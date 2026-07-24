@@ -1,0 +1,278 @@
+/* ==========================================================================
+   COMPONENT STYLES: SBM BANK REGISTER (register.component.css)
+   ==========================================================================
+   This stylesheet matches the 2-column SBM Bank split card layout from login.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   LEFT HALF: SBM BRANDING & VECTOR GRADIENT PANEL
+   -------------------------------------------------------------------------- */
+.sbm-left-branding-panel {
+  flex: 1;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
+  overflow: hidden;
+  padding: 3rem 2.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  color: #ffffff;
+}
+
+/* Dark subtle vignette backdrop tint to enhance background photo contrast */
+.sbm-left-branding-panel::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at center, rgba(6, 33, 77, 0.25) 0%, rgba(6, 19, 43, 0.55) 100%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Left Panel Top Header */
+.sbm-brand-logo-header {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  text-align: center;
+  gap: 0.65rem;
+}
+
+.sbm-logo-icon-wrapper {
+  height: 76px;
+  padding: 0.5rem 1rem;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  transition: transform 0.3s ease;
+}
+
+.sbm-logo-icon-wrapper:hover {
+  transform: translateY(-2px) scale(1.02);
+}
+
+.sbm-logo-icon-wrapper img {
+  height: 100%;
+  width: auto;
+  object-fit: contain;
+  border-radius: 4px;
+}
+
+.sbm-company-name-text {
+  font-weight: 800;
+  font-size: 1.35rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #ffffff;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+/* Left Panel Glassmorphic Welcome Card */
+.sbm-left-glass-card {
+  position: relative;
+  z-index: 3;
+  text-align: center;
+  padding: 2.25rem 1.75rem;
+  background: rgba(6, 19, 43, 0.45);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 18px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+  max-width: 380px;
+  width: 100%;
+  margin: 1.5rem auto;
+}
+
+.sbm-welcome-pill-tag {
+  display: inline-block;
+  font-size: 0.825rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: #eaf7fc;
+  background: rgba(26, 163, 216, 0.3);
+  border: 1px solid rgba(26, 163, 216, 0.5);
+  padding: 0.35rem 1.15rem;
+  border-radius: 50px;
+  box-shadow: 0 4px 12px rgba(26, 163, 216, 0.15);
+}
+
+.sbm-welcome-title {
+  font-size: 1.55rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 0.75rem;
+  color: #ffffff;
+  text-shadow: 0 3px 12px rgba(0, 0, 0, 0.35);
+}
+
+.sbm-gradient-divider-line {
+  width: 56px;
+  height: 4px;
+  background: linear-gradient(90deg, var(--sbm-blue), #ffffff);
+  border-radius: 10px;
+  margin: 0 auto 1.15rem auto;
+  box-shadow: 0 2px 8px rgba(26, 163, 216, 0.4);
+}
+
+.sbm-welcome-description {
+  font-size: 0.875rem;
+  line-height: 1.65;
+  color: rgba(255, 255, 255, 0.92);
+  margin: 0 auto;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+}
+
+
+/* --------------------------------------------------------------------------
+   RIGHT HALF: REGISTER FORM PANEL
+   -------------------------------------------------------------------------- */
+.sbm-right-form-panel {
+  flex: 1.1;
+  background-color: var(--sbm-card);
+  padding: 3rem 2.8rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+@media (max-width: 768px) {
+  .sbm-right-form-panel {
+    padding: 2.5rem 1.75rem;
+  }
+}
+
+.sbm-form-header-group {
+  text-align: center;
+}
+
+.sbm-form-title {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--sbm-navy);
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.01em;
+  text-align: center;
+}
+
+.sbm-brand-highlight {
+  color: var(--sbm-blue);
+}
+
+.sbm-form-subtitle {
+  font-size: 0.875rem;
+  color: var(--sbm-muted);
+  line-height: 1.5;
+  margin: 0 auto;
+  text-align: center;
+}
+
+/* Floating Badge Label for Country Field */
+.sbm-select-container {
+  position: relative;
+}
+
+.sbm-floating-select-label {
+  position: absolute;
+  top: -9px;
+  left: 14px;
+  background-color: var(--sbm-card);
+  padding: 1px 7px;
+  font-size: 0.72rem;
+  color: var(--sbm-navy);
+  font-weight: 700;
+  z-index: 10;
+  border-radius: 4px;
+  line-height: 1;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  border: 1px solid var(--sbm-border);
+}
+
+.sbm-country-select-field {
+  background-color: transparent;
+  border: none;
+  padding: 0.65rem 2.2rem 0.65rem 0.75rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--sbm-ink);
+  cursor: pointer;
+  box-shadow: none !important;
+}
+
+.sbm-country-select-field:focus {
+  background-color: transparent;
+  border: none;
+  box-shadow: none !important;
+}
+
+.sbm-country-select-field option {
+  background-color: #ffffff;
+  color: var(--sbm-ink);
+  font-weight: 500;
+  padding: 0.5rem;
+}
+
+/* Eye Icon Button inside password input */
+.sbm-password-toggle-btn {
+  border: none;
+  background-color: transparent;
+  color: var(--sbm-muted);
+  width: 44px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.05rem;
+  transition: color 0.2s ease;
+}
+
+.sbm-password-toggle-btn:hover {
+  color: var(--sbm-blue) !important;
+}
+
+/* Custom Checkbox Styling */
+.form-check-input {
+  width: 1.15em;
+  height: 1.15em;
+  border-color: var(--sbm-border);
+  cursor: pointer;
+}
+
+.form-check-input:checked {
+  background-color: var(--sbm-blue);
+  border-color: var(--sbm-blue);
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+/* Link styling */
+.sbm-link-text {
+  color: var(--sbm-blue);
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.15s ease-in-out;
+}
+
+.sbm-link-text:hover {
+  color: var(--sbm-navy);
+  text-decoration: underline;
+}

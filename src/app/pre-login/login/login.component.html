@@ -1,0 +1,191 @@
+<!--
+================================================================================
+SBM BANK LOGIN PAGE TEMPLATE (pre-login/login/login.component.html)
+================================================================================
+This template implements the exact 2-column split layout from the design mockup:
+- Left Half: Rich SBM blue vector gradient background with SBM Bank logo,
+  "WELCOME BACK" title, and abstract tech grid lines.
+- Right Half: Clean white form panel with "Login Account" title, custom SBM inputs,
+  "Keep me signed in" checkbox, "Register Account" link, and SBM Pill Submit Button.
+================================================================================
+-->
+
+<div class="sbm-page-wrapper" id="sbm-login-page-root">
+
+  <!-- 2-COLUMN SPLIT CONTAINER CARD -->
+  <div class="sbm-split-card-container" id="sbm-split-card">
+
+    <!-- ====================================================================
+         LEFT HALF: BRANDING & CUSTOM BACKGROUND IMAGE PANEL
+         ==================================================================== -->
+    <div
+      class="sbm-left-branding-panel"
+      id="sbm-branding-left-side"
+      [style.backgroundImage]="sbmLeftBannerPath ? 'url(' + sbmLeftBannerPath + ')' : 'none'"
+    >
+
+      <!-- TOP BRANDING HEADER -->
+      <div class="sbm-brand-logo-header" id="sbm-logo-header-group">
+        <div class="sbm-logo-icon-wrapper" id="sbm-logo-badge">
+          <i class="bi bi-bank2" *ngIf="!sbmLogoPath"></i>
+          <img [src]="sbmLogoPath" alt="SBM Bank Logo" *ngIf="sbmLogoPath" (error)="onLogoError()" id="sbm-company-logo-img" />
+        </div>
+        <span class="sbm-company-name-text" id="sbm-company-name">SBM Bank</span>
+      </div>
+
+      <!-- CENTER WELCOME GLASS CARD -->
+      <div class="sbm-left-glass-card" id="sbm-left-welcome-content">
+        <div class="sbm-welcome-pill-tag mb-3" id="sbm-welcome-subtitle">
+          Nice to see you again
+        </div>
+        <h1 class="sbm-welcome-title" id="sbm-welcome-title">WELCOME BACK</h1>
+        
+        <!-- Gradient Divider Line -->
+        <div class="sbm-gradient-divider-line"></div>
+
+        <p class="sbm-welcome-description" id="sbm-welcome-description">
+          Manage your APIs securely with SBM Bank portal. Access developer tools, monitors, and system integrations.
+        </p>
+      </div>
+
+    </div>
+
+
+    <!-- ====================================================================
+         RIGHT HALF: LOGIN FORM PANEL
+         ==================================================================== -->
+    <div class="sbm-right-form-panel" id="sbm-form-right-side">
+
+      <!-- FORM HEADER SECTION -->
+      <div class="sbm-form-header-group mb-4" id="sbm-form-header">
+        <h2 class="sbm-form-title" id="sbm-form-title">Login Account</h2>
+        <p class="sbm-form-subtitle" id="sbm-form-subtitle">
+          Please enter your credentials to access your SBM Bank account.
+        </p>
+      </div>
+
+      <!-- DYNAMIC ERROR NOTIFICATION BANNER -->
+      <div *ngIf="errorMessage" class="alert alert-danger d-flex align-items-center mb-3 py-2 px-3 border-0 rounded-3" role="alert" id="sbm-error-alert">
+        <i class="bi bi-exclamation-circle-fill me-2 font-size-1-1"></i>
+        <div class="small fw-medium">{{ errorMessage }}</div>
+      </div>
+
+      <!-- DYNAMIC SUCCESS NOTIFICATION BANNER -->
+      <div *ngIf="successMessage" class="alert alert-success d-flex align-items-center mb-3 py-2 px-3 border-0 rounded-3" role="alert" id="sbm-success-alert">
+        <i class="bi bi-check-circle-fill me-2 font-size-1-1"></i>
+        <div class="small fw-medium">{{ successMessage }}</div>
+      </div>
+
+      <!-- LOGIN FORM -->
+      <form (ngSubmit)="onLoginSubmit()" id="sbm-login-form" novalidate>
+
+        <!-- 1. EMAIL ID FIELD -->
+        <div class="mb-3" id="sbm-email-input-group">
+          <div class="position-relative">
+            <input
+              type="email"
+              id="sbm-user-email-input"
+              name="userEmail"
+              class="sbm-custom-input"
+              placeholder="Email ID"
+              [(ngModel)]="userCredentials.email"
+              [disabled]="isSubmitting"
+              required
+              autocomplete="email"
+            />
+          </div>
+        </div>
+
+        <!-- 2. PASSWORD FIELD -->
+        <div class="mb-3" id="sbm-password-input-group">
+          <div class="position-relative">
+            <input
+              [type]="isPasswordVisible ? 'text' : 'password'"
+              id="sbm-user-password-input"
+              name="userPassword"
+              class="sbm-custom-input pe-5"
+              placeholder="Password"
+              [(ngModel)]="userCredentials.password"
+              [disabled]="isSubmitting"
+              required
+              autocomplete="current-password"
+            />
+            <!-- Show/Hide Password Eye Icon Toggle -->
+            <button
+              type="button"
+              class="btn btn-link position-absolute top-50 end-0 translate-middle-y text-muted pe-3 border-0 shadow-none"
+              (click)="togglePasswordVisibility()"
+              [disabled]="isSubmitting"
+              id="sbm-toggle-password-btn"
+              title="Toggle password visibility"
+            >
+              <i class="bi" [ngClass]="isPasswordVisible ? 'bi-eye-slash-fill' : 'bi-eye-fill'"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- 3. CHECKBOX & FORGOT PASSWORD LINK ROW -->
+        <div class="d-flex align-items-center justify-content-between mb-4" id="sbm-form-options-row">
+          <!-- Checkbox: Keep me signed in -->
+          <div class="form-check d-flex align-items-center gap-2 m-0 ps-0" id="sbm-remember-me-wrapper">
+            <input
+              type="checkbox"
+              class="form-check-input ms-0 mt-0"
+              id="sbm-keep-signed-in-check"
+              name="rememberMe"
+              [(ngModel)]="userCredentials.rememberMe"
+              [disabled]="isSubmitting"
+            />
+            <label class="form-check-label text-secondary small user-select-none cursor-pointer" for="sbm-keep-signed-in-check" id="sbm-remember-label">
+              Keep me signed in
+            </label>
+          </div>
+
+          <!-- Forgot Password Link -->
+          <a routerLink="/forgot-password" class="sbm-link-text small" id="sbm-forgot-password-link">
+            Forgot password?
+          </a>
+        </div>
+
+        <!-- 4. SUBMIT BUTTON (Pill Shaped 'LOGIN' button) -->
+        <button
+          type="submit"
+          class="sbm-pill-button mb-3"
+          [disabled]="isSubmitting"
+          id="sbm-submit-login-button"
+        >
+          <!-- Loading Spinner -->
+          <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+
+          <!-- Button Label with Sign-in / Login icon -->
+          <span *ngIf="!isSubmitting">
+            LOGIN <i class="bi bi-box-arrow-in-right ms-1"></i>
+          </span>
+          <span *ngIf="isSubmitting">LOGGING IN...</span>
+        </button>
+
+        <!-- 5. SIGNUP PROMPT BELOW LOGIN BUTTON -->
+        <div class="text-center mt-3 pt-1" id="sbm-signup-prompt-section">
+          <p class="text-secondary small mb-0" id="sbm-signup-text">
+            Don't have an account?
+            <a routerLink="/signup" class="sbm-link-text ms-1 fw-semibold" id="sbm-signup-link">
+              SignUp
+            </a>
+          </p>
+        </div>
+
+        <!-- 6. BOTTOM FOOTER LINKS (FAQs, Policy, Terms) -->
+        <hr class="sbm-footer-divider" />
+        <div class="sbm-footer-links d-flex justify-content-center align-items-center gap-4 text-center" id="sbm-login-footer-links">
+          <a href="javascript:void(0)" class="sbm-footer-link" id="sbm-login-faq-link">FAQs</a>
+          <a href="javascript:void(0)" class="sbm-footer-link" id="sbm-login-policy-link">Policy</a>
+          <a href="javascript:void(0)" class="sbm-footer-link" id="sbm-login-terms-link">Terms</a>
+        </div>
+
+      </form>
+
+    </div>
+
+  </div>
+
+</div>

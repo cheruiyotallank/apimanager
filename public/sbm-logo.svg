@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 135" width="100" height="135">
+  <!-- Left Bar: Deep Royal Navy -->
+  <polygon points="5,43 35,5 35,93 5,115" fill="#0c356a" />
+  
+  <!-- Center Bar: Deep Dark Navy -->
+  <polygon points="41,5 71,5 71,130 41,110" fill="#061d43" />
+  
+  <!-- Right Bar: SBM Bright Blue / Cyan -->
+  <polygon points="77,31 98,31 98,90 77,105" fill="#1aa3d8" />
+</svg>

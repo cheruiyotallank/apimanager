@@ -1,0 +1,325 @@
+<!--
+================================================================================
+SBM BANK REGISTER (SIGN UP) PAGE TEMPLATE (pre-login/register/register.component.html)
+================================================================================
+Implements 2-column split card layout matching the requested design:
+- Left Half: SBM branding backdrop with company logo, welcome card, and custom background image.
+- Right Half: Clean registration form grid matching First/Last name, Email, Username,
+  Country select badge, Phone number, Password, Confirm password, and Terms agreement.
+================================================================================
+-->
+
+<div class="sbm-page-wrapper" id="sbm-register-page-root">
+
+  <!-- 2-COLUMN SPLIT CONTAINER CARD -->
+  <div class="sbm-split-card-container" id="sbm-register-split-card">
+
+    <!-- ====================================================================
+         LEFT HALF: BRANDING & CUSTOM BACKGROUND IMAGE PANEL
+         ==================================================================== -->
+    <div
+      class="sbm-left-branding-panel"
+      id="sbm-register-branding-left"
+      [style.backgroundImage]="sbmLeftBannerPath ? 'url(' + sbmLeftBannerPath + ')' : 'none'"
+    >
+
+      <!-- TOP BRANDING HEADER -->
+      <div class="sbm-brand-logo-header" id="sbm-register-logo-group">
+        <div class="sbm-logo-icon-wrapper" id="sbm-register-logo-badge">
+          <i class="bi bi-bank2" *ngIf="!sbmLogoPath"></i>
+          <img [src]="sbmLogoPath" alt="SBM Bank Logo" *ngIf="sbmLogoPath" (error)="onLogoError()" id="sbm-register-company-logo" />
+        </div>
+        <span class="sbm-company-name-text" id="sbm-register-company-name">SBM Bank</span>
+      </div>
+
+      <!-- CENTER WELCOME GLASS CARD -->
+      <div class="sbm-left-glass-card" id="sbm-register-welcome-content">
+        <div class="sbm-welcome-pill-tag mb-3" id="sbm-register-welcome-subtitle">
+          Nice to see you again
+        </div>
+        <h1 class="sbm-welcome-title" id="sbm-register-welcome-title">CREATE ACCOUNT</h1>
+        
+        <!-- Gradient Divider Line -->
+        <div class="sbm-gradient-divider-line"></div>
+
+        <p class="sbm-welcome-description" id="sbm-register-welcome-description">
+          Register to access secure SBM Bank APIs, developer tools, integration keys, and developer documentation.
+        </p>
+      </div>
+
+    </div>
+
+
+    <!-- ====================================================================
+         RIGHT HALF: REGISTER FORM PANEL
+         ==================================================================== -->
+    <div class="sbm-right-form-panel" id="sbm-register-form-right">
+
+      <!-- FORM HEADER SECTION -->
+      <div class="sbm-form-header-group mb-4" id="sbm-register-form-header">
+        <h2 class="sbm-form-title" id="sbm-register-form-title">
+          <span class="sbm-brand-highlight">Sign</span> Up
+        </h2>
+        <p class="sbm-form-subtitle" id="sbm-register-form-subtitle">Enter your details to Sign Up</p>
+      </div>
+
+      <!-- FEEDBACK MESSAGES -->
+      <!-- Error Feedback -->
+      <div *ngIf="errorMessage" class="alert alert-danger sbm-custom-alert d-flex align-items-center mb-3" role="alert" id="sbm-register-error-alert">
+        <i class="bi bi-exclamation-triangle-fill me-2 fs-5 flex-shrink-0"></i>
+        <div>{{ errorMessage }}</div>
+      </div>
+
+      <!-- Success Feedback -->
+      <div *ngIf="successMessage" class="alert alert-success sbm-custom-alert d-flex align-items-center mb-3" role="alert" id="sbm-register-success-alert">
+        <i class="bi bi-check-circle-fill me-2 fs-5 flex-shrink-0"></i>
+        <div>{{ successMessage }}</div>
+      </div>
+
+      <!-- REGISTRATION FORM -->
+      <form (ngSubmit)="onRegisterSubmit()" id="sbm-register-form" novalidate>
+
+        <!-- ROW 1: FIRST NAME & LAST NAME -->
+        <div class="row g-3 mb-3" id="sbm-name-row">
+          <div class="col-md-6" id="sbm-firstname-col">
+            <div class="input-group sbm-custom-input-group">
+              <span class="input-group-text sbm-input-icon-box">
+                <i class="bi bi-person text-muted"></i>
+              </span>
+              <input
+                type="text"
+                class="form-control sbm-input-field"
+                id="register-firstName"
+                name="firstName"
+                placeholder="First Name"
+                [(ngModel)]="registerData.firstName"
+                required
+              />
+            </div>
+          </div>
+
+          <div class="col-md-6" id="sbm-lastname-col">
+            <div class="input-group sbm-custom-input-group">
+              <span class="input-group-text sbm-input-icon-box">
+                <i class="bi bi-person text-muted"></i>
+              </span>
+              <input
+                type="text"
+                class="form-control sbm-input-field"
+                id="register-lastName"
+                name="lastName"
+                placeholder="Last Name"
+                [(ngModel)]="registerData.lastName"
+                required
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- ROW 2: EMAIL ADDRESS & USERNAME -->
+        <div class="row g-3 mb-3" id="sbm-credentials-row">
+          <div class="col-md-6" id="sbm-email-col">
+            <div class="input-group sbm-custom-input-group">
+              <span class="input-group-text sbm-input-icon-box">
+                <i class="bi bi-envelope text-muted"></i>
+              </span>
+              <input
+                type="email"
+                class="form-control sbm-input-field"
+                id="register-email"
+                name="email"
+                placeholder="Email Address"
+                [(ngModel)]="registerData.email"
+                required
+              />
+            </div>
+          </div>
+
+          <div class="col-md-6" id="sbm-username-col">
+            <div class="input-group sbm-custom-input-group">
+              <span class="input-group-text sbm-input-icon-box">
+                <i class="bi bi-at text-muted"></i>
+              </span>
+              <input
+                type="text"
+                class="form-control sbm-input-field"
+                id="register-username"
+                name="username"
+                placeholder="Username"
+                [(ngModel)]="registerData.username"
+                required
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- ROW 3: COUNTRY & PHONE NUMBER -->
+        <div class="row g-3 mb-3" id="sbm-contact-row">
+          <div class="col-md-6" id="sbm-country-col">
+            <div class="sbm-select-container position-relative">
+              <span class="sbm-floating-select-label">Country</span>
+              <div class="input-group sbm-custom-input-group">
+                <span class="input-group-text sbm-input-icon-box">
+                  <i class="bi bi-globe text-muted"></i>
+                </span>
+                <select
+                  class="form-select sbm-country-select-field"
+                  id="register-country"
+                  name="country"
+                  [(ngModel)]="registerData.country"
+                >
+                  <option *ngFor="let c of countries" [value]="c">{{ c }}</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6" id="sbm-phone-col">
+            <div class="input-group sbm-custom-input-group">
+              <span class="input-group-text sbm-input-icon-box">
+                <i class="bi bi-telephone text-muted"></i>
+              </span>
+              <input
+                type="tel"
+                class="form-control sbm-input-field"
+                id="register-phone"
+                name="phone"
+                placeholder="Phone Number"
+                [(ngModel)]="registerData.phone"
+                required
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- ROW 4: PASSWORD & CONFIRM PASSWORD -->
+        <div class="row g-3 mb-3" id="sbm-password-row">
+
+          <!-- Password Field -->
+          <div class="col-md-6" id="sbm-password-col">
+            <div class="input-group sbm-custom-input-group">
+              <span class="input-group-text sbm-input-icon-box">
+                <i class="bi bi-lock text-muted"></i>
+              </span>
+              <input
+                [type]="isPasswordVisible ? 'text' : 'password'"
+                class="form-control sbm-input-field pe-5"
+                id="register-password"
+                name="password"
+                placeholder="Password"
+                [(ngModel)]="registerData.password"
+                required
+              />
+              <button
+                type="button"
+                class="btn sbm-password-toggle-btn"
+                (click)="togglePasswordVisibility()"
+                id="sbm-toggle-password-btn"
+              >
+                <i class="bi" [ngClass]="isPasswordVisible ? 'bi-eye-slash-fill' : 'bi-eye-fill'"></i>
+              </button>
+            </div>
+
+            <!-- Real-time Password Strength Meter -->
+            <div *ngIf="registerData.password" class="sbm-password-strength-box mt-1 pt-1" id="sbm-password-strength-container">
+              <div class="d-flex justify-content-between align-items-center mb-1">
+                <span class="text-muted small" style="font-size: 0.75rem;">Strength:</span>
+                <span class="fw-semibold small" [ngClass]="getPasswordStrength().textClass" style="font-size: 0.75rem;" id="sbm-password-strength-text">
+                  {{ getPasswordStrength().label }}
+                </span>
+              </div>
+              <div class="progress" style="height: 4px; border-radius: 4px; background-color: #e2e8f0;">
+                <div
+                  class="progress-bar transition-all"
+                  [ngClass]="getPasswordStrength().colorClass"
+                  [style.width.%]="getPasswordStrength().percent"
+                  role="progressbar"
+                ></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Confirm Password Field -->
+          <div class="col-md-6" id="sbm-confirm-password-col">
+            <div class="input-group sbm-custom-input-group">
+              <span class="input-group-text sbm-input-icon-box">
+                <i class="bi bi-shield-lock text-muted"></i>
+              </span>
+              <input
+                [type]="isConfirmPasswordVisible ? 'text' : 'password'"
+                class="form-control sbm-input-field pe-5"
+                id="register-confirmPassword"
+                name="confirmPassword"
+                placeholder="Confirm Password"
+                [(ngModel)]="registerData.confirmPassword"
+                required
+              />
+              <button
+                type="button"
+                class="btn sbm-password-toggle-btn"
+                (click)="toggleConfirmPasswordVisibility()"
+                id="sbm-toggle-confirm-password-btn"
+              >
+                <i class="bi" [ngClass]="isConfirmPasswordVisible ? 'bi-eye-slash-fill' : 'bi-eye-fill'"></i>
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- 5. TERMS AND CONDITIONS CHECKBOX -->
+        <div class="form-check mb-4" id="sbm-terms-checkbox-group">
+          <input
+            class="form-check-input sbm-custom-checkbox cursor-pointer"
+            type="checkbox"
+            id="register-acceptTerms"
+            name="acceptTerms"
+            [(ngModel)]="registerData.acceptTerms"
+          />
+          <label class="form-check-label sbm-checkbox-label cursor-pointer ms-1" for="register-acceptTerms">
+            I accept SBM Bank's <a href="javascript:void(0)" class="sbm-link-text">Terms and Conditions</a> concerning this application
+          </label>
+        </div>
+
+        <!-- 6. SUBMIT BUTTON -->
+        <button
+          type="submit"
+          class="sbm-pill-button mb-3"
+          [disabled]="isSubmitting"
+          id="sbm-submit-register-button"
+        >
+          <!-- Loading Spinner -->
+          <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+
+          <!-- Button Label -->
+          <span *ngIf="!isSubmitting">
+            Sign Up
+          </span>
+          <span *ngIf="isSubmitting">SIGNING UP...</span>
+        </button>
+
+        <!-- 7. LOGIN LINK BELOW SUBMIT -->
+        <div class="text-center mt-3 pt-1" id="sbm-login-prompt-section">
+          <p class="text-secondary small mb-0" id="sbm-login-text">
+            Already have an account?
+            <a routerLink="/login" class="sbm-link-text ms-1 fw-semibold" id="sbm-register-to-login-link">
+              Log In
+            </a>
+          </p>
+        </div>
+
+        <!-- 8. BOTTOM FOOTER LINKS (FAQs, Policy, Terms) -->
+        <hr class="sbm-footer-divider" />
+        <div class="sbm-footer-links d-flex justify-content-center align-items-center gap-4 text-center" id="sbm-register-footer-links">
+          <a href="javascript:void(0)" class="sbm-footer-link" id="sbm-register-faq-link">FAQs</a>
+          <a href="javascript:void(0)" class="sbm-footer-link" id="sbm-register-policy-link">Policy</a>
+          <a href="javascript:void(0)" class="sbm-footer-link" id="sbm-register-terms-link">Terms</a>
+        </div>
+
+      </form>
+
+    </div>
+
+  </div>
+
+</div>

@@ -1,0 +1,233 @@
+/* ==========================================================================
+   COMPONENT STYLES: SBM BANK LOGIN (login.component.css)
+   ==========================================================================
+   This stylesheet controls the specific layout aesthetics for the 2-column SBM Bank
+   split login card.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   LEFT HALF: SBM BRANDING & VECTOR GRADIENT PANEL
+   -------------------------------------------------------------------------- */
+.sbm-left-branding-panel {
+  flex: 1;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
+  overflow: hidden;
+  padding: 3rem 2.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  color: #ffffff;
+}
+
+/* Dark subtle vignette backdrop tint to enhance background photo contrast */
+.sbm-left-branding-panel::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at center, rgba(6, 33, 77, 0.25) 0%, rgba(6, 19, 43, 0.55) 100%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Left Panel Top Header */
+.sbm-brand-logo-header {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  text-align: center;
+  gap: 0.65rem;
+}
+
+.sbm-logo-icon-wrapper {
+  height: 76px;
+  padding: 0.5rem 1rem;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  transition: transform 0.3s ease;
+}
+
+.sbm-logo-icon-wrapper:hover {
+  transform: translateY(-2px) scale(1.02);
+}
+
+.sbm-logo-icon-wrapper img {
+  height: 100%;
+  width: auto;
+  object-fit: contain;
+  border-radius: 4px;
+}
+
+.sbm-company-name-text {
+  font-weight: 800;
+  font-size: 1.35rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #ffffff;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+/* Left Panel Glassmorphic Welcome Card */
+.sbm-left-glass-card {
+  position: relative;
+  z-index: 3;
+  text-align: center;
+  padding: 2.25rem 1.75rem;
+  background: rgba(6, 19, 43, 0.45);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 18px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+  max-width: 380px;
+  width: 100%;
+  margin: 1.5rem auto;
+}
+
+.sbm-welcome-pill-tag {
+  display: inline-block;
+  font-size: 0.825rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: #eaf7fc;
+  background: rgba(26, 163, 216, 0.3);
+  border: 1px solid rgba(26, 163, 216, 0.5);
+  padding: 0.35rem 1.15rem;
+  border-radius: 50px;
+  box-shadow: 0 4px 12px rgba(26, 163, 216, 0.15);
+}
+
+.sbm-welcome-title {
+  font-size: 2.15rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 0.85rem;
+  color: #ffffff;
+  text-shadow: 0 3px 12px rgba(0, 0, 0, 0.35);
+}
+
+.sbm-gradient-divider-line {
+  width: 56px;
+  height: 4px;
+  background: linear-gradient(90deg, var(--sbm-blue), #ffffff);
+  border-radius: 10px;
+  margin: 0 auto 1.15rem auto;
+  box-shadow: 0 2px 8px rgba(26, 163, 216, 0.4);
+}
+
+.sbm-welcome-description {
+  font-size: 0.875rem;
+  line-height: 1.65;
+  color: rgba(255, 255, 255, 0.92);
+  margin: 0 auto;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+}
+
+
+/* --------------------------------------------------------------------------
+   RIGHT HALF: LOGIN FORM PANEL
+   -------------------------------------------------------------------------- */
+.sbm-right-form-panel {
+  flex: 1;
+  background-color: var(--sbm-card);
+  padding: 3.5rem 3rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+@media (max-width: 768px) {
+  .sbm-right-form-panel {
+    padding: 2.5rem 1.75rem;
+  }
+}
+
+.sbm-form-header-group {
+  text-align: center;
+}
+
+.sbm-form-title {
+  font-size: 1.85rem;
+  font-weight: 700;
+  color: var(--sbm-blue); /* Title matches design mockup SBM Blue */
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.01em;
+  text-align: center;
+}
+
+.sbm-form-subtitle {
+  font-size: 0.875rem;
+  color: var(--sbm-muted);
+  line-height: 1.5;
+  margin: 0 auto;
+  text-align: center;
+}
+
+/* Eye Icon Button inside password input */
+#sbm-toggle-password-btn:hover {
+  color: var(--sbm-blue) !important;
+}
+
+/* Custom Checkbox Styling */
+.form-check-input {
+  width: 1.15em;
+  height: 1.15em;
+  border-color: var(--sbm-border);
+  cursor: pointer;
+}
+
+.form-check-input:checked {
+  background-color: var(--sbm-blue);
+  border-color: var(--sbm-blue);
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.font-size-1-1 {
+  font-size: 1.1rem;
+}
+
+/* SignUp Link professional styling */
+#sbm-signup-link {
+  color: var(--sbm-blue);
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.15s ease-in-out;
+}
+
+#sbm-signup-link:hover {
+  color: var(--sbm-navy);
+  text-decoration: underline;
+}
+
+/* Forgot Password Link professional styling */
+#sbm-forgot-password-link {
+  color: var(--sbm-muted);
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.15s ease-in-out;
+}
+
+#sbm-forgot-password-link:hover {
+  color: var(--sbm-blue);
+  text-decoration: underline;
+}

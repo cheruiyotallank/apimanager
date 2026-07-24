@@ -1,0 +1,210 @@
+/* ==========================================================================
+   GLOBAL STYLES & SBM BANK HIGH-AESTHETIC DESIGN SYSTEM (apimanager)
+   ==========================================================================
+   Contains rich gradients, multi-layer ambient shadows, responsive layout math,
+   and fluid interactive micro-animations across the application.
+   ========================================================================== */
+
+/* 1. THIRD-PARTY CSS IMPORTS */
+@import 'bootstrap/dist/css/bootstrap.min.css';
+@import 'bootstrap-icons/font/bootstrap-icons.css';
+
+/* ==========================================================================
+   2. SBM BANK COLOR PALETTE & DESIGN TOKENS
+   ========================================================================== */
+:root {
+  /* Exact SBM Brand Color Tokens */
+  --sbm-navy: #06214d;         /* Deep Navy Blue */
+  --sbm-blue: #1aa3d8;         /* Vibrant SBM Cyan Blue */
+  --sbm-sky: #eaf7fc;          /* Soft Sky Blue */
+  --sbm-ink: #06132b;          /* Dark Ink */
+  --sbm-muted: #5f6b7a;        /* Neutral Grey */
+  --sbm-card: #ffffff;         /* Pure White card background */
+  --sbm-border: #d8e3ee;       /* Light border */
+
+  /* Derived Interactive States & Shadows */
+  --sbm-blue-hover: #158dbd;
+  --sbm-input-bg: #f8fafc;
+  --sbm-card-shadow: 0 30px 70px -12px rgba(6, 33, 77, 0.35), 0 18px 36px -18px rgba(0, 0, 0, 0.4);
+  --sbm-focus-glow: 0 0 0 4px rgba(26, 163, 216, 0.22), 0 8px 16px -4px rgba(26, 163, 216, 0.15);
+
+  /* Typography */
+  --sbm-font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* ==========================================================================
+   3. BASE RESET & BODY STYLING
+   ========================================================================== */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: var(--sbm-font-family);
+  background-color: #f1f5f9;
+  color: var(--sbm-ink);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ==========================================================================
+   4. HIGH-AESTHETIC LAYOUT CONTAINERS
+   ========================================================================== */
+
+/* Full Screen Centered Container Wrapper with Vibrant Mesh Backdrop */
+.sbm-page-wrapper {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at 10% 20%, #eaf7fc 0%, #dbeafe 45%, #c7d2fe 90%);
+  padding: 2rem 1rem;
+}
+
+/* Split-Screen Modal Container with Multi-Layer Ambient Elevation */
+.sbm-split-card-container {
+  background-color: var(--sbm-card);
+  border-radius: 24px;
+  box-shadow: var(--sbm-card-shadow);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  overflow: hidden;
+  width: 100%;
+  max-width: 980px;
+  min-height: 580px;
+  display: flex;
+  flex-direction: row;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.sbm-split-card-container:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 40px 85px -12px rgba(6, 33, 77, 0.4), 0 24px 48px -18px rgba(0, 0, 0, 0.35);
+}
+
+/* Responsive collapse on mobile screens */
+@media (max-width: 768px) {
+  .sbm-split-card-container {
+    flex-direction: column;
+    max-width: 480px;
+  }
+}
+
+/* ==========================================================================
+   5. REUSABLE FORM CONTROLS & BUTTONS WITH HOVER & FOCUS EFFECTS
+   ========================================================================== */
+
+/* Custom Input Field with Animated SBM Accent Left Border */
+.sbm-custom-input {
+  width: 100%;
+  padding: 0.85rem 1rem 0.85rem 1.25rem;
+  font-family: var(--sbm-font-family);
+  font-size: 0.95rem;
+  color: var(--sbm-ink);
+  background-color: var(--sbm-input-bg);
+  border: 1.5px solid var(--sbm-border);
+  border-left: 5px solid var(--sbm-blue);
+  border-radius: 8px;
+  outline: none;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.sbm-custom-input:hover {
+  border-color: var(--sbm-blue);
+  background-color: #ffffff;
+  box-shadow: 0 4px 12px rgba(26, 163, 216, 0.08);
+}
+
+.sbm-custom-input:focus {
+  background-color: #ffffff;
+  border-color: var(--sbm-blue);
+  border-left-width: 6px;
+  border-left-color: var(--sbm-navy);
+  box-shadow: var(--sbm-focus-glow);
+}
+
+.sbm-custom-input::placeholder {
+  color: #a0aec0;
+}
+
+/* Rich Gradient Pill Submit Button */
+.sbm-pill-button {
+  width: 100%;
+  padding: 0.9rem 2rem;
+  font-family: var(--sbm-font-family);
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #ffffff;
+  background: linear-gradient(135deg, #1aa3d8 0%, #06214d 100%);
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  box-shadow: 0 10px 25px -3px rgba(26, 163, 216, 0.4);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.sbm-pill-button i {
+  transition: transform 0.25s ease-in-out;
+}
+
+.sbm-pill-button:hover {
+  background: linear-gradient(135deg, #1898ca 0%, #082d69 100%);
+  box-shadow: 0 14px 30px -3px rgba(26, 163, 216, 0.55);
+  transform: translateY(-2px) scale(1.005);
+}
+
+.sbm-pill-button:hover i {
+  transform: translateX(4px);
+}
+
+.sbm-pill-button:active {
+  transform: translateY(0) scale(0.99);
+}
+
+.sbm-pill-button:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Interactive Link Aesthetics */
+.sbm-link-text {
+  font-size: 0.875rem;
+  color: var(--sbm-blue);
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.15s ease-in-out;
+}
+
+.sbm-link-text:hover {
+  color: var(--sbm-navy);
+  text-decoration: underline;
+}
+
+/* Bottom Footer Links (FAQs | Policy | Terms) */
+.sbm-footer-divider {
+  border: 0;
+  border-top: 1px solid var(--sbm-border);
+  opacity: 0.7;
+  margin-top: 1.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.sbm-footer-link {
+  color: var(--sbm-navy);
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  transition: color 0.15s ease-in-out;
+}
+
+.sbm-footer-link:hover {
+  color: var(--sbm-blue);
+}

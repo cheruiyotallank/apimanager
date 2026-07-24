@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
+import { AuthService } from '../../core/services/auth.service';
 
 /**
  * ============================================================================
@@ -41,7 +42,10 @@ export class ForgotPasswordComponent {
   public errorMessage: string | null = null;
   public successMessage: string | null = null;
 
-  constructor(private router: Router) { }
+  constructor(
+    private router: Router,
+    private authService: AuthService
+  ) { }
 
   /**
    * Fallback for logo error

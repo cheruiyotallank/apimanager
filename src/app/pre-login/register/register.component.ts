@@ -9,6 +9,7 @@ import { Router, RouterModule } from '@angular/router';
  * ============================================================================
  * Manages user registration state, organization profile, email verification workflow,
  * asset paths, and navigation back to login.
+ * Password credentials are securely generated and emailed to the user upon verification.
  * ============================================================================
  */
 @Component({
@@ -47,8 +48,6 @@ export class RegisterComponent {
     organizationType: 'Enterprise',
     country: 'Kenya (+254)',
     phone: '',
-    password: '',
-    confirmPassword: '',
     acceptTerms: false
   };
 
@@ -79,27 +78,11 @@ export class RegisterComponent {
   /**
    * UI INTERACTIVE STATES
    */
-  public isPasswordVisible: boolean = false;
-  public isConfirmPasswordVisible: boolean = false;
   public isSubmitting: boolean = false;
   public errorMessage: string | null = null;
   public successMessage: string | null = null;
 
   constructor(private router: Router) { }
-
-  /**
-   * Toggles password field visibility.
-   */
-  public togglePasswordVisibility(): void {
-    this.isPasswordVisible = !this.isPasswordVisible;
-  }
-
-  /**
-   * Toggles confirm password field visibility.
-   */
-  public toggleConfirmPasswordVisibility(): void {
-    this.isConfirmPasswordVisible = !this.isConfirmPasswordVisible;
-  }
 
   /**
    * Fallback for logo error.
@@ -156,23 +139,6 @@ export class RegisterComponent {
       return;
     }
 
-    // Password validation
-    if (!this.registerData.password) {
-      this.errorMessage = 'Please enter a Password.';
-      return;
-    }
-
-    if (this.registerData.password.length < 6) {
-      this.errorMessage = 'Password must be at least 6 characters long.';
-      return;
-    }
-
-    // Confirm Password matching check
-    if (this.registerData.password !== this.registerData.confirmPassword) {
-      this.errorMessage = 'Passwords do not match. Please check and try again.';
-      return;
-    }
-
     // Terms & Conditions check
     if (!this.registerData.acceptTerms) {
       this.errorMessage = "You must accept SBM Bank's Terms and Conditions concerning this application.";
@@ -206,11 +172,11 @@ export class RegisterComponent {
 
     setTimeout(() => {
       this.isSubmitting = false;
-      this.successMessage = 'Email verified & account created! Redirecting to login...';
+      this.successMessage = 'Email verified! Account login credentials have been sent to your email inbox.';
 
       setTimeout(() => {
         this.router.navigate(['/login']);
-      }, 1500);
+      }, 2000);
     }, 1200);
   }
 
@@ -237,30 +203,5 @@ export class RegisterComponent {
   private isValidEmail(email: string): boolean {
     const emailRegexPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     return emailRegexPattern.test(email);
-  }
-
-  /**
-   * Evaluates real-time password strength score and label.
-   */
-  public getPasswordStrength(): { label: string; colorClass: string; textClass: string; percent: number } {
-    const pwd = this.registerData.password || '';
-    if (!pwd) {
-      return { label: '', colorClass: '', textClass: '', percent: 0 };
-    }
-
-    let score = 0;
-    if (pwd.length >= 6) score += 1;
-    if (pwd.length >= 10) score += 1;
-    if (/[a-z]/.test(pwd) && /[A-Z]/.test(pwd)) score += 1;
-    if (/[0-9]/.test(pwd)) score += 1;
-    if (/[^a-zA-Z0-9]/.test(pwd)) score += 1;
-
-    if (score <= 2) {
-      return { label: 'Weak', colorClass: 'bg-danger', textClass: 'text-danger', percent: 33 };
-    } else if (score <= 4) {
-      return { label: 'Medium', colorClass: 'bg-warning', textClass: 'text-warning', percent: 66 };
-    } else {
-      return { label: 'Strong', colorClass: 'bg-success', textClass: 'text-success', percent: 100 };
-    }
   }
 }

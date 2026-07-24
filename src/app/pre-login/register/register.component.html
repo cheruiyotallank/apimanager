@@ -192,7 +192,7 @@ Implements 2-column split card layout matching the requested design:
           </div>
 
           <!-- ROW 4: COUNTRY & PHONE NUMBER -->
-          <div class="row g-3 mb-3" id="sbm-contact-row">
+          <div class="row g-3 mb-4" id="sbm-contact-row">
             <div class="col-md-6" id="sbm-country-col">
               <div class="sbm-select-container position-relative">
                 <span class="sbm-floating-select-label">Country</span>
@@ -228,81 +228,6 @@ Implements 2-column split card layout matching the requested design:
                 />
               </div>
             </div>
-          </div>
-
-          <!-- ROW 5: PASSWORD & CONFIRM PASSWORD -->
-          <div class="row g-3 mb-3" id="sbm-password-row">
-
-            <!-- Password Field -->
-            <div class="col-md-6" id="sbm-password-col">
-              <div class="input-group sbm-custom-input-group">
-                <span class="input-group-text sbm-input-icon-box">
-                  <i class="bi bi-lock text-muted"></i>
-                </span>
-                <input
-                  [type]="isPasswordVisible ? 'text' : 'password'"
-                  class="form-control sbm-input-field pe-5"
-                  id="register-password"
-                  name="password"
-                  placeholder="Password"
-                  [(ngModel)]="registerData.password"
-                  required
-                />
-                <button
-                  type="button"
-                  class="btn sbm-password-toggle-btn"
-                  (click)="togglePasswordVisibility()"
-                  id="sbm-toggle-password-btn"
-                >
-                  <i class="bi" [ngClass]="isPasswordVisible ? 'bi-eye-slash-fill' : 'bi-eye-fill'"></i>
-                </button>
-              </div>
-
-              <!-- Real-time Password Strength Meter -->
-              <div *ngIf="registerData.password" class="sbm-password-strength-box mt-1 pt-1" id="sbm-password-strength-container">
-                <div class="d-flex justify-content-between align-items-center mb-1">
-                  <span class="text-muted small" style="font-size: 0.75rem;">Strength:</span>
-                  <span class="fw-semibold small" [ngClass]="getPasswordStrength().textClass" style="font-size: 0.75rem;" id="sbm-password-strength-text">
-                    {{ getPasswordStrength().label }}
-                  </span>
-                </div>
-                <div class="progress" style="height: 4px; border-radius: 4px; background-color: #e2e8f0;">
-                  <div
-                    class="progress-bar transition-all"
-                    [ngClass]="getPasswordStrength().colorClass"
-                    [style.width.%]="getPasswordStrength().percent"
-                    role="progressbar"
-                  ></div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Confirm Password Field -->
-            <div class="col-md-6" id="sbm-confirm-password-col">
-              <div class="input-group sbm-custom-input-group">
-                <span class="input-group-text sbm-input-icon-box">
-                  <i class="bi bi-shield-lock text-muted"></i>
-                </span>
-                <input
-                  [type]="isConfirmPasswordVisible ? 'text' : 'password'"
-                  class="form-control sbm-input-field pe-5"
-                  id="register-confirmPassword"
-                  name="confirmPassword"
-                  placeholder="Confirm Password"
-                  [(ngModel)]="registerData.confirmPassword"
-                  required
-                />
-                <button
-                  type="button"
-                  class="btn sbm-password-toggle-btn"
-                  (click)="toggleConfirmPasswordVisibility()"
-                  id="sbm-toggle-confirm-password-btn"
-                >
-                  <i class="bi" [ngClass]="isConfirmPasswordVisible ? 'bi-eye-slash-fill' : 'bi-eye-fill'"></i>
-                </button>
-              </div>
-            </div>
-
           </div>
 
           <!-- TERMS AND CONDITIONS CHECKBOX -->
@@ -370,7 +295,7 @@ Implements 2-column split card layout matching the requested design:
             <span class="sbm-brand-highlight">Verify</span> Email
           </h2>
           <p class="sbm-form-subtitle" id="sbm-email-verify-subtitle">
-            We sent a 6-digit verification code to <strong>{{ registerData.email }}</strong>
+            We sent a 6-digit verification code to <strong>{{ registerData.email }}</strong>. Your login credentials will be delivered upon verification.
           </p>
         </div>
 

@@ -97,7 +97,8 @@
   box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
   max-width: 380px;
   width: 100%;
-  margin: 1.5rem auto;
+  margin: 0.25rem auto 2rem auto;
+  transform: translateY(-20px);
 }
 
 .sbm-welcome-pill-tag {

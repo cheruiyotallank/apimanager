@@ -7,8 +7,8 @@ import { Router, RouterModule } from '@angular/router';
  * ============================================================================
  * SBM BANK REGISTER (SIGN UP) COMPONENT (pre-login/register/register.component.ts)
  * ============================================================================
- * Manages user registration state, input validation, SBM Bank asset paths,
- * and navigation back to login.
+ * Manages user registration state, organization profile, email verification workflow,
+ * asset paths, and navigation back to login.
  * ============================================================================
  */
 @Component({
@@ -31,13 +31,20 @@ export class RegisterComponent {
   public sbmLeftBannerPath: string | null = 'assets/background5.jpg';
 
   /**
-   * USER REGISTRATION FORM MODEL
+   * WORKFLOW STEP: 'REGISTER_FORM' | 'EMAIL_VERIFICATION'
+   */
+  public step: 'REGISTER_FORM' | 'EMAIL_VERIFICATION' = 'REGISTER_FORM';
+
+  /**
+   * USER REGISTRATION FORM MODEL (Personal & Organization Profile)
    */
   public registerData = {
     firstName: '',
     lastName: '',
     email: '',
     username: '',
+    organizationName: '',
+    organizationType: 'Enterprise',
     country: 'Kenya (+254)',
     phone: '',
     password: '',
@@ -46,7 +53,7 @@ export class RegisterComponent {
   };
 
   /**
-   * COUNTRY OPTIONS
+   * DROPDOWN OPTIONS
    */
   public countries: string[] = [
     'Kenya (+254)',
@@ -56,6 +63,18 @@ export class RegisterComponent {
     'United States (+1)',
     'Other International'
   ];
+
+  public organizationTypes: string[] = [
+    'Enterprise',
+    'Fintech / Startup',
+    'Independent Developer',
+    'Financial Institution'
+  ];
+
+  /**
+   * EMAIL VERIFICATION OTP CODE STATE (6-Digit Code)
+   */
+  public verificationCode: string[] = ['', '', '', '', '', ''];
 
   /**
    * UI INTERACTIVE STATES
@@ -125,6 +144,12 @@ export class RegisterComponent {
       return;
     }
 
+    // Organization Profile validation
+    if (!this.registerData.organizationName || !this.registerData.organizationName.trim()) {
+      this.errorMessage = 'Please enter your Organization / Company Name.';
+      return;
+    }
+
     // Phone Number validation
     if (!this.registerData.phone || !this.registerData.phone.trim()) {
       this.errorMessage = 'Please enter your Phone Number.';
@@ -154,17 +179,56 @@ export class RegisterComponent {
       return;
     }
 
-    // Process Registration
+    // Transition to Email Verification Workflow
     this.isSubmitting = true;
 
     setTimeout(() => {
       this.isSubmitting = false;
-      this.successMessage = 'Account created successfully! Redirecting to login...';
+      this.step = 'EMAIL_VERIFICATION';
+      this.successMessage = `Verification code sent to ${this.registerData.email}. Enter code below.`;
+    }, 1200);
+  }
+
+  /**
+   * Verifies 6-digit Email OTP Verification Code.
+   */
+  public verifyEmailOtp(): void {
+    this.errorMessage = null;
+    this.successMessage = null;
+
+    const fullCode = this.verificationCode.join('');
+    if (fullCode.length < 6) {
+      this.errorMessage = 'Please enter the complete 6-digit verification code.';
+      return;
+    }
+
+    this.isSubmitting = true;
+
+    setTimeout(() => {
+      this.isSubmitting = false;
+      this.successMessage = 'Email verified & account created! Redirecting to login...';
 
       setTimeout(() => {
         this.router.navigate(['/login']);
-      }, 1200);
-    }, 1500);
+      }, 1500);
+    }, 1200);
+  }
+
+  /**
+   * Resends Email Verification OTP code.
+   */
+  public resendEmailOtp(): void {
+    this.errorMessage = null;
+    this.successMessage = `A new 6-digit verification code has been sent to ${this.registerData.email}.`;
+  }
+
+  /**
+   * Navigates back to registration form step.
+   */
+  public backToRegisterForm(): void {
+    this.step = 'REGISTER_FORM';
+    this.errorMessage = null;
+    this.successMessage = null;
   }
 
   /**

@@ -231,3 +231,66 @@
   color: var(--sbm-blue);
   text-decoration: underline;
 }
+
+/* OAuth2 / SSO Button Styling */
+.sbm-sso-button {
+  border-radius: 50px;
+  padding: 0.6rem 1.25rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border-color: var(--sbm-border);
+  color: var(--sbm-navy);
+  background-color: #ffffff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+  transition: all 0.2s ease-in-out;
+}
+
+.sbm-sso-button:hover {
+  background-color: var(--sbm-input-bg);
+  border-color: var(--sbm-blue);
+  color: var(--sbm-blue);
+  transform: translateY(-1px);
+}
+
+/* SSO Text Divider */
+.sbm-divider-with-text {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  color: var(--sbm-muted);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.sbm-divider-with-text::before,
+.sbm-divider-with-text::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid var(--sbm-border);
+}
+
+.sbm-divider-with-text span {
+  padding: 0 0.75rem;
+}
+
+/* 6-Digit OTP / MFA Verification Inputs */
+.sbm-otp-digit-input {
+  width: 48px;
+  height: 54px;
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--sbm-navy);
+  background-color: var(--sbm-input-bg);
+  border: 2px solid var(--sbm-border);
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+  transition: all 0.2s ease-in-out;
+}
+
+.sbm-otp-digit-input:focus {
+  border-color: var(--sbm-blue);
+  background-color: #ffffff;
+  box-shadow: var(--sbm-focus-glow);
+  outline: none;
+}

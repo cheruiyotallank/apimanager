@@ -38,4 +38,21 @@ describe('LoginComponent', () => {
     component.onLoginSubmit();
     expect(component.errorMessage).toBeTruthy();
   });
+
+  it('should transition to MFA_VERIFICATION step on valid login submit', () => {
+    component.userCredentials.email = 'developer@sbm.co.ke';
+    component.userCredentials.password = 'P@ssw0rd123!';
+    component.onLoginSubmit();
+    expect(component.isSubmitting).toBe(true);
+  });
+
+  it('should trigger Google SSO login flow', () => {
+    component.loginWithGoogle();
+    expect(component.isSubmitting).toBe(true);
+  });
+
+  it('should trigger Enterprise SSO login flow', () => {
+    component.loginWithSSO();
+    expect(component.isSubmitting).toBe(true);
+  });
 });

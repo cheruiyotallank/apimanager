@@ -276,3 +276,24 @@
   color: var(--sbm-navy);
   text-decoration: underline;
 }
+
+/* 6-Digit OTP Verification Inputs */
+.sbm-otp-digit-input {
+  width: 48px;
+  height: 54px;
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--sbm-navy);
+  background-color: var(--sbm-input-bg);
+  border: 2px solid var(--sbm-border);
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+  transition: all 0.2s ease-in-out;
+}
+
+.sbm-otp-digit-input:focus {
+  border-color: var(--sbm-blue);
+  background-color: #ffffff;
+  box-shadow: var(--sbm-focus-glow);
+  outline: none;
+}

@@ -4,8 +4,7 @@ SBM BANK REGISTER (SIGN UP) PAGE TEMPLATE (pre-login/register/register.component
 ================================================================================
 Implements 2-column split card layout matching the requested design:
 - Left Half: SBM branding backdrop with company logo, welcome card, and custom background image.
-- Right Half: Clean registration form grid matching First/Last name, Email, Username,
-  Country select badge, Phone number, Password, Confirm password, and Terms agreement.
+- Right Half: Registration form grid (Personal & Organization Profile) & Email Verification Step.
 ================================================================================
 -->
 
@@ -51,272 +50,385 @@ Implements 2-column split card layout matching the requested design:
 
 
     <!-- ====================================================================
-         RIGHT HALF: REGISTER FORM PANEL
+         RIGHT HALF: REGISTER FORM PANEL & EMAIL VERIFICATION WORKFLOW
          ==================================================================== -->
     <div class="sbm-right-form-panel" id="sbm-register-form-right">
 
-      <!-- FORM HEADER SECTION -->
-      <div class="sbm-form-header-group mb-4" id="sbm-register-form-header">
-        <h2 class="sbm-form-title" id="sbm-register-form-title">
-          <span class="sbm-brand-highlight">Sign</span> Up
-        </h2>
-        <p class="sbm-form-subtitle" id="sbm-register-form-subtitle">Enter your details to Sign Up</p>
-      </div>
+      <!-- STEP 1: INITIAL REGISTRATION FORM -->
+      <ng-container *ngIf="step === 'REGISTER_FORM'">
 
-      <!-- FEEDBACK MESSAGES -->
-      <!-- Error Feedback -->
-      <div *ngIf="errorMessage" class="alert alert-danger sbm-custom-alert d-flex align-items-center mb-3" role="alert" id="sbm-register-error-alert">
-        <i class="bi bi-exclamation-triangle-fill me-2 fs-5 flex-shrink-0"></i>
-        <div>{{ errorMessage }}</div>
-      </div>
-
-      <!-- Success Feedback -->
-      <div *ngIf="successMessage" class="alert alert-success sbm-custom-alert d-flex align-items-center mb-3" role="alert" id="sbm-register-success-alert">
-        <i class="bi bi-check-circle-fill me-2 fs-5 flex-shrink-0"></i>
-        <div>{{ successMessage }}</div>
-      </div>
-
-      <!-- REGISTRATION FORM -->
-      <form (ngSubmit)="onRegisterSubmit()" id="sbm-register-form" novalidate>
-
-        <!-- ROW 1: FIRST NAME & LAST NAME -->
-        <div class="row g-3 mb-3" id="sbm-name-row">
-          <div class="col-md-6" id="sbm-firstname-col">
-            <div class="input-group sbm-custom-input-group">
-              <span class="input-group-text sbm-input-icon-box">
-                <i class="bi bi-person text-muted"></i>
-              </span>
-              <input
-                type="text"
-                class="form-control sbm-input-field"
-                id="register-firstName"
-                name="firstName"
-                placeholder="First Name"
-                [(ngModel)]="registerData.firstName"
-                required
-              />
-            </div>
-          </div>
-
-          <div class="col-md-6" id="sbm-lastname-col">
-            <div class="input-group sbm-custom-input-group">
-              <span class="input-group-text sbm-input-icon-box">
-                <i class="bi bi-person text-muted"></i>
-              </span>
-              <input
-                type="text"
-                class="form-control sbm-input-field"
-                id="register-lastName"
-                name="lastName"
-                placeholder="Last Name"
-                [(ngModel)]="registerData.lastName"
-                required
-              />
-            </div>
-          </div>
+        <!-- FORM HEADER SECTION -->
+        <div class="sbm-form-header-group mb-4" id="sbm-register-form-header">
+          <h2 class="sbm-form-title" id="sbm-register-form-title">
+            <span class="sbm-brand-highlight">Sign</span> Up
+          </h2>
+          <p class="sbm-form-subtitle" id="sbm-register-form-subtitle">Enter your details to Sign Up</p>
         </div>
 
-        <!-- ROW 2: EMAIL ADDRESS & USERNAME -->
-        <div class="row g-3 mb-3" id="sbm-credentials-row">
-          <div class="col-md-6" id="sbm-email-col">
-            <div class="input-group sbm-custom-input-group">
-              <span class="input-group-text sbm-input-icon-box">
-                <i class="bi bi-envelope text-muted"></i>
-              </span>
-              <input
-                type="email"
-                class="form-control sbm-input-field"
-                id="register-email"
-                name="email"
-                placeholder="Email Address"
-                [(ngModel)]="registerData.email"
-                required
-              />
-            </div>
-          </div>
-
-          <div class="col-md-6" id="sbm-username-col">
-            <div class="input-group sbm-custom-input-group">
-              <span class="input-group-text sbm-input-icon-box">
-                <i class="bi bi-at text-muted"></i>
-              </span>
-              <input
-                type="text"
-                class="form-control sbm-input-field"
-                id="register-username"
-                name="username"
-                placeholder="Username"
-                [(ngModel)]="registerData.username"
-                required
-              />
-            </div>
-          </div>
+        <!-- FEEDBACK MESSAGES -->
+        <!-- Error Feedback -->
+        <div *ngIf="errorMessage" class="alert alert-danger sbm-custom-alert d-flex align-items-center mb-3" role="alert" id="sbm-register-error-alert">
+          <i class="bi bi-exclamation-triangle-fill me-2 fs-5 flex-shrink-0"></i>
+          <div>{{ errorMessage }}</div>
         </div>
 
-        <!-- ROW 3: COUNTRY & PHONE NUMBER -->
-        <div class="row g-3 mb-3" id="sbm-contact-row">
-          <div class="col-md-6" id="sbm-country-col">
-            <div class="sbm-select-container position-relative">
-              <span class="sbm-floating-select-label">Country</span>
+        <!-- Success Feedback -->
+        <div *ngIf="successMessage" class="alert alert-success sbm-custom-alert d-flex align-items-center mb-3" role="alert" id="sbm-register-success-alert">
+          <i class="bi bi-check-circle-fill me-2 fs-5 flex-shrink-0"></i>
+          <div>{{ successMessage }}</div>
+        </div>
+
+        <!-- REGISTRATION FORM -->
+        <form (ngSubmit)="onRegisterSubmit()" id="sbm-register-form" novalidate>
+
+          <!-- ROW 1: FIRST NAME & LAST NAME -->
+          <div class="row g-3 mb-3" id="sbm-name-row">
+            <div class="col-md-6" id="sbm-firstname-col">
               <div class="input-group sbm-custom-input-group">
                 <span class="input-group-text sbm-input-icon-box">
-                  <i class="bi bi-globe text-muted"></i>
+                  <i class="bi bi-person text-muted"></i>
+                </span>
+                <input
+                  type="text"
+                  class="form-control sbm-input-field"
+                  id="register-firstName"
+                  name="firstName"
+                  placeholder="First Name"
+                  [(ngModel)]="registerData.firstName"
+                  required
+                />
+              </div>
+            </div>
+
+            <div class="col-md-6" id="sbm-lastname-col">
+              <div class="input-group sbm-custom-input-group">
+                <span class="input-group-text sbm-input-icon-box">
+                  <i class="bi bi-person text-muted"></i>
+                </span>
+                <input
+                  type="text"
+                  class="form-control sbm-input-field"
+                  id="register-lastName"
+                  name="lastName"
+                  placeholder="Last Name"
+                  [(ngModel)]="registerData.lastName"
+                  required
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- ROW 2: EMAIL ADDRESS & USERNAME -->
+          <div class="row g-3 mb-3" id="sbm-credentials-row">
+            <div class="col-md-6" id="sbm-email-col">
+              <div class="input-group sbm-custom-input-group">
+                <span class="input-group-text sbm-input-icon-box">
+                  <i class="bi bi-envelope text-muted"></i>
+                </span>
+                <input
+                  type="email"
+                  class="form-control sbm-input-field"
+                  id="register-email"
+                  name="email"
+                  placeholder="Email Address"
+                  [(ngModel)]="registerData.email"
+                  required
+                />
+              </div>
+            </div>
+
+            <div class="col-md-6" id="sbm-username-col">
+              <div class="input-group sbm-custom-input-group">
+                <span class="input-group-text sbm-input-icon-box">
+                  <i class="bi bi-at text-muted"></i>
+                </span>
+                <input
+                  type="text"
+                  class="form-control sbm-input-field"
+                  id="register-username"
+                  name="username"
+                  placeholder="Username"
+                  [(ngModel)]="registerData.username"
+                  required
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- ROW 3: ORGANIZATION PROFILE (Name & Type) -->
+          <div class="row g-3 mb-3" id="sbm-organization-row">
+            <div class="col-md-6" id="sbm-orgname-col">
+              <div class="input-group sbm-custom-input-group">
+                <span class="input-group-text sbm-input-icon-box">
+                  <i class="bi bi-building text-muted"></i>
+                </span>
+                <input
+                  type="text"
+                  class="form-control sbm-input-field"
+                  id="register-orgName"
+                  name="organizationName"
+                  placeholder="Organization / Company Name"
+                  [(ngModel)]="registerData.organizationName"
+                  required
+                />
+              </div>
+            </div>
+
+            <div class="col-md-6" id="sbm-orgtype-col">
+              <div class="input-group sbm-custom-input-group">
+                <span class="input-group-text sbm-input-icon-box">
+                  <i class="bi bi-diagram-3 text-muted"></i>
                 </span>
                 <select
                   class="form-select sbm-country-select-field"
-                  id="register-country"
-                  name="country"
-                  [(ngModel)]="registerData.country"
+                  id="register-orgType"
+                  name="organizationType"
+                  [(ngModel)]="registerData.organizationType"
                 >
-                  <option *ngFor="let c of countries" [value]="c">{{ c }}</option>
+                  <option *ngFor="let org of organizationTypes" [value]="org">{{ org }}</option>
                 </select>
               </div>
             </div>
           </div>
 
-          <div class="col-md-6" id="sbm-phone-col">
-            <div class="input-group sbm-custom-input-group">
-              <span class="input-group-text sbm-input-icon-box">
-                <i class="bi bi-telephone text-muted"></i>
-              </span>
-              <input
-                type="tel"
-                class="form-control sbm-input-field"
-                id="register-phone"
-                name="phone"
-                placeholder="Phone Number"
-                [(ngModel)]="registerData.phone"
-                required
-              />
-            </div>
-          </div>
-        </div>
-
-        <!-- ROW 4: PASSWORD & CONFIRM PASSWORD -->
-        <div class="row g-3 mb-3" id="sbm-password-row">
-
-          <!-- Password Field -->
-          <div class="col-md-6" id="sbm-password-col">
-            <div class="input-group sbm-custom-input-group">
-              <span class="input-group-text sbm-input-icon-box">
-                <i class="bi bi-lock text-muted"></i>
-              </span>
-              <input
-                [type]="isPasswordVisible ? 'text' : 'password'"
-                class="form-control sbm-input-field pe-5"
-                id="register-password"
-                name="password"
-                placeholder="Password"
-                [(ngModel)]="registerData.password"
-                required
-              />
-              <button
-                type="button"
-                class="btn sbm-password-toggle-btn"
-                (click)="togglePasswordVisibility()"
-                id="sbm-toggle-password-btn"
-              >
-                <i class="bi" [ngClass]="isPasswordVisible ? 'bi-eye-slash-fill' : 'bi-eye-fill'"></i>
-              </button>
+          <!-- ROW 4: COUNTRY & PHONE NUMBER -->
+          <div class="row g-3 mb-3" id="sbm-contact-row">
+            <div class="col-md-6" id="sbm-country-col">
+              <div class="sbm-select-container position-relative">
+                <span class="sbm-floating-select-label">Country</span>
+                <div class="input-group sbm-custom-input-group">
+                  <span class="input-group-text sbm-input-icon-box">
+                    <i class="bi bi-globe text-muted"></i>
+                  </span>
+                  <select
+                    class="form-select sbm-country-select-field"
+                    id="register-country"
+                    name="country"
+                    [(ngModel)]="registerData.country"
+                  >
+                    <option *ngFor="let c of countries" [value]="c">{{ c }}</option>
+                  </select>
+                </div>
+              </div>
             </div>
 
-            <!-- Real-time Password Strength Meter -->
-            <div *ngIf="registerData.password" class="sbm-password-strength-box mt-1 pt-1" id="sbm-password-strength-container">
-              <div class="d-flex justify-content-between align-items-center mb-1">
-                <span class="text-muted small" style="font-size: 0.75rem;">Strength:</span>
-                <span class="fw-semibold small" [ngClass]="getPasswordStrength().textClass" style="font-size: 0.75rem;" id="sbm-password-strength-text">
-                  {{ getPasswordStrength().label }}
+            <div class="col-md-6" id="sbm-phone-col">
+              <div class="input-group sbm-custom-input-group">
+                <span class="input-group-text sbm-input-icon-box">
+                  <i class="bi bi-telephone text-muted"></i>
                 </span>
-              </div>
-              <div class="progress" style="height: 4px; border-radius: 4px; background-color: #e2e8f0;">
-                <div
-                  class="progress-bar transition-all"
-                  [ngClass]="getPasswordStrength().colorClass"
-                  [style.width.%]="getPasswordStrength().percent"
-                  role="progressbar"
-                ></div>
+                <input
+                  type="tel"
+                  class="form-control sbm-input-field"
+                  id="register-phone"
+                  name="phone"
+                  placeholder="Phone Number"
+                  [(ngModel)]="registerData.phone"
+                  required
+                />
               </div>
             </div>
           </div>
 
-          <!-- Confirm Password Field -->
-          <div class="col-md-6" id="sbm-confirm-password-col">
-            <div class="input-group sbm-custom-input-group">
-              <span class="input-group-text sbm-input-icon-box">
-                <i class="bi bi-shield-lock text-muted"></i>
-              </span>
-              <input
-                [type]="isConfirmPasswordVisible ? 'text' : 'password'"
-                class="form-control sbm-input-field pe-5"
-                id="register-confirmPassword"
-                name="confirmPassword"
-                placeholder="Confirm Password"
-                [(ngModel)]="registerData.confirmPassword"
-                required
-              />
-              <button
-                type="button"
-                class="btn sbm-password-toggle-btn"
-                (click)="toggleConfirmPasswordVisibility()"
-                id="sbm-toggle-confirm-password-btn"
-              >
-                <i class="bi" [ngClass]="isConfirmPasswordVisible ? 'bi-eye-slash-fill' : 'bi-eye-fill'"></i>
-              </button>
+          <!-- ROW 5: PASSWORD & CONFIRM PASSWORD -->
+          <div class="row g-3 mb-3" id="sbm-password-row">
+
+            <!-- Password Field -->
+            <div class="col-md-6" id="sbm-password-col">
+              <div class="input-group sbm-custom-input-group">
+                <span class="input-group-text sbm-input-icon-box">
+                  <i class="bi bi-lock text-muted"></i>
+                </span>
+                <input
+                  [type]="isPasswordVisible ? 'text' : 'password'"
+                  class="form-control sbm-input-field pe-5"
+                  id="register-password"
+                  name="password"
+                  placeholder="Password"
+                  [(ngModel)]="registerData.password"
+                  required
+                />
+                <button
+                  type="button"
+                  class="btn sbm-password-toggle-btn"
+                  (click)="togglePasswordVisibility()"
+                  id="sbm-toggle-password-btn"
+                >
+                  <i class="bi" [ngClass]="isPasswordVisible ? 'bi-eye-slash-fill' : 'bi-eye-fill'"></i>
+                </button>
+              </div>
+
+              <!-- Real-time Password Strength Meter -->
+              <div *ngIf="registerData.password" class="sbm-password-strength-box mt-1 pt-1" id="sbm-password-strength-container">
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                  <span class="text-muted small" style="font-size: 0.75rem;">Strength:</span>
+                  <span class="fw-semibold small" [ngClass]="getPasswordStrength().textClass" style="font-size: 0.75rem;" id="sbm-password-strength-text">
+                    {{ getPasswordStrength().label }}
+                  </span>
+                </div>
+                <div class="progress" style="height: 4px; border-radius: 4px; background-color: #e2e8f0;">
+                  <div
+                    class="progress-bar transition-all"
+                    [ngClass]="getPasswordStrength().colorClass"
+                    [style.width.%]="getPasswordStrength().percent"
+                    role="progressbar"
+                  ></div>
+                </div>
+              </div>
             </div>
+
+            <!-- Confirm Password Field -->
+            <div class="col-md-6" id="sbm-confirm-password-col">
+              <div class="input-group sbm-custom-input-group">
+                <span class="input-group-text sbm-input-icon-box">
+                  <i class="bi bi-shield-lock text-muted"></i>
+                </span>
+                <input
+                  [type]="isConfirmPasswordVisible ? 'text' : 'password'"
+                  class="form-control sbm-input-field pe-5"
+                  id="register-confirmPassword"
+                  name="confirmPassword"
+                  placeholder="Confirm Password"
+                  [(ngModel)]="registerData.confirmPassword"
+                  required
+                />
+                <button
+                  type="button"
+                  class="btn sbm-password-toggle-btn"
+                  (click)="toggleConfirmPasswordVisibility()"
+                  id="sbm-toggle-confirm-password-btn"
+                >
+                  <i class="bi" [ngClass]="isConfirmPasswordVisible ? 'bi-eye-slash-fill' : 'bi-eye-fill'"></i>
+                </button>
+              </div>
+            </div>
+
           </div>
 
-        </div>
+          <!-- TERMS AND CONDITIONS CHECKBOX -->
+          <div class="form-check mb-4" id="sbm-terms-checkbox-group">
+            <input
+              class="form-check-input sbm-custom-checkbox cursor-pointer"
+              type="checkbox"
+              id="register-acceptTerms"
+              name="acceptTerms"
+              [(ngModel)]="registerData.acceptTerms"
+            />
+            <label class="form-check-label sbm-checkbox-label cursor-pointer ms-1" for="register-acceptTerms">
+              I accept SBM Bank's <a href="javascript:void(0)" class="sbm-link-text">Terms and Conditions</a> concerning this application
+            </label>
+          </div>
 
-        <!-- 5. TERMS AND CONDITIONS CHECKBOX -->
-        <div class="form-check mb-4" id="sbm-terms-checkbox-group">
-          <input
-            class="form-check-input sbm-custom-checkbox cursor-pointer"
-            type="checkbox"
-            id="register-acceptTerms"
-            name="acceptTerms"
-            [(ngModel)]="registerData.acceptTerms"
-          />
-          <label class="form-check-label sbm-checkbox-label cursor-pointer ms-1" for="register-acceptTerms">
-            I accept SBM Bank's <a href="javascript:void(0)" class="sbm-link-text">Terms and Conditions</a> concerning this application
-          </label>
-        </div>
+          <!-- SUBMIT BUTTON -->
+          <button
+            type="submit"
+            class="sbm-pill-button mb-3"
+            [disabled]="isSubmitting"
+            id="sbm-submit-register-button"
+          >
+            <!-- Loading Spinner -->
+            <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
 
-        <!-- 6. SUBMIT BUTTON -->
-        <button
-          type="submit"
-          class="sbm-pill-button mb-3"
-          [disabled]="isSubmitting"
-          id="sbm-submit-register-button"
-        >
-          <!-- Loading Spinner -->
-          <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+            <!-- Button Label -->
+            <span *ngIf="!isSubmitting">
+              Sign Up <i class="bi bi-arrow-right-circle-fill ms-1"></i>
+            </span>
+            <span *ngIf="isSubmitting">PROCESSSING...</span>
+          </button>
 
-          <!-- Button Label -->
-          <span *ngIf="!isSubmitting">
-            Sign Up
-          </span>
-          <span *ngIf="isSubmitting">SIGNING UP...</span>
-        </button>
+          <!-- LOGIN LINK BELOW SUBMIT -->
+          <div class="text-center mt-3 pt-1" id="sbm-login-prompt-section">
+            <p class="text-secondary small mb-0" id="sbm-login-text">
+              Already have an account?
+              <a routerLink="/login" class="sbm-link-text ms-1 fw-semibold" id="sbm-register-to-login-link">
+                Log In
+              </a>
+            </p>
+          </div>
 
-        <!-- 7. LOGIN LINK BELOW SUBMIT -->
-        <div class="text-center mt-3 pt-1" id="sbm-login-prompt-section">
-          <p class="text-secondary small mb-0" id="sbm-login-text">
-            Already have an account?
-            <a routerLink="/login" class="sbm-link-text ms-1 fw-semibold" id="sbm-register-to-login-link">
-              Log In
-            </a>
+          <!-- BOTTOM FOOTER LINKS (FAQs, Policy, Terms) -->
+          <hr class="sbm-footer-divider" />
+          <div class="sbm-footer-links d-flex justify-content-center align-items-center gap-4 text-center" id="sbm-register-footer-links">
+            <a href="javascript:void(0)" class="sbm-footer-link" id="sbm-register-faq-link">FAQs</a>
+            <a href="javascript:void(0)" class="sbm-footer-link" id="sbm-register-policy-link">Policy</a>
+            <a href="javascript:void(0)" class="sbm-footer-link" id="sbm-register-terms-link">Terms</a>
+          </div>
+
+        </form>
+
+      </ng-container>
+
+
+      <!-- STEP 2: EMAIL VERIFICATION OTP WORKFLOW -->
+      <ng-container *ngIf="step === 'EMAIL_VERIFICATION'">
+        
+        <div class="sbm-form-header-group text-center mb-4" id="sbm-email-verification-header">
+          <div class="sbm-otp-icon-badge mb-3 mx-auto">
+            <i class="bi bi-patch-check-fill text-primary fs-1"></i>
+          </div>
+          <h2 class="sbm-form-title" id="sbm-email-verify-title">
+            <span class="sbm-brand-highlight">Verify</span> Email
+          </h2>
+          <p class="sbm-form-subtitle" id="sbm-email-verify-subtitle">
+            We sent a 6-digit verification code to <strong>{{ registerData.email }}</strong>
           </p>
         </div>
 
-        <!-- 8. BOTTOM FOOTER LINKS (FAQs, Policy, Terms) -->
-        <hr class="sbm-footer-divider" />
-        <div class="sbm-footer-links d-flex justify-content-center align-items-center gap-4 text-center" id="sbm-register-footer-links">
-          <a href="javascript:void(0)" class="sbm-footer-link" id="sbm-register-faq-link">FAQs</a>
-          <a href="javascript:void(0)" class="sbm-footer-link" id="sbm-register-policy-link">Policy</a>
-          <a href="javascript:void(0)" class="sbm-footer-link" id="sbm-register-terms-link">Terms</a>
+        <!-- FEEDBACK BANNER -->
+        <div *ngIf="errorMessage" class="alert alert-danger sbm-custom-alert d-flex align-items-center mb-3" role="alert" id="sbm-otp-error-alert">
+          <i class="bi bi-exclamation-triangle-fill me-2 fs-5 flex-shrink-0"></i>
+          <div>{{ errorMessage }}</div>
         </div>
 
-      </form>
+        <div *ngIf="successMessage" class="alert alert-success sbm-custom-alert d-flex align-items-center mb-3" role="alert" id="sbm-otp-success-alert">
+          <i class="bi bi-check-circle-fill me-2 fs-5 flex-shrink-0"></i>
+          <div>{{ successMessage }}</div>
+        </div>
+
+        <!-- 6-DIGIT OTP INPUT CODE GRID -->
+        <div class="d-flex justify-content-center gap-2 mb-4" id="sbm-otp-code-grid">
+          <input
+            *ngFor="let digit of [0,1,2,3,4,5]; let i = index"
+            type="text"
+            maxlength="1"
+            class="form-control sbm-otp-digit-input text-center"
+            [(ngModel)]="verificationCode[i]"
+            [id]="'otp-digit-' + i"
+          />
+        </div>
+
+        <!-- VERIFY SUBMIT BUTTON -->
+        <button
+          type="button"
+          class="sbm-pill-button mb-3"
+          (click)="verifyEmailOtp()"
+          [disabled]="isSubmitting"
+          id="sbm-verify-email-button"
+        >
+          <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+          <span *ngIf="!isSubmitting">Verify & Complete Registration</span>
+          <span *ngIf="isSubmitting">VERIFYING...</span>
+        </button>
+
+        <!-- RESEND & BACK ACTIONS -->
+        <div class="d-flex justify-content-between align-items-center mt-3 pt-2" id="sbm-otp-actions">
+          <button type="button" class="btn btn-link sbm-link-text p-0 border-0" (click)="backToRegisterForm()">
+            <i class="bi bi-arrow-left me-1"></i> Back to Form
+          </button>
+          <button type="button" class="btn btn-link sbm-link-text p-0 border-0" (click)="resendEmailOtp()">
+            <i class="bi bi-arrow-clockwise me-1"></i> Resend Code
+          </button>
+        </div>
+
+        <!-- BOTTOM FOOTER LINKS -->
+        <hr class="sbm-footer-divider my-4" />
+        <div class="sbm-footer-links d-flex justify-content-center align-items-center gap-4 text-center">
+          <a href="javascript:void(0)" class="sbm-footer-link">FAQs</a>
+          <a href="javascript:void(0)" class="sbm-footer-link">Policy</a>
+          <a href="javascript:void(0)" class="sbm-footer-link">Terms</a>
+        </div>
+
+      </ng-container>
 
     </div>
 

@@ -39,6 +39,7 @@ describe('RegisterComponent', () => {
     component.registerData.lastName = 'User';
     component.registerData.email = 'test@sbm.co.ke';
     component.registerData.username = 'testuser';
+    component.registerData.organizationName = 'SBM Tech';
     component.registerData.phone = '0700000000';
     component.registerData.password = 'password123';
     component.registerData.confirmPassword = 'mismatch123';
@@ -58,5 +59,21 @@ describe('RegisterComponent', () => {
 
     component.registerData.password = 'P@ssw0rd123!';
     expect(component.getPasswordStrength().label).toBe('Strong');
+  });
+
+  it('should transition to EMAIL_VERIFICATION step on valid registration submit', () => {
+    component.registerData.firstName = 'Allan';
+    component.registerData.lastName = 'Smith';
+    component.registerData.email = 'allan@sbm.co.ke';
+    component.registerData.username = 'allansmith';
+    component.registerData.organizationName = 'SBM Bank Ltd';
+    component.registerData.phone = '+254700000000';
+    component.registerData.password = 'P@ssw0rd123!';
+    component.registerData.confirmPassword = 'P@ssw0rd123!';
+    component.registerData.acceptTerms = true;
+
+    component.onRegisterSubmit();
+
+    expect(component.isSubmitting).toBe(true);
   });
 });

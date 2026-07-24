@@ -17,8 +17,9 @@
   padding: 3rem 2.5rem;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
+  gap: 2rem;
   color: #ffffff;
 }
 
@@ -97,8 +98,7 @@
   box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
   max-width: 380px;
   width: 100%;
-  margin: 0.25rem auto 2rem auto;
-  transform: translateY(-20px);
+  margin: 0 auto;
 }
 
 .sbm-welcome-pill-tag {

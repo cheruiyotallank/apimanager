@@ -43,7 +43,6 @@ export class RegisterComponent {
     firstName: '',
     lastName: '',
     email: '',
-    username: '',
     organizationName: '',
     organizationType: 'Enterprise',
     country: 'Kenya (+254)',
@@ -121,21 +120,15 @@ export class RegisterComponent {
       return;
     }
 
-    // Username validation
-    if (!this.registerData.username || !this.registerData.username.trim()) {
-      this.errorMessage = 'Please enter your Username.';
+    // Phone Number validation
+    if (!this.registerData.phone || !this.registerData.phone.trim()) {
+      this.errorMessage = 'Please enter your Phone Number.';
       return;
     }
 
     // Organization Profile validation
     if (!this.registerData.organizationName || !this.registerData.organizationName.trim()) {
       this.errorMessage = 'Please enter your Organization / Company Name.';
-      return;
-    }
-
-    // Phone Number validation
-    if (!this.registerData.phone || !this.registerData.phone.trim()) {
-      this.errorMessage = 'Please enter your Phone Number.';
       return;
     }
 

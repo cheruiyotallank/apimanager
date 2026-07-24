@@ -118,8 +118,8 @@ Implements 2-column split card layout matching the requested design:
             </div>
           </div>
 
-          <!-- ROW 2: EMAIL ADDRESS & USERNAME -->
-          <div class="row g-3 mb-3" id="sbm-credentials-row">
+          <!-- ROW 2: EMAIL ADDRESS & PHONE NUMBER -->
+          <div class="row g-3 mb-3" id="sbm-contact-row">
             <div class="col-md-6" id="sbm-email-col">
               <div class="input-group sbm-custom-input-group">
                 <span class="input-group-text sbm-input-icon-box">
@@ -137,81 +137,6 @@ Implements 2-column split card layout matching the requested design:
               </div>
             </div>
 
-            <div class="col-md-6" id="sbm-username-col">
-              <div class="input-group sbm-custom-input-group">
-                <span class="input-group-text sbm-input-icon-box">
-                  <i class="bi bi-at text-muted"></i>
-                </span>
-                <input
-                  type="text"
-                  class="form-control sbm-input-field"
-                  id="register-username"
-                  name="username"
-                  placeholder="Username"
-                  [(ngModel)]="registerData.username"
-                  required
-                />
-              </div>
-            </div>
-          </div>
-
-          <!-- ROW 3: ORGANIZATION PROFILE (Name & Type) -->
-          <div class="row g-3 mb-3" id="sbm-organization-row">
-            <div class="col-md-6" id="sbm-orgname-col">
-              <div class="input-group sbm-custom-input-group">
-                <span class="input-group-text sbm-input-icon-box">
-                  <i class="bi bi-building text-muted"></i>
-                </span>
-                <input
-                  type="text"
-                  class="form-control sbm-input-field"
-                  id="register-orgName"
-                  name="organizationName"
-                  placeholder="Organization / Company Name"
-                  [(ngModel)]="registerData.organizationName"
-                  required
-                />
-              </div>
-            </div>
-
-            <div class="col-md-6" id="sbm-orgtype-col">
-              <div class="input-group sbm-custom-input-group">
-                <span class="input-group-text sbm-input-icon-box">
-                  <i class="bi bi-diagram-3 text-muted"></i>
-                </span>
-                <select
-                  class="form-select sbm-country-select-field"
-                  id="register-orgType"
-                  name="organizationType"
-                  [(ngModel)]="registerData.organizationType"
-                >
-                  <option *ngFor="let org of organizationTypes" [value]="org">{{ org }}</option>
-                </select>
-              </div>
-            </div>
-          </div>
-
-          <!-- ROW 4: COUNTRY & PHONE NUMBER -->
-          <div class="row g-3 mb-4" id="sbm-contact-row">
-            <div class="col-md-6" id="sbm-country-col">
-              <div class="sbm-select-container position-relative">
-                <span class="sbm-floating-select-label">Country</span>
-                <div class="input-group sbm-custom-input-group">
-                  <span class="input-group-text sbm-input-icon-box">
-                    <i class="bi bi-globe text-muted"></i>
-                  </span>
-                  <select
-                    class="form-select sbm-country-select-field"
-                    id="register-country"
-                    name="country"
-                    [(ngModel)]="registerData.country"
-                  >
-                    <option *ngFor="let c of countries" [value]="c">{{ c }}</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-
             <div class="col-md-6" id="sbm-phone-col">
               <div class="input-group sbm-custom-input-group">
                 <span class="input-group-text sbm-input-icon-box">
@@ -226,6 +151,67 @@ Implements 2-column split card layout matching the requested design:
                   [(ngModel)]="registerData.phone"
                   required
                 />
+              </div>
+            </div>
+          </div>
+
+          <!-- ROW 3: ORGANIZATION NAME & ORGANIZATION TYPE -->
+          <div class="row g-3 mb-3" id="sbm-organization-row">
+            <div class="col-md-6" id="sbm-orgname-col">
+              <div class="input-group sbm-custom-input-group">
+                <span class="input-group-text sbm-input-icon-box">
+                  <i class="bi bi-building text-muted"></i>
+                </span>
+                <input
+                  type="text"
+                  class="form-control sbm-input-field"
+                  id="register-orgName"
+                  name="organizationName"
+                  placeholder="Organization Name"
+                  [(ngModel)]="registerData.organizationName"
+                  required
+                />
+              </div>
+            </div>
+
+            <div class="col-md-6" id="sbm-orgtype-col">
+              <div class="sbm-select-container position-relative">
+                <span class="sbm-floating-select-label">Organization Type</span>
+                <div class="input-group sbm-custom-input-group">
+                  <span class="input-group-text sbm-input-icon-box">
+                    <i class="bi bi-diagram-3 text-muted"></i>
+                  </span>
+                  <select
+                    class="form-select sbm-custom-select-field"
+                    id="register-orgType"
+                    name="organizationType"
+                    [(ngModel)]="registerData.organizationType"
+                  >
+                    <option *ngFor="let org of organizationTypes" [value]="org">{{ org }}</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ROW 4: COUNTRY SELECT DROPDOWN -->
+          <div class="row g-3 mb-4" id="sbm-country-row">
+            <div class="col-12" id="sbm-country-col">
+              <div class="sbm-select-container position-relative">
+                <span class="sbm-floating-select-label">Country</span>
+                <div class="input-group sbm-custom-input-group">
+                  <span class="input-group-text sbm-input-icon-box">
+                    <i class="bi bi-globe text-muted"></i>
+                  </span>
+                  <select
+                    class="form-select sbm-custom-select-field"
+                    id="register-country"
+                    name="country"
+                    [(ngModel)]="registerData.country"
+                  >
+                    <option *ngFor="let c of countries" [value]="c">{{ c }}</option>
+                  </select>
+                </div>
               </div>
             </div>
           </div>

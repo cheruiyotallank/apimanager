@@ -154,12 +154,6 @@
   justify-content: center;
 }
 
-@media (max-width: 768px) {
-  .sbm-right-form-panel {
-    padding: 2.5rem 1.75rem;
-  }
-}
-
 .sbm-form-header-group {
   text-align: center;
 }
@@ -185,7 +179,50 @@
   text-align: center;
 }
 
-/* Floating Badge Label for Country Field */
+/* Custom Styled Input Groups & Borders */
+.sbm-custom-input-group {
+  border: 1.5px solid var(--sbm-border);
+  border-radius: 12px;
+  background-color: var(--sbm-input-bg);
+  overflow: hidden;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+}
+
+.sbm-custom-input-group:focus-within {
+  border-color: var(--sbm-blue);
+  background-color: #ffffff;
+  box-shadow: 0 0 0 4px rgba(26, 163, 216, 0.18);
+}
+
+.sbm-input-icon-box {
+  background-color: transparent;
+  border: none;
+  padding-left: 1rem;
+  padding-right: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+}
+
+.sbm-input-field {
+  background-color: transparent;
+  border: none;
+  padding: 0.72rem 1rem 0.72rem 0.5rem;
+  font-size: 0.92rem;
+  font-weight: 500;
+  color: var(--sbm-ink);
+  box-shadow: none !important;
+}
+
+.sbm-input-field:focus {
+  background-color: transparent;
+  border: none;
+  box-shadow: none !important;
+}
+
+/* Floating Badge Labels & Custom Select Dropdown Styling */
 .sbm-select-container {
   position: relative;
 }
@@ -194,7 +231,7 @@
   position: absolute;
   top: -9px;
   left: 14px;
-  background-color: var(--sbm-card);
+  background-color: #ffffff;
   padding: 1px 7px;
   font-size: 0.72rem;
   color: var(--sbm-navy);
@@ -206,10 +243,10 @@
   border: 1px solid var(--sbm-border);
 }
 
-.sbm-country-select-field {
+.sbm-custom-select-field {
   background-color: transparent;
   border: none;
-  padding: 0.65rem 2.2rem 0.65rem 0.75rem;
+  padding: 0.72rem 2.2rem 0.72rem 0.5rem;
   font-size: 0.9rem;
   font-weight: 500;
   color: var(--sbm-ink);
@@ -217,35 +254,17 @@
   box-shadow: none !important;
 }
 
-.sbm-country-select-field:focus {
+.sbm-custom-select-field:focus {
   background-color: transparent;
   border: none;
   box-shadow: none !important;
 }
 
-.sbm-country-select-field option {
+.sbm-custom-select-field option {
   background-color: #ffffff;
   color: var(--sbm-ink);
   font-weight: 500;
-  padding: 0.5rem;
-}
-
-/* Eye Icon Button inside password input */
-.sbm-password-toggle-btn {
-  border: none;
-  background-color: transparent;
-  color: var(--sbm-muted);
-  width: 44px;
-  padding: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.05rem;
-  transition: color 0.2s ease;
-}
-
-.sbm-password-toggle-btn:hover {
-  color: var(--sbm-blue) !important;
+  padding: 0.65rem 1rem;
 }
 
 /* Custom Checkbox Styling */
@@ -297,4 +316,27 @@
   background-color: #ffffff;
   box-shadow: var(--sbm-focus-glow);
   outline: none;
+}
+
+/* Responsive Media Queries (Desktops, Tablets & Mobile) */
+@media (max-width: 991px) {
+  .sbm-right-form-panel {
+    padding: 2.5rem 2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .sbm-right-form-panel {
+    padding: 2rem 1.25rem;
+  }
+
+  .sbm-form-title {
+    font-size: 1.65rem;
+  }
+
+  .sbm-otp-digit-input {
+    width: 38px;
+    height: 46px;
+    font-size: 1.15rem;
+  }
 }

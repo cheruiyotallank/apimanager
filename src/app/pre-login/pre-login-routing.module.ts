@@ -25,6 +25,10 @@ const routes: Routes = [
     loadComponent: () => import('./forgot-password/forgot-password.component').then(m => m.ForgotPasswordComponent)
   },
   {
+    path: 'force-change-password',
+    loadComponent: () => import('./force-change-password/force-change-password.component').then(m => m.ForceChangePasswordComponent)
+  },
+  {
     path: '**',
     redirectTo: 'login'
   }

@@ -308,8 +308,9 @@ Implements 2-column split card layout matching the requested design:
           />
         </div>
 
-        <!-- VERIFY SUBMIT BUTTON -->
+        <!-- VERIFY / PROCEED BUTTON -->
         <button
+          *ngIf="!isRegistrationComplete"
           type="button"
           class="sbm-pill-button mb-3"
           (click)="verifyEmailOtp()"
@@ -317,8 +318,18 @@ Implements 2-column split card layout matching the requested design:
           id="sbm-verify-email-button"
         >
           <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-          <span *ngIf="!isSubmitting">Verify Code & Continue</span>
+          <span *ngIf="!isSubmitting">Verify Code & Complete Registration</span>
           <span *ngIf="isSubmitting">VERIFYING...</span>
+        </button>
+
+        <button
+          *ngIf="isRegistrationComplete"
+          type="button"
+          class="sbm-pill-button mb-3"
+          (click)="navigateToLogin()"
+          id="sbm-proceed-login-button"
+        >
+          <span>PROCEED TO LOGIN <i class="bi bi-arrow-right-circle-fill ms-1"></i></span>
         </button>
 
         <!-- RESEND & BACK ACTIONS -->
@@ -326,7 +337,7 @@ Implements 2-column split card layout matching the requested design:
           <button type="button" class="btn btn-link sbm-link-text p-0 border-0" (click)="backToRegisterForm()">
             <i class="bi bi-arrow-left me-1"></i> Back to Form
           </button>
-          <button type="button" class="btn btn-link sbm-link-text p-0 border-0" (click)="resendEmailOtp()">
+          <button *ngIf="!isRegistrationComplete" type="button" class="btn btn-link sbm-link-text p-0 border-0" (click)="resendEmailOtp()">
             <i class="bi bi-arrow-clockwise me-1"></i> Resend Code
           </button>
         </div>
@@ -341,149 +352,10 @@ Implements 2-column split card layout matching the requested design:
 
       </ng-container>
 
-
-      <!-- STEP 3: FORCE CHANGE PASSWORD (OLD, NEW & CONFIRM PASSWORD) -->
-      <ng-container *ngIf="step === 'SET_PASSWORD'">
-
-        <div class="sbm-form-header-group text-center mb-3" id="sbm-force-password-header">
-          <div class="sbm-otp-icon-badge mb-2 mx-auto">
-            <i class="bi bi-shield-lock-fill text-primary fs-2"></i>
-          </div>
-          <h2 class="sbm-form-title" id="sbm-force-password-title">
-            <span class="sbm-brand-highlight">Force</span> Change Password
-          </h2>
-          <p class="sbm-form-subtitle" id="sbm-force-password-subtitle">
-            Enter the temporary password sent to your email as your Old Password, then set a new password.
-          </p>
-        </div>
-
-        <!-- FEEDBACK BANNER -->
-        <div *ngIf="errorMessage" class="alert alert-danger sbm-custom-alert d-flex align-items-center mb-2 py-1 px-3" role="alert" id="sbm-password-error-alert">
-          <i class="bi bi-exclamation-triangle-fill me-2 fs-6 flex-shrink-0"></i>
-          <div class="small">{{ errorMessage }}</div>
-        </div>
-
-        <div *ngIf="successMessage" class="alert alert-success sbm-custom-alert d-flex align-items-center mb-2 py-1 px-3" role="alert" id="sbm-password-success-alert">
-          <i class="bi bi-check-circle-fill me-2 fs-6 flex-shrink-0"></i>
-          <div class="small">{{ successMessage }}</div>
-        </div>
-
-        <!-- FORCE CHANGE PASSWORD FORM -->
-        <form (ngSubmit)="onForceChangePasswordSubmit()" id="sbm-force-password-form" novalidate>
-
-          <!-- 1. OLD PASSWORD FIELD -->
-          <div class="mb-2" id="sbm-old-password-group">
-            <div class="input-group sbm-custom-input-group position-relative">
-              <span class="input-group-text sbm-input-icon-box">
-                <i class="bi bi-key text-muted"></i>
-              </span>
-              <input
-                [type]="isOldPasswordVisible ? 'text' : 'password'"
-                class="form-control sbm-input-field pe-5"
-                id="register-oldPassword"
-                name="oldPassword"
-                placeholder="Old / Temporary Password (from email)"
-                [(ngModel)]="passwordData.oldPassword"
-                [disabled]="isSubmitting"
-                required
-              />
-              <button
-                type="button"
-                class="btn btn-link position-absolute top-50 end-0 translate-middle-y text-muted pe-3 border-0 shadow-none z-3"
-                (click)="toggleOldPasswordVisibility()"
-                [disabled]="isSubmitting"
-                title="Toggle old password visibility"
-              >
-                <i class="bi" [ngClass]="isOldPasswordVisible ? 'bi-eye-slash-fill' : 'bi-eye-fill'"></i>
-              </button>
-            </div>
-          </div>
-
-          <!-- 2. NEW PASSWORD FIELD -->
-          <div class="mb-2" id="sbm-new-password-group">
-            <div class="input-group sbm-custom-input-group position-relative">
-              <span class="input-group-text sbm-input-icon-box">
-                <i class="bi bi-lock text-muted"></i>
-              </span>
-              <input
-                [type]="isNewPasswordVisible ? 'text' : 'password'"
-                class="form-control sbm-input-field pe-5"
-                id="register-newPassword"
-                name="newPassword"
-                placeholder="New Password (Min 8 characters)"
-                [(ngModel)]="passwordData.newPassword"
-                [disabled]="isSubmitting"
-                required
-              />
-              <button
-                type="button"
-                class="btn btn-link position-absolute top-50 end-0 translate-middle-y text-muted pe-3 border-0 shadow-none z-3"
-                (click)="toggleNewPasswordVisibility()"
-                [disabled]="isSubmitting"
-                title="Toggle new password visibility"
-              >
-                <i class="bi" [ngClass]="isNewPasswordVisible ? 'bi-eye-slash-fill' : 'bi-eye-fill'"></i>
-              </button>
-            </div>
-          </div>
-
-          <!-- 3. CONFIRM NEW PASSWORD FIELD -->
-          <div class="mb-3" id="sbm-confirm-password-group">
-            <div class="input-group sbm-custom-input-group position-relative">
-              <span class="input-group-text sbm-input-icon-box">
-                <i class="bi bi-shield-check text-muted"></i>
-              </span>
-              <input
-                [type]="isConfirmPasswordVisible ? 'text' : 'password'"
-                class="form-control sbm-input-field pe-5"
-                id="register-confirmPassword"
-                name="confirmPassword"
-                placeholder="Confirm New Password"
-                [(ngModel)]="passwordData.confirmPassword"
-                [disabled]="isSubmitting"
-                required
-              />
-              <button
-                type="button"
-                class="btn btn-link position-absolute top-50 end-0 translate-middle-y text-muted pe-3 border-0 shadow-none z-3"
-                (click)="toggleConfirmPasswordVisibility()"
-                [disabled]="isSubmitting"
-                title="Toggle confirm password visibility"
-              >
-                <i class="bi" [ngClass]="isConfirmPasswordVisible ? 'bi-eye-slash-fill' : 'bi-eye-fill'"></i>
-              </button>
-            </div>
-          </div>
-
-          <!-- SUBMIT BUTTON -->
-          <button
-            type="submit"
-            class="sbm-pill-button mb-3"
-            [disabled]="isSubmitting"
-            id="sbm-submit-force-password-button"
-          >
-            <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-            <span *ngIf="!isSubmitting">
-              CHANGE PASSWORD & CONTINUE <i class="bi bi-check-circle-fill ms-1"></i>
-            </span>
-            <span *ngIf="isSubmitting">UPDATING...</span>
-          </button>
-
-          <!-- BOTTOM FOOTER LINKS -->
-          <hr class="sbm-footer-divider my-3" />
-          <div class="sbm-footer-links d-flex justify-content-center align-items-center gap-4 text-center">
-            <a href="javascript:void(0)" class="sbm-footer-link">FAQs</a>
-            <a href="javascript:void(0)" class="sbm-footer-link">Policy</a>
-            <a href="javascript:void(0)" class="sbm-footer-link">Terms</a>
-          </div>
-
-        </form>
-
-      </ng-container>
-
     </div>
 
   </div>
 
 </div>
+
 

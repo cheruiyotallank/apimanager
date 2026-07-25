@@ -15,6 +15,8 @@ export interface ApiResponse<T = any> {
   data?: T;
   errorCode?: string;
   timestamp?: string;
+  isFirstTimeLogin?: boolean;
+  forcePasswordChange?: boolean;
 }
 
 /**
@@ -92,6 +94,8 @@ export interface AuthResponse {
   refreshToken?: string;
   expiresIn?: number;
   tokenType?: string;
+  isFirstTimeLogin?: boolean;
+  forcePasswordChange?: boolean;
   user: UserProfile;
 }
 

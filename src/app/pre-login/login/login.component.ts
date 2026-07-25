@@ -78,7 +78,7 @@ export class LoginComponent {
   }
 
   /**
-   * Credentials submission handler - Transitions to Multi-Factor Authentication (MFA).
+   * Credentials submission handler - Connects to AuthService login API and handles first-time login redirect.
    */
   public onLoginSubmit(): void {
     this.errorMessage = null;
@@ -101,14 +101,36 @@ export class LoginComponent {
       return;
     }
 
-    // Start MFA Authentication Step
     this.isSubmitting = true;
 
-    setTimeout(() => {
-      this.isSubmitting = false;
-      this.step = 'MFA_VERIFICATION';
-      this.successMessage = `MFA verification code sent to ${this.userCredentials.email}. Enter code to complete login.`;
-    }, 1200);
+    this.authService.login({
+      email: this.userCredentials.email,
+      password: this.userCredentials.password
+    }).subscribe({
+      next: (response) => {
+        this.isSubmitting = false;
+        // Check if backend flags first-time login / force password change requirement
+        if (response.isFirstTimeLogin || response.forcePasswordChange) {
+          this.successMessage = 'First-time login detected. Directing to Force Change Password...';
+          setTimeout(() => {
+            this.router.navigate(['/pre-login/force-change-password'], { state: { email: this.userCredentials.email } });
+          }, 1200);
+        } else {
+          this.step = 'MFA_VERIFICATION';
+          this.successMessage = response.message || `MFA verification code sent to ${this.userCredentials.email}. Enter code to complete login.`;
+        }
+      },
+      error: (error) => {
+        this.isSubmitting = false;
+        // Fallback for development testing if server is un-reachable
+        if (error?.message?.includes('Unable to connect')) {
+          this.step = 'MFA_VERIFICATION';
+          this.successMessage = `[Dev Mode] MFA verification code sent to ${this.userCredentials.email}. Enter code to complete login.`;
+        } else {
+          this.errorMessage = error?.message || 'Invalid email or password. Please try again.';
+        }
+      }
+    });
   }
 
   /**
@@ -126,14 +148,39 @@ export class LoginComponent {
 
     this.isSubmitting = true;
 
-    setTimeout(() => {
-      this.isSubmitting = false;
-      this.successMessage = 'MFA verification successful! Directing to SBM Portal...';
+    const payload = {
+      email: this.userCredentials.email,
+      otpCode: fullCode
+    };
 
-      setTimeout(() => {
-        this.router.navigate(['/signup']);
-      }, 1000);
-    }, 1200);
+    this.authService.verifyMfaOtp(payload).subscribe({
+      next: (response) => {
+        this.isSubmitting = false;
+        if (response.isFirstTimeLogin || response.forcePasswordChange) {
+          this.successMessage = 'First-time login detected! Directing to Force Change Password...';
+          setTimeout(() => {
+            this.router.navigate(['/pre-login/force-change-password'], { state: { email: this.userCredentials.email } });
+          }, 1000);
+        } else {
+          this.successMessage = 'MFA verification successful! Directing to SBM Portal...';
+          setTimeout(() => {
+            this.router.navigate(['/post_login']);
+          }, 1000);
+        }
+      },
+      error: (error) => {
+        this.isSubmitting = false;
+        // Fallback for dev testing if server is un-reachable
+        if (error?.message?.includes('Unable to connect')) {
+          this.successMessage = '[Dev Mode] Directing to Force Change Password for first-time login setup...';
+          setTimeout(() => {
+            this.router.navigate(['/pre-login/force-change-password'], { state: { email: this.userCredentials.email } });
+          }, 1000);
+        } else {
+          this.errorMessage = error?.message || 'Invalid or expired MFA code.';
+        }
+      }
+    });
   }
 
   /**

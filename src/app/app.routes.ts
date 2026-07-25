@@ -4,37 +4,29 @@ import { Routes } from '@angular/router';
  * ============================================================================
  * APPLICATION ROUTING DEFINITION (app.routes.ts)
  * ============================================================================
- * Maps URL paths to specific page components.
- * - 'login': Renders the LoginComponent
- * - '': Redirects root visits automatically to 'login'
+ * Maps URL paths to lazy-loaded modules for better performance.
+ * - '': Redirects root visits automatically to pre-login
+ * - 'pre-login': Lazy loads PreLoginModule (login, signup, forgot-password)
+ * - 'post_login': Lazy loads PostLoginModule (dashboard and authenticated features)
  * ============================================================================
  */
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: 'login',
+    redirectTo: 'pre-login',
     pathMatch: 'full'
   },
   {
-    path: 'login',
-    loadComponent: () => import('./pre-login/login/login.component').then(m => m.LoginComponent)
+    path: 'pre-login',
+    loadChildren: () => import('./pre-login/pre-login.module').then(m => m.PreLoginModule)
   },
   {
-    path: 'signup',
-    loadComponent: () => import('./pre-login/register/register.component').then(m => m.RegisterComponent)
-  },
-  {
-    path: 'register',
-    redirectTo: 'signup',
-    pathMatch: 'full'
-  },
-  {
-    path: 'forgot-password',
-    loadComponent: () => import('./pre-login/forgot-password/forgot-password.component').then(m => m.ForgotPasswordComponent)
+    path: 'post_login',
+    loadChildren: () => import('./post-login/post-login.module').then(m => m.PostLoginModule)
   },
   {
     path: '**',
-    redirectTo: 'login'
+    redirectTo: 'pre-login'
   }
 ];
 

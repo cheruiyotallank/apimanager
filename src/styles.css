@@ -36,9 +36,13 @@
    3. BASE RESET & BODY STYLING
    ========================================================================== */
 html, body {
-  height: 100%;
+  height: 100vh;
+  height: 100dvh;
+  max-height: 100vh;
+  max-height: 100dvh;
   margin: 0;
   padding: 0;
+  overflow: hidden;
   font-family: var(--sbm-font-family);
   background-color: #f1f5f9;
   color: var(--sbm-ink);
@@ -51,32 +55,38 @@ html, body {
 
 /* Full Screen Centered Container Wrapper with Vibrant Mesh Backdrop */
 .sbm-page-wrapper {
-  min-height: 100vh;
-  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  max-height: 100vh;
+  max-height: 100dvh;
+  width: 100vw;
   display: flex;
   align-items: center;
   justify-content: center;
   background: radial-gradient(circle at 10% 20%, #eaf7fc 0%, #dbeafe 45%, #c7d2fe 90%);
-  padding: 2rem 1rem;
+  padding: clamp(0.5rem, 2.5vh, 1.5rem) clamp(0.5rem, 2vw, 1.5rem);
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 /* Split-Screen Modal Container with Multi-Layer Ambient Elevation */
 .sbm-split-card-container {
   background-color: var(--sbm-card);
-  border-radius: 24px;
+  border-radius: clamp(16px, 2.5vh, 24px);
   box-shadow: var(--sbm-card-shadow);
   border: 1px solid rgba(255, 255, 255, 0.8);
   overflow: hidden;
   width: 100%;
   max-width: 980px;
-  min-height: 580px;
+  height: min(94vh, 660px);
+  max-height: calc(100vh - 1.5rem);
   display: flex;
   flex-direction: row;
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .sbm-split-card-container:hover {
-  transform: translateY(-4px);
+  transform: translateY(-2px);
   box-shadow: 0 40px 85px -12px rgba(6, 33, 77, 0.4), 0 24px 48px -18px rgba(0, 0, 0, 0.35);
 }
 
@@ -84,7 +94,9 @@ html, body {
 @media (max-width: 768px) {
   .sbm-split-card-container {
     flex-direction: column;
-    max-width: 480px;
+    max-width: 500px;
+    height: calc(100vh - 1rem);
+    max-height: calc(100vh - 1rem);
   }
 }
 
@@ -128,9 +140,9 @@ html, body {
 /* Rich Gradient Pill Submit Button */
 .sbm-pill-button {
   width: 100%;
-  padding: 0.9rem 2rem;
+  padding: clamp(0.6rem, 1.4vh, 0.85rem) 1.5rem;
   font-family: var(--sbm-font-family);
-  font-size: 0.95rem;
+  font-size: clamp(0.85rem, 1.2vh, 0.95rem);
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -192,13 +204,13 @@ html, body {
   border: 0;
   border-top: 1px solid var(--sbm-border);
   opacity: 0.7;
-  margin-top: 1.75rem;
-  margin-bottom: 1.25rem;
+  margin-top: clamp(0.5rem, 1.5vh, 1.25rem);
+  margin-bottom: clamp(0.35rem, 1vh, 0.85rem);
 }
 
 .sbm-footer-link {
   color: var(--sbm-navy);
-  font-size: 0.9rem;
+  font-size: clamp(0.78rem, 1.1vh, 0.88rem);
   font-weight: 600;
   text-decoration: underline;
   text-underline-offset: 4px;
@@ -208,3 +220,16 @@ html, body {
 .sbm-footer-link:hover {
   color: var(--sbm-blue);
 }
+
+/* Responsive Scaling for Low Viewport Heights */
+@media (max-height: 750px) {
+  .sbm-page-wrapper {
+    padding: 0.5rem;
+  }
+
+  .sbm-split-card-container {
+    height: calc(100vh - 1rem);
+    max-height: calc(100vh - 1rem);
+  }
+}
+

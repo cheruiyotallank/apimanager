@@ -107,17 +107,17 @@ export class LoginComponent {
       email: this.userCredentials.email,
       password: this.userCredentials.password
     }).subscribe({
-      next: (response) => {
+      next: (response: any) => {
         this.isSubmitting = false;
         // Check if backend flags first-time login / force password change requirement
-        if (response.isFirstTimeLogin || response.forcePasswordChange) {
+        if (response?.isFirstTimeLogin || response?.forcePasswordChange || response?.data?.isFirstTimeLogin || response?.data?.forcePasswordChange) {
           this.successMessage = 'First-time login detected. Directing to Force Change Password...';
           setTimeout(() => {
             this.router.navigate(['/pre-login/force-change-password'], { state: { email: this.userCredentials.email } });
           }, 1200);
         } else {
           this.step = 'MFA_VERIFICATION';
-          this.successMessage = response.message || `MFA verification code sent to ${this.userCredentials.email}. Enter code to complete login.`;
+          this.successMessage = response?.message || `MFA verification code sent to ${this.userCredentials.email}. Enter code to complete login.`;
         }
       },
       error: (error) => {
@@ -154,9 +154,9 @@ export class LoginComponent {
     };
 
     this.authService.verifyMfaOtp(payload).subscribe({
-      next: (response) => {
+      next: (response: any) => {
         this.isSubmitting = false;
-        if (response.isFirstTimeLogin || response.forcePasswordChange) {
+        if (response?.isFirstTimeLogin || response?.forcePasswordChange || response?.data?.isFirstTimeLogin || response?.data?.forcePasswordChange) {
           this.successMessage = 'First-time login detected! Directing to Force Change Password...';
           setTimeout(() => {
             this.router.navigate(['/pre-login/force-change-password'], { state: { email: this.userCredentials.email } });

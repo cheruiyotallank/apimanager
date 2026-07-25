@@ -74,6 +74,17 @@ export interface PasswordResetRequest {
 }
 
 /**
+ * Force Change Password request payload (First-time user password setup)
+ */
+export interface ForceChangePasswordRequest {
+  email: string;
+  oldPassword?: string;
+  newPassword?: string;
+  confirmPassword?: string;
+}
+
+
+/**
  * Authentication Token & Session payload
  */
 export interface AuthResponse {

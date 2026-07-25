@@ -148,11 +148,19 @@
 .sbm-right-form-panel {
   flex: 1.1;
   background-color: var(--sbm-card);
-  padding: clamp(1rem, 2.5vh, 2.2rem) clamp(1rem, 2.5vw, 2.5rem);
+  padding: clamp(0.8rem, 2vh, 1.8rem) clamp(1rem, 2.5vw, 2.2rem);
   display: flex;
   flex-direction: column;
   justify-content: center;
   overflow-y: auto;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.sbm-right-form-panel::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
 }
 
 .sbm-form-header-group {

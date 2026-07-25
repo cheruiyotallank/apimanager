@@ -9,6 +9,7 @@ import {
   EmailOtpVerifyRequest,
   MfaOtpVerifyRequest,
   PasswordResetRequest,
+  ForceChangePasswordRequest,
   AuthResponse,
   ApiResponse,
   UserProfile
@@ -19,8 +20,8 @@ import {
  * SBM BANK AUTHENTICATION SERVICE (core/services/auth.service.ts)
  * ============================================================================
  * Handles REST API endpoints for user authentication, developer registration,
- * 6-digit email OTP verification, 6-digit MFA verification, password reset,
- * and JWT local session storage.
+ * 6-digit email OTP verification, 6-digit MFA verification, force password change,
+ * password reset, and JWT local session storage.
  * ============================================================================
  */
 @Injectable({
@@ -59,6 +60,13 @@ export class AuthService {
    */
   public verifyEmailOtp(payload: EmailOtpVerifyRequest): Observable<ApiResponse> {
     return this.apiService.post<ApiResponse>('/auth/verify-email', payload);
+  }
+
+  /**
+   * Submits Force Change Password (Old Password, New Password, Confirm New Password).
+   */
+  public forceChangePassword(payload: ForceChangePasswordRequest): Observable<ApiResponse> {
+    return this.apiService.post<ApiResponse>('/auth/change-password', payload);
   }
 
   /**

@@ -1,0 +1,224 @@
+/* ==========================================================================
+   SBM BANK PROFILE CENTER STYLES (profile.component.css)
+   ========================================================================== */
+
+.sbm-profile-layout {
+  height: 100vh;
+  max-height: 100vh;
+  background-color: #f8fafc;
+  color: var(--sbm-ink, #06132b);
+  display: flex;
+  flex-direction: column;
+  font-family: var(--sbm-font-family, 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif);
+  overflow: hidden;
+}
+
+/* Header Bar */
+.sbm-header-bar {
+  height: 66px;
+  min-height: 66px;
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--sbm-border, #d8e3ee);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1.75rem;
+  z-index: 1000;
+  box-shadow: 0 4px 20px rgba(6, 33, 77, 0.04);
+}
+
+.sbm-brand-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.sbm-header-logo-img {
+  height: 34px;
+  max-width: 125px;
+  object-fit: contain;
+}
+
+.brand-divider {
+  width: 1.5px;
+  height: 24px;
+  background: var(--sbm-border, #d8e3ee);
+  margin: 0 0.2rem;
+}
+
+.brand-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+}
+
+.brand-title {
+  font-weight: 800;
+  font-size: 0.92rem;
+  letter-spacing: 0.08em;
+  color: var(--sbm-navy, #06214d);
+}
+
+.brand-subtitle {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  color: var(--sbm-blue, #1aa3d8);
+}
+
+.env-pill {
+  font-size: 0.65rem;
+  font-weight: 700;
+  background: var(--sbm-sky, #eaf7fc);
+  color: #0284c7;
+  padding: 3px 10px;
+  border-radius: 20px;
+  border: 1px solid rgba(26, 163, 216, 0.25);
+  letter-spacing: 0.05em;
+}
+
+.user-profile-chip {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 3px 12px 3px 3px;
+  background: #ffffff;
+  border: 1px solid var(--sbm-border, #d8e3ee);
+  border-radius: 50px;
+}
+
+.user-avatar-circle {
+  width: 32px;
+  height: 32px;
+  background: linear-gradient(135deg, var(--sbm-navy, #06214d) 0%, var(--sbm-blue, #1aa3d8) 100%);
+  color: #ffffff;
+  border-radius: 50%;
+  font-weight: 800;
+  font-size: 0.82rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.user-name {
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: var(--sbm-navy, #06214d);
+  line-height: 1.1;
+}
+
+.user-role {
+  font-size: 0.68rem;
+  color: #64748b;
+}
+
+/* Scroll Container */
+.sbm-profile-body {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-bottom: 3rem;
+  scroll-behavior: smooth;
+}
+
+.sbm-profile-body::-webkit-scrollbar {
+  width: 7px;
+}
+
+.sbm-profile-body::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+.sbm-profile-body::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 10px;
+}
+
+/* Hero Banner Card */
+.profile-hero-card {
+  background: linear-gradient(135deg, #06214d 0%, #0c387d 100%);
+}
+
+.profile-hero-avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  font-weight: 800;
+  font-size: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+}
+
+/* Sub-Nav Tabs */
+.profile-tab-btn {
+  font-size: 0.82rem;
+  font-weight: 700;
+  border-radius: 50px;
+  padding: 6px 16px;
+  border: 1px solid var(--sbm-border, #d8e3ee);
+  background: #ffffff;
+  color: #475569;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.profile-tab-btn:hover {
+  background: var(--sbm-sky, #eaf7fc);
+  color: var(--sbm-navy, #06214d);
+  border-color: var(--sbm-blue, #1aa3d8);
+}
+
+.profile-tab-btn.active {
+  background: linear-gradient(135deg, var(--sbm-blue, #1aa3d8) 0%, var(--sbm-navy, #06214d) 100%);
+  color: #ffffff;
+  border-color: transparent;
+  box-shadow: 0 4px 12px rgba(26, 163, 216, 0.35);
+}
+
+/* General SBM Card */
+.sbm-card {
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1px solid var(--sbm-border, #d8e3ee);
+  box-shadow: 0 6px 20px -4px rgba(6, 33, 77, 0.05);
+}
+
+.sbm-custom-input {
+  border-radius: 8px;
+  font-size: 0.85rem;
+  padding: 0.55rem 0.85rem;
+  border-color: #cbd5e1;
+}
+
+.sbm-custom-input:focus {
+  border-color: var(--sbm-blue, #1aa3d8);
+  box-shadow: 0 0 0 3px rgba(26, 163, 216, 0.15);
+}
+
+.custom-progress {
+  background-color: #e2e8f0;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.bg-gradient-primary {
+  background: linear-gradient(90deg, #1aa3d8 0%, #06214d 100%);
+}
+
+.sbm-toast-notification {
+  background: var(--sbm-navy, #06214d);
+  color: #ffffff;
+  padding: 0.65rem 1.1rem;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+  box-shadow: 0 8px 20px rgba(6, 33, 77, 0.2);
+  font-size: 0.85rem;
+}

@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
-import { tap, catchError } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { tap } from 'rxjs/operators';
 import { ApiService } from './api.service';
+import { API_ENDPOINTS } from '../config/api-endpoints.config';
 import {
   LoginRequest,
   RegisterRequest,
@@ -21,7 +22,7 @@ import {
  * ============================================================================
  * Handles REST API endpoints for user authentication, developer registration,
  * 6-digit email OTP verification, 6-digit MFA verification, force password change,
- * password reset, and JWT local session storage.
+ * password reset, and JWT local session storage using centralized endpoints config.
  * ============================================================================
  */
 @Injectable({
@@ -38,7 +39,7 @@ export class AuthService {
    * Submits user credentials for login authentication.
    */
   public login(credentials: LoginRequest): Observable<ApiResponse<AuthResponse>> {
-    return this.apiService.post<ApiResponse<AuthResponse>>('/auth/login', credentials)
+    return this.apiService.post<ApiResponse<AuthResponse>>(API_ENDPOINTS.AUTH.LOGIN, credentials)
       .pipe(
         tap(response => {
           if (response.success && response.data) {
@@ -52,28 +53,28 @@ export class AuthService {
    * Submits developer profile registration.
    */
   public register(payload: RegisterRequest): Observable<ApiResponse<RegisterResponse>> {
-    return this.apiService.post<ApiResponse<RegisterResponse>>('/auth/register', payload);
+    return this.apiService.post<ApiResponse<RegisterResponse>>(API_ENDPOINTS.AUTH.REGISTER, payload);
   }
 
   /**
    * Verifies 6-digit Email OTP verification code.
    */
   public verifyEmailOtp(payload: EmailOtpVerifyRequest): Observable<ApiResponse> {
-    return this.apiService.post<ApiResponse>('/auth/verify-email', payload);
+    return this.apiService.post<ApiResponse>(API_ENDPOINTS.AUTH.VERIFY_EMAIL, payload);
   }
 
   /**
    * Submits Force Change Password (Old Password, New Password, Confirm New Password).
    */
   public forceChangePassword(payload: ForceChangePasswordRequest): Observable<ApiResponse> {
-    return this.apiService.post<ApiResponse>('/auth/change-password', payload);
+    return this.apiService.post<ApiResponse>(API_ENDPOINTS.AUTH.CHANGE_PASSWORD, payload);
   }
 
   /**
    * Verifies 6-digit MFA security OTP code.
    */
   public verifyMfaOtp(payload: MfaOtpVerifyRequest): Observable<ApiResponse<AuthResponse>> {
-    return this.apiService.post<ApiResponse<AuthResponse>>('/auth/verify-mfa', payload)
+    return this.apiService.post<ApiResponse<AuthResponse>>(API_ENDPOINTS.AUTH.VERIFY_MFA, payload)
       .pipe(
         tap(response => {
           if (response.success && response.data) {
@@ -87,14 +88,14 @@ export class AuthService {
    * Requests a password reset link for forgotten password.
    */
   public requestPasswordReset(payload: PasswordResetRequest): Observable<ApiResponse> {
-    return this.apiService.post<ApiResponse>('/auth/forgot-password', payload);
+    return this.apiService.post<ApiResponse>(API_ENDPOINTS.AUTH.FORGOT_PASSWORD, payload);
   }
 
   /**
    * Resends Email or MFA OTP code.
    */
   public resendOtp(email: string, type: 'EMAIL' | 'MFA'): Observable<ApiResponse> {
-    return this.apiService.post<ApiResponse>('/auth/resend-otp', { email, type });
+    return this.apiService.post<ApiResponse>(API_ENDPOINTS.AUTH.RESEND_OTP, { email, type });
   }
 
   /**

@@ -36,29 +36,36 @@
    3. BASE RESET & BODY STYLING
    ========================================================================== */
 html, body {
-  height: 100vh;
-  height: 100dvh;
-  max-height: 100vh;
-  max-height: 100dvh;
+  min-height: 100vh;
   margin: 0;
   padding: 0;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
   font-family: var(--sbm-font-family);
-  background-color: #f1f5f9;
+  background-color: #f8fafc;
   color: var(--sbm-ink);
   -webkit-font-smoothing: antialiased;
 }
 
-/* Hide scrollbars globally across all browser engines */
-* {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
+/* Custom styled smooth scrollbar for containers */
+.sbm-scroll-container::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+  display: block !important;
 }
 
-::-webkit-scrollbar {
-  display: none !important;
-  width: 0 !important;
-  height: 0 !important;
+.sbm-scroll-container::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 10px;
+}
+
+.sbm-scroll-container::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 10px;
+}
+
+.sbm-scroll-container::-webkit-scrollbar-thumb:hover {
+  background: #1aa3d8;
 }
 
 /* ==========================================================================

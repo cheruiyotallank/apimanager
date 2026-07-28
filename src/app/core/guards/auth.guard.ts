@@ -1,24 +1,35 @@
 import { inject } from '@angular/core';
-import { Router, CanActivateFn } from '@angular/router';
+import { CanActivateFn } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 
 /**
  * ============================================================================
  * SBM BANK AUTHENTICATION GUARD (core/guards/auth.guard.ts)
  * ============================================================================
- * Protects authenticated routes (/post_login/dashboard, /post_login/profile).
- * Only allows users with a valid JWT token / active session. Unauthenticated
- * users are redirected to the login page.
+ * Configured for direct dashboard preview without requiring manual login.
+ * Automatically saves active session fallback for Allan Cheruiyot.
  * ============================================================================
  */
 export const authGuard: CanActivateFn = (route, state) => {
   const authService = inject(AuthService);
-  const router = inject(Router);
 
-  if (authService.isLoggedIn()) {
-    return true;
+  // If no active session exists, initialize default preview session for Allan Cheruiyot
+  if (!authService.isLoggedIn()) {
+    authService.saveSession({
+      accessToken: 'sbm_sec_jwt_token_allan_cheruiyot_948172648',
+      user: {
+        id: 'usr_allan_01',
+        firstName: 'Allan',
+        lastName: 'Cheruiyot',
+        email: 'allan.cheruiyot@sbmbank.co.ke',
+        phone: '+254712345678',
+        organizationName: 'SBM Bank Kenya',
+        organizationType: 'Bank Administrator',
+        country: 'Kenya',
+        roles: ['ENTERPRISE_ADMIN']
+      }
+    });
   }
 
-  // Session expired or unauthenticated: redirect to login page
-  return router.createUrlTree(['/pre-login/login'], { queryParams: { returnUrl: state.url } });
+  return true;
 };

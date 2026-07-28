@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { SbmBankApiService } from '../../core/services/sbm-bank-api.service';
 
 export interface WebhookEventLog {
@@ -95,12 +95,36 @@ export class SandboxComponent implements OnInit {
 
   constructor(
     private router: Router,
+    private route: ActivatedRoute,
     private sbmApiService: SbmBankApiService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
+    // Check for API query parameter to load specific keys
+    this.route.queryParams.subscribe(params => {
+      const apiType = params['api'];
+      if (apiType === 'safaricom') {
+        // Load Safaricom-specific sandbox keys
+        this.requestParams.consumerKey = 'sbm_sbx_safaricom_client_948172648192';
+        this.requestParams.consumerSecret = 'sbm_sbx_safaricom_sec_84719284719284719283719284719283';
+        this.requestParams.businessShortCode = '174379';
+        this.requestParams.passkey = 'bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919';
+      }
+    });
     this.updateResponseTerminal();
     this.updateCodeSnippet();
+  }
+
+  public launchGoLiveWizard(): void {
+    this.router.navigate(['/post_login/go-live']);
+  }
+
+  public downloadOpenApiSpec(): void {
+    this.triggerToast('Downloading official SBM Bank Safaricom M-Pesa OpenAPI 3.0 Specification (JSON)');
+  }
+
+  public viewOpenApiSpec(): void {
+    this.triggerToast('Viewing OpenAPI 3.0 Documentation Schema for SBM Bank Kenya APIs');
   }
 
   /**
@@ -188,7 +212,7 @@ export class SandboxComponent implements OnInit {
           // Generate a simulated incoming Webhook callback log event
           const checkoutId = 'ws_CO_28072026_' + Math.floor(10000000 + Math.random() * 90000000);
           const receipt = 'NLJ' + Math.floor(1000000 + Math.random() * 9000000);
-          
+
           const newWebhookEvent: WebhookEventLog = {
             id: 'wh_evt_' + (this.webhookLogs.length + 1),
             timestamp: new Date().toISOString().replace('T', ' ').substring(0, 19),

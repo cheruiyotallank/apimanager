@@ -136,23 +136,48 @@
   border-radius: 10px;
 }
 
-/* Hero Banner Card */
+/* SBM Sky Theme Hero Card (#eaf7fc) */
 .profile-hero-card {
-  background: linear-gradient(135deg, #06214d 0%, #0c387d 100%);
+  background: linear-gradient(135deg, #eaf7fc 0%, #dbeafe 100%);
+  border: 1.5px solid #bbe1f3 !important;
+  box-shadow: 0 8px 24px -4px rgba(26, 163, 216, 0.15) !important;
 }
 
 .profile-hero-avatar {
-  width: 52px;
-  height: 52px;
+  width: 56px;
+  height: 56px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.2);
+  background: linear-gradient(135deg, #06214d 0%, #1aa3d8 100%);
   color: #ffffff;
   font-weight: 800;
-  font-size: 1.25rem;
+  font-size: 1.3rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 2px solid rgba(255, 255, 255, 0.5);
+  border: 2.5px solid #ffffff;
+  box-shadow: 0 4px 12px rgba(6, 33, 77, 0.15);
+}
+
+.text-navy {
+  color: #06214d !important;
+}
+
+.hero-credential-pill {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #06214d;
+  background: #ffffff;
+  padding: 0.3rem 0.75rem;
+  border-radius: 50rem;
+  border: 1px solid #cceafd;
+  box-shadow: 0 2px 6px rgba(6, 33, 77, 0.04);
+  display: inline-flex;
+  align-items: center;
+}
+
+.pill-dot {
+  color: #1aa3d8;
+  font-weight: bold;
 }
 
 /* Sub-Nav Tabs */

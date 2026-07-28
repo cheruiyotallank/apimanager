@@ -62,7 +62,7 @@ export class DashboardComponent implements OnInit {
     private router: Router,
     private sbmApiService: SbmBankApiService,
     private authService: AuthService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     // If logged in via backend auth session, load user details
@@ -271,9 +271,8 @@ export class DashboardComponent implements OnInit {
   // Action for "More ->" button on each card:
   handleCardMore(cat: ApiCategory): void {
     if (cat.id === 'safaricom') {
-      this.selectedCategoryModal = cat;
-      this.activeModalTab = 'endpoints';
-      this.testedEndpointResult = null;
+      // Navigate to sandbox page with Safaricom API keys
+      this.router.navigate(['/post_login/sandbox'], { queryParams: { api: 'safaricom' } });
     } else {
       this.triggerToast(`${cat.name} Coming Soon!`);
     }

@@ -1,5 +1,5 @@
 <div class="sbm-dashboard-layout">
-  
+
   <!-- ========================================================================= -->
   <!-- TOP NAVIGATION HEADER (Sticky Header: SBM Logo | Search | Profile Dropdown) -->
   <!-- ========================================================================= -->
@@ -7,12 +7,7 @@
     <div class="header-left d-flex align-items-center gap-3">
       <!-- SBM Bank Logo -->
       <div class="sbm-brand-logo">
-        <img 
-          [src]="sbmLogoPath" 
-          (error)="onLogoError($event)" 
-          alt="SBM Bank Logo" 
-          class="sbm-header-logo-img"
-        />
+        <img [src]="sbmLogoPath" (error)="onLogoError($event)" alt="SBM Bank Logo" class="sbm-header-logo-img" />
         <div class="brand-divider"></div>
         <div class="brand-text">
           <span class="brand-title">API MANAGER</span>
@@ -25,12 +20,8 @@
     <div class="header-center">
       <div class="sbm-search-wrapper">
         <i class="bi bi-search search-icon"></i>
-        <input 
-          type="text" 
-          class="sbm-search-input" 
-          [(ngModel)]="searchQuery" 
-          placeholder="Search SBM Bank Kenya APIs, PesaLink, Safaricom..."
-        />
+        <input type="text" class="sbm-search-input" [(ngModel)]="searchQuery"
+          placeholder="Search SBM Bank Kenya APIs, PesaLink, Safaricom..." />
         <button *ngIf="searchQuery" class="clear-search-btn" (click)="searchQuery = ''">
           <i class="bi bi-x-lg"></i>
         </button>
@@ -39,30 +30,17 @@
 
     <!-- Right Controls & User Profile Dropdown -->
     <div class="header-right d-flex align-items-center gap-2">
-      
-      <button class="btn btn-outline-info btn-sm rounded-pill px-3 fw-bold" (click)="openSandboxPlayground()">
-        <i class="bi bi-box-seam-fill me-1"></i> Sandbox
-      </button>
 
-      <button class="btn btn-outline-success btn-sm rounded-pill px-3 fw-bold" (click)="openGoLiveConsole()">
-        <i class="bi bi-rocket-takeoff-fill me-1"></i> Go-Live
-      </button>
-
-      <button class="icon-nav-btn" title="System Status" (click)="triggerToast('System Status: Safaricom APIs Operational')">
+      <button class="icon-nav-btn" title="System Status"
+        (click)="triggerToast('System Status: Safaricom APIs Operational')">
         <i class="bi bi-bell-fill"></i>
         <span class="notification-dot"></span>
       </button>
 
-      <button class="icon-nav-btn" title="API Docs & Guide" (click)="triggerToast('Opening SBM Bank Developer Documentation')">
-        <i class="bi bi-journal-code"></i>
-      </button>
 
       <!-- USER PROFILE DROPDOWN WRAPPER (Opens on Hover / Click) -->
-      <div 
-        class="profile-dropdown-wrapper position-relative"
-        (mouseenter)="openProfileDropdown()"
-        (mouseleave)="closeProfileDropdown()"
-      >
+      <div class="profile-dropdown-wrapper position-relative" (mouseenter)="openProfileDropdown()"
+        (mouseleave)="closeProfileDropdown()">
         <!-- Profile Chip Button -->
         <div class="user-profile-chip" (click)="toggleProfileDropdown()">
           <div class="user-avatar-circle">{{ userProfile.avatar }}</div>
@@ -75,7 +53,7 @@
 
         <!-- STYLISH HOVER DROPDOWN MENU (Matching Uploaded Mockup Layout) -->
         <div class="profile-dropdown-menu" [class.show]="isProfileDropdownOpen">
-          
+
           <!-- Dropdown Header: User Details & Tier -->
           <div class="dropdown-header-box p-3 border-bottom">
             <div class="d-flex align-items-center gap-3">
@@ -95,16 +73,6 @@
 
           <!-- RECOMMENDED API MANAGER MENU ITEMS -->
           <div class="dropdown-body-items py-2">
-            
-            <div class="dropdown-item-row" (click)="openSandboxPlayground()">
-              <i class="bi bi-box-seam dropdown-item-icon text-info"></i>
-              <span class="dropdown-item-text text-info fw-bold">API Sandbox Playground</span>
-            </div>
-
-            <div class="dropdown-item-row" (click)="openGoLiveConsole()">
-              <i class="bi bi-rocket-takeoff dropdown-item-icon text-success"></i>
-              <span class="dropdown-item-text text-success fw-bold">Go-Live Production Wizard</span>
-            </div>
 
             <div class="dropdown-item-row" (click)="onDropdownItemClick('Credentials')">
               <i class="bi bi-shield-lock dropdown-item-icon"></i>
@@ -147,7 +115,7 @@
   <!-- ========================================================================= -->
   <main class="sbm-dashboard-body sbm-scroll-container">
     <div class="container-fluid px-4 px-lg-5 py-4">
-      
+
       <!-- Quick Pop-up Toast Alert -->
       <div *ngIf="showNotificationToast" class="sbm-toast-notification">
         <i class="bi bi-info-circle-fill me-2"></i>
@@ -159,7 +127,8 @@
       <div class="dashboard-header-banner mb-4 d-flex flex-wrap align-items-center justify-content-between gap-3">
         <div>
           <h4 class="dashboard-heading mb-1 fw-bold">SBM Bank Kenya API Portal</h4>
-          <p class="dashboard-subheading mb-0">Safaricom APIs are live for integration. Click <strong>More →</strong> to access details or test endpoints.</p>
+          <p class="dashboard-subheading mb-0">Safaricom APIs are live for integration. Click <strong>More →</strong> to
+            access details or test endpoints.</p>
         </div>
         <div class="d-flex align-items-center gap-2">
           <span class="badge bg-white text-dark border px-3 py-2 rounded-pill fw-bold shadow-sm">
@@ -180,14 +149,15 @@
 
       <!-- SPACIOUS 3 CARDS PER ROW GRID (col-12 col-md-6 col-lg-4) -->
       <div class="row g-4">
-        
+
         <div *ngFor="let cat of filteredCategories" class="col-12 col-md-6 col-lg-4 d-flex align-items-stretch">
-          
+
           <!-- Spacious Card -->
-          <div class="sbm-card sbm-spacious-card flex-fill d-flex flex-column" [style.border-top-color]="cat.accentColor" (click)="handleCardMore(cat)">
-            
+          <div class="sbm-card sbm-spacious-card flex-fill d-flex flex-column"
+            [style.border-top-color]="cat.accentColor" (click)="handleCardMore(cat)">
+
             <div class="card-body-content d-flex flex-column flex-fill p-4">
-              
+
               <!-- Card Header (Icon, Title, Badge & Status) -->
               <div class="d-flex align-items-start justify-content-between mb-3">
                 <div class="d-flex align-items-center gap-3">
@@ -201,7 +171,8 @@
                     </span>
                   </div>
                 </div>
-                <span class="status-dot" [class.green]="cat.status === 'Operational'" [class.orange]="cat.status === 'Coming Soon'" [title]="cat.status"></span>
+                <span class="status-dot" [class.green]="cat.status === 'Operational'"
+                  [class.orange]="cat.status === 'Coming Soon'" [title]="cat.status"></span>
               </div>
 
               <!-- Basic Card Description -->
@@ -248,7 +219,7 @@
   <!-- ========================================================================= -->
   <div *ngIf="selectedCategoryModal" class="sbm-modal-backdrop" (click)="closeModal()">
     <div class="sbm-modal-card" (click)="$event.stopPropagation()">
-      
+
       <!-- STYLISH SBM NAVY MODAL HEADER -->
       <div class="sbm-modal-header p-4 d-flex align-items-center justify-content-between">
         <div class="d-flex align-items-center gap-3">
@@ -262,14 +233,16 @@
                 {{ selectedCategoryModal.badge }}
               </span>
             </div>
-            <small class="text-light opacity-75 fs-8">SBM Bank Kenya Enterprise API Specifications & Interactive Console</small>
+            <small class="text-light opacity-75 fs-8">SBM Bank Kenya Enterprise API Specifications & Interactive
+              Console</small>
           </div>
         </div>
         <button class="btn-close btn-close-white" (click)="closeModal()"></button>
       </div>
 
       <!-- MODAL TOP METRICS & STATS BAR -->
-      <div class="modal-metrics-bar px-4 py-3 bg-light border-bottom d-flex flex-wrap align-items-center justify-content-between gap-3">
+      <div
+        class="modal-metrics-bar px-4 py-3 bg-light border-bottom d-flex flex-wrap align-items-center justify-content-between gap-3">
         <div class="d-flex align-items-center gap-3">
           <div class="metric-chip">
             <i class="bi bi-cpu-fill text-primary me-1"></i>
@@ -287,18 +260,15 @@
 
         <!-- MODAL SUB-NAVIGATION TABS -->
         <div class="modal-tabs-group d-flex align-items-center gap-1 bg-white p-1 rounded-pill border">
-          <button 
-            [class]="activeModalTab === 'endpoints' ? 'modal-tab-btn active' : 'modal-tab-btn'" 
+          <button [class]="activeModalTab === 'endpoints' ? 'modal-tab-btn active' : 'modal-tab-btn'"
             (click)="activeModalTab = 'endpoints'">
             <i class="bi bi-code-slash me-1"></i> Endpoints
           </button>
-          <button 
-            [class]="activeModalTab === 'auth' ? 'modal-tab-btn active' : 'modal-tab-btn'" 
+          <button [class]="activeModalTab === 'auth' ? 'modal-tab-btn active' : 'modal-tab-btn'"
             (click)="activeModalTab = 'auth'">
             <i class="bi bi-key-fill me-1"></i> Auth & Headers
           </button>
-          <button 
-            [class]="activeModalTab === 'snippets' ? 'modal-tab-btn active' : 'modal-tab-btn'" 
+          <button [class]="activeModalTab === 'snippets' ? 'modal-tab-btn active' : 'modal-tab-btn'"
             (click)="activeModalTab = 'snippets'">
             <i class="bi bi-terminal-fill me-1"></i> SDK Snippets
           </button>
@@ -307,10 +277,10 @@
 
       <!-- MODAL MAIN BODY CONTENT -->
       <div class="sbm-modal-body p-4">
-        
+
         <!-- TAB 1: ENDPOINTS & SPECS TABLE -->
         <div *ngIf="activeModalTab === 'endpoints'">
-          
+
           <div class="modal-description-box p-3 rounded-3 mb-4 border">
             <p class="text-secondary mb-0 fs-8 fw-medium">
               <i class="bi bi-info-circle-fill text-primary me-2"></i>
@@ -367,8 +337,10 @@
                 <i class="bi bi-terminal me-1 text-primary"></i> Response: {{ testedEndpointResult.name }}
               </span>
               <div class="d-flex align-items-center gap-2">
-                <span class="badge bg-success text-white rounded-pill fs-8">HTTP {{ testedEndpointResult.status }} OK</span>
-                <small class="text-muted fs-8"><i class="bi bi-clock me-1"></i> {{ testedEndpointResult.duration }}ms</small>
+                <span class="badge bg-success text-white rounded-pill fs-8">HTTP {{ testedEndpointResult.status }}
+                  OK</span>
+                <small class="text-muted fs-8"><i class="bi bi-clock me-1"></i> {{ testedEndpointResult.duration
+                  }}ms</small>
               </div>
             </div>
             <pre class="json-code-block mb-0">{{ testedEndpointResult.responseJson }}</pre>
@@ -378,17 +350,21 @@
 
         <!-- TAB 2: AUTH & HEADERS SPECIFICATIONS -->
         <div *ngIf="activeModalTab === 'auth'" class="py-2">
-          
-          <h6 class="fw-bold text-dark mb-3"><i class="bi bi-shield-lock-fill text-primary me-2"></i> Authentication & Request Headers</h6>
-          
+
+          <h6 class="fw-bold text-dark mb-3"><i class="bi bi-shield-lock-fill text-primary me-2"></i> Authentication &
+            Request Headers</h6>
+
           <div class="card p-3 mb-3 border">
-            <div class="fw-bold text-primary fs-8 mb-1"><i class="bi bi-key me-1"></i> OAuth 2.0 Bearer Token Authorization</div>
-            <p class="text-muted fs-8 mb-2">All API calls require a valid Bearer Token obtained via the SBM OAuth token endpoint.</p>
+            <div class="fw-bold text-primary fs-8 mb-1"><i class="bi bi-key me-1"></i> OAuth 2.0 Bearer Token
+              Authorization</div>
+            <p class="text-muted fs-8 mb-2">All API calls require a valid Bearer Token obtained via the SBM OAuth token
+              endpoint.</p>
             <pre class="json-code-block">Authorization: Bearer sbm_sec_token_9481726481293817</pre>
           </div>
 
           <div class="card p-3 mb-3 border">
-            <div class="fw-bold text-primary fs-8 mb-1"><i class="bi bi-file-code me-1"></i> Required Standard Headers</div>
+            <div class="fw-bold text-primary fs-8 mb-1"><i class="bi bi-file-code me-1"></i> Required Standard Headers
+            </div>
             <table class="table table-sm text-secondary fs-8 mb-0">
               <tbody>
                 <tr>
@@ -411,22 +387,19 @@
 
         <!-- TAB 3: SDK & CODE SNIPPETS GENERATOR -->
         <div *ngIf="activeModalTab === 'snippets'" class="py-2">
-          
+
           <div class="d-flex align-items-center justify-content-between mb-3">
             <h6 class="fw-bold text-dark mb-0"><i class="bi bi-code-square text-primary me-2"></i> Code Snippets</h6>
             <div class="btn-group btn-group-sm">
-              <button 
-                [class]="activeSnippetLang === 'curl' ? 'btn btn-primary' : 'btn btn-outline-primary'" 
+              <button [class]="activeSnippetLang === 'curl' ? 'btn btn-primary' : 'btn btn-outline-primary'"
                 (click)="activeSnippetLang = 'curl'">
                 cURL
               </button>
-              <button 
-                [class]="activeSnippetLang === 'ts' ? 'btn btn-primary' : 'btn btn-outline-primary'" 
+              <button [class]="activeSnippetLang === 'ts' ? 'btn btn-primary' : 'btn btn-outline-primary'"
                 (click)="activeSnippetLang = 'ts'">
                 TypeScript
               </button>
-              <button 
-                [class]="activeSnippetLang === 'python' ? 'btn btn-primary' : 'btn btn-outline-primary'" 
+              <button [class]="activeSnippetLang === 'python' ? 'btn btn-primary' : 'btn btn-outline-primary'"
                 (click)="activeSnippetLang = 'python'">
                 Python
               </button>
@@ -476,14 +449,7 @@ print(response.json())</pre>
       </div>
 
       <!-- MODAL STYLISH FOOTER -->
-      <div class="sbm-modal-footer p-3 bg-light d-flex justify-content-between align-items-center border-top">
-        <div class="d-flex align-items-center gap-3">
-          <span class="fs-8 text-muted"><i class="bi bi-file-earmark-code me-1 text-primary"></i> OpenAPI 3.0 Ready</span>
-          <button class="btn btn-sm btn-link text-decoration-none fs-8 p-0" (click)="triggerToast('Downloading Safaricom APIs OpenAPI Spec JSON')">
-            <i class="bi bi-download me-1"></i> Download OpenAPI Spec
-          </button>
-        </div>
-
+      <div class="sbm-modal-footer p-3 bg-light d-flex justify-content-end align-items-center border-top">
         <button class="btn btn-secondary rounded-pill px-4 fs-8 fw-semibold" (click)="closeModal()">
           Close Window
         </button>

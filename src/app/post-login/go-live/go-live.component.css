@@ -69,12 +69,15 @@
   border-radius: 50rem;
 }
 
-/* ---------------------------------------------------------------------------
- * HERO BANNER & STEPPER
- * --------------------------------------------------------------------------- */
+/* SBM Sky Theme Hero Banner (#eaf7fc) */
 .golive-hero-banner {
-  background: linear-gradient(135deg, #06214d 0%, #0c387d 60%, #16a34a 100%);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: linear-gradient(135deg, #eaf7fc 0%, #dbeafe 100%);
+  border: 1.5px solid #bbe1f3 !important;
+  box-shadow: 0 8px 24px -4px rgba(26, 163, 216, 0.15) !important;
+}
+
+.text-navy {
+  color: #06214d !important;
 }
 
 .golive-stepper-wrapper {
@@ -206,6 +209,7 @@
     transform: translateX(100%);
     opacity: 0;
   }
+
   to {
     transform: translateX(0);
     opacity: 1;

@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef, NgZone } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
+import { Subscription } from 'rxjs';
 
 /**
  * ============================================================================
@@ -23,7 +24,10 @@ import { AuthService } from '../../core/services/auth.service';
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit, OnDestroy {
+
+  private successMessageSubscription: Subscription | null = null;
+  private successMessageTimeout: any = null;
 
   /**
    * SBM BANK ASSET PATHS
@@ -60,8 +64,42 @@ export class LoginComponent {
 
   constructor(
     private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
+    private cdr: ChangeDetectorRef,
+    private ngZone: NgZone
   ) { }
+
+  ngOnInit(): void {
+    // Subscribe to success message from AuthService for reactive updates
+    this.successMessageSubscription = this.authService.getSuccessMessage().subscribe(message => {
+      this.ngZone.run(() => {
+        this.successMessage = message;
+        this.cdr.detectChanges();
+
+        // Clear success message after 5 seconds locally
+        if (message && this.successMessageTimeout) {
+          clearTimeout(this.successMessageTimeout);
+        }
+        if (message) {
+          this.successMessageTimeout = setTimeout(() => {
+            this.ngZone.run(() => {
+              this.successMessage = null;
+              this.cdr.detectChanges();
+            });
+          }, 5000);
+        }
+      });
+    });
+  }
+
+  ngOnDestroy(): void {
+    if (this.successMessageSubscription) {
+      this.successMessageSubscription.unsubscribe();
+    }
+    if (this.successMessageTimeout) {
+      clearTimeout(this.successMessageTimeout);
+    }
+  }
 
   /**
    * Toggles the visibility of the password text field.

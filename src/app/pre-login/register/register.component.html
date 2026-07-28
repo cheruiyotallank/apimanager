@@ -305,6 +305,9 @@ Implements 2-column split card layout matching the requested design:
             class="form-control sbm-otp-digit-input text-center"
             [(ngModel)]="verificationCode[i]"
             [id]="'otp-digit-' + i"
+            (input)="onOtpInput($event, i)"
+            (keydown.backspace)="onOtpBackspace($event, i)"
+            #otpInput
           />
         </div>
 

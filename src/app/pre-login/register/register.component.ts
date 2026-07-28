@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, NgZone, ChangeDetectorRef, ViewChild, ElementRef, QueryList, ViewChildren } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
+import { HttpAdapterService } from '../../core/services/http-adapter.service';
 import { AuthService } from '../../core/services/auth.service';
 
 /**
@@ -83,10 +84,24 @@ export class RegisterComponent {
   public errorMessage: string | null = null;
   public successMessage: string | null = null;
 
+  /**
+   * REQUEST OBJECT FOR BACKEND API CALLS
+   */
+  public request: any = {};
+
+  @ViewChildren('otpInput') otpInputs!: QueryList<ElementRef<HTMLInputElement>>;
+
   constructor(
     private router: Router,
+    private httpAdapter: HttpAdapterService,
+    private ngZone: NgZone,
+    private cdr: ChangeDetectorRef,
     private authService: AuthService
   ) { }
+
+  ngOnInit(): void {
+    this.request = { ...this.httpAdapter.preLoginRequest };
+  }
 
   /**
    * Fallback for logo error.
@@ -96,7 +111,7 @@ export class RegisterComponent {
   }
 
   /**
-   * Form submission handler for account registration via AuthService.
+   * Form submission handler for account registration via HttpAdapterService.
    */
   public onRegisterSubmit(): void {
     this.errorMessage = null;
@@ -145,27 +160,54 @@ export class RegisterComponent {
 
     this.isSubmitting = true;
 
-    this.authService.register(this.registerData).subscribe({
-      next: (response) => {
-        this.isSubmitting = false;
-        this.step = 'EMAIL_VERIFICATION';
-        this.successMessage = response.message || `Verification code sent to ${this.registerData.email}. Enter code below.`;
+    // Set request data for backend API call
+    this.request.firstName = this.registerData.firstName;
+    this.request.lastName = this.registerData.lastName;
+    this.request.email = this.registerData.email;
+    this.request.organizationName = this.registerData.organizationName;
+    this.request.organizationType = this.registerData.organizationType;
+    this.request.country = this.registerData.country;
+    this.request.phone = this.registerData.phone;
+    this.request.acceptTerms = this.registerData.acceptTerms;
+    this.request.ReqService = 'APIM_SIGNUP';
+
+    this.httpAdapter.sendRequest(this.request).subscribe({
+      next: (data: any) => {
+        console.log('Registration response:', data);
+        this.ngZone.run(() => {
+          this.isSubmitting = false;
+          try {
+            let jsonResponse = JSON.parse(data);
+            console.log('Parsed JSON:', jsonResponse);
+            if ('ErrorMessage' in jsonResponse) {
+              this.errorMessage = jsonResponse['ErrorMessage'];
+              console.log('Error message set:', this.errorMessage);
+            } else {
+              this.step = 'EMAIL_VERIFICATION';
+              this.successMessage = jsonResponse['ResultMessage'] || `Verification code sent to ${this.registerData.email}. Enter code below.`;
+              console.log('Success message set:', this.successMessage);
+            }
+          } catch (e) {
+            console.error('JSON parse error:', e);
+            this.errorMessage = 'Service error. Please try again later.';
+          }
+          this.cdr.detectChanges();
+        });
       },
-      error: (error) => {
-        this.isSubmitting = false;
-        // Fallback for development testing if server is un-reachable
-        if (error?.message?.includes('Unable to connect')) {
-          this.step = 'EMAIL_VERIFICATION';
-          this.successMessage = `[Dev Mode] Verification code dispatched to ${this.registerData.email}. Enter code below.`;
-        } else {
-          this.errorMessage = error?.message || 'Registration failed. Please check your inputs and try again.';
-        }
+      error: (error: any) => {
+        console.error('HTTP error:', error);
+        this.ngZone.run(() => {
+          this.isSubmitting = false;
+          this.errorMessage = 'Unable to connect to server. Please check your internet connection.';
+          console.log('Error message set:', this.errorMessage);
+          this.cdr.detectChanges();
+        });
       }
     });
   }
 
   /**
-   * Verifies 6-digit Email OTP Verification Code via AuthService & completes registration.
+   * Verifies 6-digit Email OTP Verification Code via HttpAdapterService & completes registration.
    */
   public verifyEmailOtp(): void {
     this.errorMessage = null;
@@ -179,26 +221,37 @@ export class RegisterComponent {
 
     this.isSubmitting = true;
 
-    const payload = {
-      email: this.registerData.email,
-      otpCode: fullCode
-    };
+    // Set request data for backend API call
+    this.request.email = this.registerData.email;
+    this.request.verificationCode = fullCode;
+    this.request.ReqService = 'APIM_VERIFY_SIGNUP_OTP';
 
-    this.authService.verifyEmailOtp(payload).subscribe({
-      next: (response) => {
-        this.isSubmitting = false;
-        this.isRegistrationComplete = true;
-        this.successMessage = 'Registration complete! Your temporary password has been sent to your email address. You can now log in.';
+    this.httpAdapter.sendRequest(this.request).subscribe({
+      next: (data: any) => {
+        this.ngZone.run(() => {
+          this.isSubmitting = false;
+          try {
+            let jsonResponse = JSON.parse(data);
+            if ('ErrorMessage' in jsonResponse) {
+              this.errorMessage = jsonResponse['ErrorMessage'];
+            } else {
+              // Store success message in service and redirect to login
+              const successMsg = jsonResponse['ResultMessage'] || 'Registration complete! Your temporary password has been sent to your email address. You can now log in.';
+              this.authService.setSuccessMessage(successMsg);
+              this.router.navigate(['/login']);
+            }
+          } catch (e) {
+            this.errorMessage = 'Service error. Please try again later.';
+          }
+          this.cdr.detectChanges();
+        });
       },
-      error: (error) => {
-        this.isSubmitting = false;
-        // Fallback for development testing if server is un-reachable
-        if (error?.message?.includes('Unable to connect')) {
-          this.isRegistrationComplete = true;
-          this.successMessage = '[Dev Mode] Registration complete! Your temporary password has been sent to your email address. You can now log in.';
-        } else {
-          this.errorMessage = error?.message || 'Invalid or expired OTP verification code.';
-        }
+      error: (error: any) => {
+        this.ngZone.run(() => {
+          this.isSubmitting = false;
+          this.errorMessage = 'Unable to connect to server. Please check your internet connection.';
+          this.cdr.detectChanges();
+        });
       }
     });
   }
@@ -211,17 +264,66 @@ export class RegisterComponent {
   }
 
   /**
-   * Resends Email Verification OTP code via AuthService.
+   * Handles OTP input - auto-focus next input
+   */
+  public onOtpInput(event: Event, index: number): void {
+    const input = event.target as HTMLInputElement;
+    const value = input.value;
+
+    // Keep only numeric characters
+    if (!/^\d*$/.test(value)) {
+      input.value = '';
+      this.verificationCode[index] = '';
+      return;
+    }
+
+    // Move to next input if value is entered
+    if (value && index < 5) {
+      const inputs = this.otpInputs.toArray();
+      const nextInput = inputs[index + 1].nativeElement;
+      nextInput.focus();
+    }
+  }
+
+  /**
+   * Handles backspace in OTP input - auto-focus previous input
+   */
+  public onOtpBackspace(event: any, index: number): void {
+    const input = event.target as HTMLInputElement;
+
+    // If current input is empty, move to previous input
+    if (!input.value && index > 0) {
+      const inputs = this.otpInputs.toArray();
+      const prevInput = inputs[index - 1].nativeElement;
+      prevInput.focus();
+    }
+  }
+
+  /**
+   * Resends Email Verification OTP code via HttpAdapterService.
    */
   public resendEmailOtp(): void {
     this.errorMessage = null;
     this.successMessage = null;
 
-    this.authService.resendOtp(this.registerData.email, 'EMAIL').subscribe({
-      next: (response) => {
-        this.successMessage = `A new 6-digit verification code has been sent to ${this.registerData.email}.`;
+    // Set request data for backend API call
+    this.request.email = this.registerData.email;
+    this.request.ReqService = 'API_MANAGER_RESEND_OTP';
+
+    this.httpAdapter.sendRequest(this.request).subscribe({
+      next: (data: any) => {
+        try {
+          let jsonResponse = JSON.parse(data);
+          if ('ErrorMessage' in jsonResponse) {
+            this.errorMessage = jsonResponse['ErrorMessage'];
+          } else {
+            this.successMessage = jsonResponse['ResultMessage'] || `A new 6-digit verification code has been sent to ${this.registerData.email}.`;
+          }
+        } catch (e) {
+          this.successMessage = `A new 6-digit verification code has been sent to ${this.registerData.email}.`;
+        }
       },
-      error: (error) => {
+      error: (error: any) => {
         this.successMessage = `A new 6-digit verification code has been sent to ${this.registerData.email}.`;
       }
     });

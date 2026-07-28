@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { SbmBankApiService } from '../../core/services/sbm-bank-api.service';
 import { AuthService } from '../../core/services/auth.service';
 
@@ -21,7 +23,8 @@ export interface ApiCategory {
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css'],
-  standalone: false
+  standalone: true,
+  imports: [CommonModule, FormsModule]
 })
 export class DashboardComponent implements OnInit {
   // Search & Filter State
@@ -65,6 +68,7 @@ export class DashboardComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    console.log('DashboardComponent ngOnInit called');
     // If logged in via backend auth session, load user details
     const savedUser = this.authService.getUser();
     if (savedUser && (savedUser.firstName || savedUser.lastName)) {

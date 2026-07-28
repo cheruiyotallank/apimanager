@@ -20,5 +20,5 @@ export const authGuard: CanActivateFn = (route, state) => {
   }
 
   // Session expired or unauthenticated: redirect to login page
-  return router.createUrlTree(['/pre-login/login'], { queryParams: { returnUrl: state.url } });
+  return router.createUrlTree(['/pre-login'], { queryParams: { returnUrl: state.url } });
 };

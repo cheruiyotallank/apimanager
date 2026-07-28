@@ -3,5 +3,5 @@
  */
 export const environment = {
   production: true,
-  apiUrl: 'https://api.sbm.co.ke/v1'
+  apiUrl: 'http://172.20.10.3:8081/vprod/apimanager'
 };

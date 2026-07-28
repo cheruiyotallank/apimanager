@@ -1,15 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { ApiService } from './api.service';
 import { API_ENDPOINTS } from '../config/api-endpoints.config';
 import {
   LoginRequest,
-  RegisterRequest,
-  RegisterResponse,
-  EmailOtpVerifyRequest,
-  MfaOtpVerifyRequest,
-  PasswordResetRequest,
   ForceChangePasswordRequest,
   AuthResponse,
   ApiResponse,
@@ -32,6 +27,8 @@ export class AuthService {
 
   private readonly tokenKey: string = 'sbm_auth_token';
   private readonly userKey: string = 'sbm_user_profile';
+  private successMessageSubject = new BehaviorSubject<string | null>(null);
+  private successMessageTimeout: any = null;
 
   constructor(private apiService: ApiService) { }
 
@@ -50,52 +47,10 @@ export class AuthService {
   }
 
   /**
-   * Submits developer profile registration.
-   */
-  public register(payload: RegisterRequest): Observable<ApiResponse<RegisterResponse>> {
-    return this.apiService.post<ApiResponse<RegisterResponse>>(API_ENDPOINTS.AUTH.REGISTER, payload);
-  }
-
-  /**
-   * Verifies 6-digit Email OTP verification code.
-   */
-  public verifyEmailOtp(payload: EmailOtpVerifyRequest): Observable<ApiResponse> {
-    return this.apiService.post<ApiResponse>(API_ENDPOINTS.AUTH.VERIFY_EMAIL, payload);
-  }
-
-  /**
    * Submits Force Change Password (Old Password, New Password, Confirm New Password).
    */
   public forceChangePassword(payload: ForceChangePasswordRequest): Observable<ApiResponse> {
     return this.apiService.post<ApiResponse>(API_ENDPOINTS.AUTH.CHANGE_PASSWORD, payload);
-  }
-
-  /**
-   * Verifies 6-digit MFA security OTP code.
-   */
-  public verifyMfaOtp(payload: MfaOtpVerifyRequest): Observable<ApiResponse<AuthResponse>> {
-    return this.apiService.post<ApiResponse<AuthResponse>>(API_ENDPOINTS.AUTH.VERIFY_MFA, payload)
-      .pipe(
-        tap(response => {
-          if (response.success && response.data) {
-            this.saveSession(response.data);
-          }
-        })
-      );
-  }
-
-  /**
-   * Requests a password reset link for forgotten password.
-   */
-  public requestPasswordReset(payload: PasswordResetRequest): Observable<ApiResponse> {
-    return this.apiService.post<ApiResponse>(API_ENDPOINTS.AUTH.FORGOT_PASSWORD, payload);
-  }
-
-  /**
-   * Resends Email or MFA OTP code.
-   */
-  public resendOtp(email: string, type: 'EMAIL' | 'MFA'): Observable<ApiResponse> {
-    return this.apiService.post<ApiResponse>(API_ENDPOINTS.AUTH.RESEND_OTP, { email, type });
   }
 
   /**
@@ -138,5 +93,43 @@ export class AuthService {
   public logout(): void {
     localStorage.removeItem(this.tokenKey);
     localStorage.removeItem(this.userKey);
+  }
+
+  /**
+   * Sets success message and auto-clears after 5 seconds
+   */
+  public setSuccessMessage(message: string): void {
+    this.successMessageSubject.next(message);
+    if (this.successMessageTimeout) {
+      clearTimeout(this.successMessageTimeout);
+    }
+    this.successMessageTimeout = setTimeout(() => {
+      this.successMessageSubject.next(null);
+    }, 5000);
+  }
+
+  /**
+   * Gets current success message as Observable
+   */
+  public getSuccessMessage(): Observable<string | null> {
+    return this.successMessageSubject.asObservable();
+  }
+
+  /**
+   * Gets current success message value synchronously
+   */
+  public getSuccessMessageValue(): string | null {
+    return this.successMessageSubject.value;
+  }
+
+  /**
+   * Clears success message manually
+   */
+  public clearSuccessMessage(): void {
+    this.successMessageSubject.next(null);
+    if (this.successMessageTimeout) {
+      clearTimeout(this.successMessageTimeout);
+      this.successMessageTimeout = null;
+    }
   }
 }

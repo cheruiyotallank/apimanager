@@ -18,11 +18,6 @@ export const routes: Routes = [
     pathMatch: 'full'
   },
   {
-    path: 'dashboard',
-    redirectTo: 'post_login/dashboard',
-    pathMatch: 'full'
-  },
-  {
     path: 'pre-login',
     loadChildren: () => import('./pre-login/pre-login.module').then(m => m.PreLoginModule)
   },

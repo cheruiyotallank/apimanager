@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
+import { HttpAdapterService } from '../../core/services/http-adapter.service';
 import { Subscription } from 'rxjs';
 
 /**
@@ -28,6 +29,11 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   private successMessageSubscription: Subscription | null = null;
   private successMessageTimeout: any = null;
+
+  /**
+   * REQUEST OBJECT FOR BACKEND API CALLS
+   */
+  public request: any = {};
 
   /**
    * SBM BANK ASSET PATHS
@@ -65,11 +71,15 @@ export class LoginComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private authService: AuthService,
+    private httpAdapter: HttpAdapterService,
     private cdr: ChangeDetectorRef,
     private ngZone: NgZone
   ) { }
 
   ngOnInit(): void {
+    // Initialize request object
+    this.request = { ...this.httpAdapter.preLoginRequest };
+
     // Subscribe to success message from AuthService for reactive updates
     this.successMessageSubscription = this.authService.getSuccessMessage().subscribe(message => {
       this.ngZone.run(() => {
@@ -143,42 +153,49 @@ export class LoginComponent implements OnInit, OnDestroy {
 
     this.isSubmitting = true;
 
-    // Send HTTP Request to Backend Authentication API
-    this.authService.login({ email, password }).subscribe({
-      next: (response: any) => {
-        this.isSubmitting = false;
-        this.router.navigate(['/post_login/dashboard']);
-      },
-      error: (err) => {
-        this.isSubmitting = false;
+    // Set request data for backend API call
+    this.request.email = email;
+    this.request.password = password;
+    this.request.ReqService = 'APIM_LOGIN';
 
-        // Valid Demo / SBM Corporate Accounts Check
-        const isAuthorizedDemoUser = (
-          (email.includes('sbmbank.co.ke') || email === 'allan.cheruiyot@sbmbank.co.ke' || email === 'cheruiyotallank@gmail.com') &&
-          password.length >= 6
-        );
-
-        if (isAuthorizedDemoUser) {
-          // Grant session for authorized SBM developer account
-          this.authService.saveSession({
-            accessToken: 'sbm_sec_jwt_token_allan_cheruiyot_948172648',
-            user: {
-              id: 'usr_allan_01',
-              firstName: 'Allan',
-              lastName: 'Cheruiyot',
-              email: email,
-              phone: '+254712345678',
-              organizationName: 'SBM Bank Kenya',
-              organizationType: 'Bank Administrator',
-              country: 'Kenya',
-              roles: ['ENTERPRISE_ADMIN']
+    this.httpAdapter.sendRequest(this.request).subscribe({
+      next: (data: any) => {
+        this.ngZone.run(() => {
+          this.isSubmitting = false;
+          try {
+            let jsonResponse = JSON.parse(data);
+            if ('ErrorMessage' in jsonResponse) {
+              this.errorMessage = jsonResponse['ErrorMessage'];
+            } else {
+              // Save session and navigate to dashboard
+              this.authService.saveSession({
+                accessToken: jsonResponse['accessToken'] || 'temp_token',
+                user: jsonResponse['user'] || {
+                  id: jsonResponse['id'] || '0',
+                  firstName: jsonResponse['firstName'] || '',
+                  lastName: jsonResponse['lastName'] || '',
+                  email: email,
+                  phone: jsonResponse['phone'] || '',
+                  organizationName: jsonResponse['organizationName'] || '',
+                  organizationType: jsonResponse['organizationType'] || '',
+                  country: jsonResponse['country'] || '',
+                  roles: jsonResponse['roles'] || ['USER']
+                }
+              });
+              this.router.navigate(['/post_login/dashboard']);
             }
-          });
-          this.router.navigate(['/post_login/dashboard']);
-        } else {
-          // Reject invalid credentials or unauthorized email/password
-          this.errorMessage = 'Invalid email or password. Access denied for ' + email;
-        }
+          } catch (e) {
+            this.errorMessage = 'Service error. Please try again later.';
+          }
+          this.cdr.detectChanges();
+        });
+      },
+      error: (error: any) => {
+        this.ngZone.run(() => {
+          this.isSubmitting = false;
+          this.errorMessage = 'Unable to connect to server. Please check your internet connection.';
+          this.cdr.detectChanges();
+        });
       }
     });
   }

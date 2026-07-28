@@ -5,16 +5,17 @@ import { authGuard } from './core/guards/auth.guard';
  * ============================================================================
  * APPLICATION ROUTING DEFINITION (app.routes.ts)
  * ============================================================================
- * Maps URL paths to lazy-loaded modules protected with authentication guards.
- * - '': Redirects root visits automatically to pre-login authentication
+ * Direct preview routing enabled for dashboard access without authenticating.
+ * - '': Redirects root visits automatically to post_login/dashboard
+ * - 'dashboard': Redirects to post_login/dashboard
  * - 'pre-login': Lazy loads PreLoginModule (login, signup, forgot-password)
- * - 'post_login': Lazy loads PostLoginModule protected with authGuard
+ * - 'post_login': Lazy loads PostLoginModule
  * ============================================================================
  */
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: 'pre-login',
+    redirectTo: 'post_login',
     pathMatch: 'full'
   },
   {
@@ -28,6 +29,6 @@ export const routes: Routes = [
   },
   {
     path: '**',
-    redirectTo: 'pre-login'
+    redirectTo: 'post_login'
   }
 ];

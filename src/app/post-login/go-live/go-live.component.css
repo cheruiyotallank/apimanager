@@ -1,0 +1,217 @@
+/**
+ * ============================================================================
+ * SBM BANK GO-LIVE PRODUCTION ENVIRONMENT STYLES (go-live.component.css)
+ * ============================================================================
+ */
+
+:host {
+  display: block;
+  height: 100vh;
+  background-color: #f8fafc;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.sbm-golive-layout {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* ---------------------------------------------------------------------------
+ * HEADER BAR STYLING
+ * --------------------------------------------------------------------------- */
+.sbm-header-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 2rem;
+  background: #ffffff;
+  border-bottom: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  z-index: 100;
+}
+
+.sbm-header-logo-img {
+  height: 38px;
+  object-fit: contain;
+}
+
+.brand-divider {
+  width: 1px;
+  height: 24px;
+  background-color: #cbd5e1;
+}
+
+.brand-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.brand-title {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #06214d;
+  letter-spacing: 0.5px;
+}
+
+.brand-subtitle {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #1aa3d8;
+  letter-spacing: 1px;
+}
+
+.env-pill {
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.35rem 0.85rem;
+  border-radius: 50rem;
+}
+
+/* SBM Sky Theme Hero Banner (#eaf7fc) */
+.golive-hero-banner {
+  background: linear-gradient(135deg, #eaf7fc 0%, #dbeafe 100%);
+  border: 1.5px solid #bbe1f3 !important;
+  box-shadow: 0 8px 24px -4px rgba(26, 163, 216, 0.15) !important;
+}
+
+.text-navy {
+  color: #06214d !important;
+}
+
+.golive-stepper-wrapper {
+  background: #ffffff;
+}
+
+.step-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  cursor: pointer;
+  z-index: 2;
+}
+
+.step-circle {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #e2e8f0;
+  color: #64748b;
+  font-weight: 700;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.25s ease;
+}
+
+.step-item.active .step-circle {
+  background: linear-gradient(135deg, #06214d 0%, #1aa3d8 100%);
+  color: #ffffff;
+  box-shadow: 0 4px 10px rgba(26, 163, 216, 0.3);
+}
+
+.step-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #64748b;
+}
+
+.step-item.active .step-label {
+  color: #06214d;
+  font-weight: 700;
+}
+
+.step-connector {
+  flex: 1;
+  height: 3px;
+  background: #e2e8f0;
+  margin: 0 0.5rem;
+}
+
+/* ---------------------------------------------------------------------------
+ * SBM CARDS & INPUTS
+ * --------------------------------------------------------------------------- */
+.sbm-card {
+  background: #ffffff;
+  border-radius: 1rem;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.border-top-info {
+  border-top: 4px solid #1aa3d8 !important;
+}
+
+.border-top-primary {
+  border-top: 4px solid #06214d !important;
+}
+
+.border-top-success {
+  border-top: 4px solid #16a34a !important;
+}
+
+.border-top-warning {
+  border-top: 4px solid #eab308 !important;
+}
+
+.sbm-custom-input {
+  border: 1px solid #cbd5e1;
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.85rem;
+  font-size: 0.85rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.sbm-custom-input:focus {
+  border-color: #1aa3d8;
+  box-shadow: 0 0 0 3px rgba(26, 163, 216, 0.15);
+}
+
+.fs-8 {
+  font-size: 0.8rem;
+}
+
+.max-w-600 {
+  max-width: 600px;
+}
+
+.sbm-scroll-container {
+  flex: 1;
+  overflow-y: auto;
+}
+
+/* ---------------------------------------------------------------------------
+ * TOAST NOTIFICATION
+ * --------------------------------------------------------------------------- */
+.sbm-toast-notification {
+  position: fixed;
+  top: 80px;
+  right: 24px;
+  z-index: 1050;
+  display: flex;
+  align-items: center;
+  background: linear-gradient(135deg, #06214d 0%, #16a34a 100%);
+  color: #ffffff;
+  padding: 0.75rem 1.25rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 10px 25px -5px rgba(6, 33, 77, 0.4);
+  font-size: 0.875rem;
+  font-weight: 600;
+  animation: slideInRight 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}

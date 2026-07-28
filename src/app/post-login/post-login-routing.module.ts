@@ -1,6 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { ProfileComponent } from './profile/profile.component';
+import { SandboxComponent } from './sandbox/sandbox.component';
+import { GoLiveComponent } from './go-live/go-live.component';
 
 const routes: Routes = [
   {
@@ -15,6 +17,14 @@ const routes: Routes = [
   {
     path: 'profile',
     component: ProfileComponent
+  },
+  {
+    path: 'sandbox',
+    component: SandboxComponent
+  },
+  {
+    path: 'go-live',
+    component: GoLiveComponent
   }
 ];
 

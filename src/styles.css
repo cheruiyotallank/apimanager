@@ -14,13 +14,20 @@
    ========================================================================== */
 :root {
   /* Exact SBM Brand Color Tokens */
-  --sbm-navy: #06214d;         /* Deep Navy Blue */
-  --sbm-blue: #1aa3d8;         /* Vibrant SBM Cyan Blue */
-  --sbm-sky: #eaf7fc;          /* Soft Sky Blue */
-  --sbm-ink: #06132b;          /* Dark Ink */
-  --sbm-muted: #5f6b7a;        /* Neutral Grey */
-  --sbm-card: #ffffff;         /* Pure White card background */
-  --sbm-border: #d8e3ee;       /* Light border */
+  --sbm-navy: #06214d;
+  /* Deep Navy Blue */
+  --sbm-blue: #1aa3d8;
+  /* Vibrant SBM Cyan Blue */
+  --sbm-sky: #eaf7fc;
+  /* Soft Sky Blue */
+  --sbm-ink: #06132b;
+  /* Dark Ink */
+  --sbm-muted: #5f6b7a;
+  /* Neutral Grey */
+  --sbm-card: #ffffff;
+  /* Pure White card background */
+  --sbm-border: #d8e3ee;
+  /* Light border */
 
   /* Derived Interactive States & Shadows */
   --sbm-blue-hover: #158dbd;
@@ -35,7 +42,8 @@
 /* ==========================================================================
    3. BASE RESET & BODY STYLING
    ========================================================================== */
-html, body {
+html,
+body {
   min-height: 100vh;
   margin: 0;
   padding: 0;
@@ -240,5 +248,3 @@ html, body {
 .sbm-footer-link:hover {
   color: var(--sbm-blue);
 }
-
-

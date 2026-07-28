@@ -1,0 +1,471 @@
+<div class="sbm-golive-layout">
+
+  <!-- ========================================================================= -->
+  <!-- TOP HEADER (SBM Bank Logo | Back to Dashboard | Go-Live Badge) -->
+  <!-- ========================================================================= -->
+  <header class="sbm-header-bar">
+    <div class="header-left d-flex align-items-center gap-3">
+      <!-- SBM Bank Logo -->
+      <div class="sbm-brand-logo" (click)="navigateBackToDashboard()" style="cursor: pointer;">
+        <img [src]="sbmLogoPath" (error)="onLogoError($event)" alt="SBM Bank Logo" class="sbm-header-logo-img" />
+        <div class="brand-divider"></div>
+        <div class="brand-text">
+          <span class="brand-title">API MANAGER</span>
+          <span class="brand-subtitle">DEVELOPER PORTAL</span>
+        </div>
+      </div>
+      <span class="env-pill bg-success-subtle text-success"><i class="bi bi-rocket-takeoff-fill me-1"></i> GO-LIVE
+        PRODUCTION</span>
+    </div>
+
+    <!-- Back to Dashboard Action Button -->
+    <div class="header-right d-flex align-items-center gap-3">
+      <button class="btn btn-outline-primary btn-sm rounded-pill px-3 fw-bold" (click)="navigateBackToDashboard()">
+        <i class="bi bi-arrow-left me-1"></i> Back to Dashboard
+      </button>
+
+      <div class="golive-mode-indicator badge bg-success text-white rounded-pill px-3 py-2 fw-bold shadow-sm">
+        <i class="bi bi-shield-check me-1"></i> GO-LIVE WIZARD
+      </div>
+    </div>
+  </header>
+
+  <!-- ========================================================================= -->
+  <!-- MAIN GO-LIVE BODY -->
+  <!-- ========================================================================= -->
+  <main class="sbm-golive-body sbm-scroll-container">
+    <div class="container-fluid px-4 px-lg-5 py-4">
+
+      <!-- Toast Notification -->
+      <div *ngIf="showToast" class="sbm-toast-notification">
+        <i class="bi bi-info-circle-fill me-2"></i>
+        <span>{{ toastMessage }}</span>
+        <button class="btn-close btn-close-white ms-auto" (click)="showToast = false"></button>
+      </div>
+
+      <!-- HERO BANNER: GO-LIVE PRODUCTION ONBOARDING (SBM SKY BACKGROUND #EAF7FC) -->
+      <div class="golive-hero-banner p-4 rounded-4 mb-4 border">
+        <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
+          <div>
+            <h3 class="fw-bold text-navy mb-1"><i class="bi bi-rocket-takeoff text-success me-2"></i> Go-Live Production Activation</h3>
+            <p class="text-muted fs-8 mb-0">
+              SBM Bank Kenya Limited enterprise production onboarding workflow for live Safaricom M-Pesa, PesaLink, and Banking API access.
+            </p>
+          </div>
+
+          <div class="d-flex align-items-center gap-2">
+            <span [class]="complianceStatus === 'APPROVED' ? 'badge bg-success-subtle text-success rounded-pill px-3 py-2 fw-bold fs-8' : 'badge bg-warning-subtle text-warning rounded-pill px-3 py-2 fw-bold fs-8'">
+              <i [class]="complianceStatus === 'APPROVED' ? 'bi bi-check-circle-fill me-1' : 'bi bi-clock-history me-1'"></i>
+              {{ complianceStatus === 'APPROVED' ? 'LIVE PRODUCTION APPROVED' : (complianceStatus === 'PENDING_REVIEW' ? 'PENDING COMPLIANCE REVIEW' : 'DRAFT ONBOARDING') }}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP PROGRESS TRACKER BAR (1 to 5) -->
+      <div class="golive-stepper-wrapper mb-4 p-3 bg-white border rounded-4 shadow-sm">
+        <div class="d-flex align-items-center justify-content-between">
+
+          <div [class]="currentStep >= 1 ? 'step-item active' : 'step-item'" (click)="currentStep = 1">
+            <div class="step-circle">1</div>
+            <span class="step-label">App Profile</span>
+          </div>
+
+          <div class="step-connector"></div>
+
+          <div [class]="currentStep >= 2 ? 'step-item active' : 'step-item'" (click)="currentStep = 2">
+            <div class="step-circle">2</div>
+            <span class="step-label">Security Check</span>
+          </div>
+
+          <div class="step-connector"></div>
+
+          <div [class]="currentStep >= 3 ? 'step-item active' : 'step-item'" (click)="currentStep = 3">
+            <div class="step-circle">3</div>
+            <span class="step-label">Sandbox Sign-off</span>
+          </div>
+
+          <div class="step-connector"></div>
+
+          <div [class]="currentStep >= 4 ? 'step-item active' : 'step-item'" (click)="currentStep = 4">
+            <div class="step-circle">4</div>
+            <span class="step-label">KYB Audit</span>
+          </div>
+
+          <div class="step-connector"></div>
+
+          <div [class]="currentStep >= 5 ? 'step-item active' : 'step-item'" (click)="currentStep = 5">
+            <div class="step-circle">5</div>
+            <span class="step-label">Live Production</span>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ===================================================================== -->
+      <!-- WIZARD STEP 1: APPLICATION PROFILE & SERVICES SELECTION -->
+      <!-- ===================================================================== -->
+      <div *ngIf="currentStep === 1">
+        <div class="sbm-card p-4">
+          <h5 class="fw-bold text-dark mb-3"><i class="bi bi-building-gear text-primary me-2"></i> Step 1: Enterprise
+            Profile & API Services</h5>
+          <p class="text-muted fs-8 mb-4">Enter your legal business details and select the SBM Bank Kenya API suites you
+            want activated in Live Production.</p>
+
+          <div class="row g-3 mb-4">
+            <div class="col-12 col-md-6">
+              <label class="form-label text-muted fs-8 fw-semibold">Application Gateway Name</label>
+              <input type="text" class="form-control sbm-custom-input" [(ngModel)]="appProfile.appName" />
+            </div>
+
+            <div class="col-12 col-md-6">
+              <label class="form-label text-muted fs-8 fw-semibold">Company Registered Legal Name</label>
+              <input type="text" class="form-control sbm-custom-input" [(ngModel)]="appProfile.businessName" />
+            </div>
+
+            <div class="col-12 col-md-4">
+              <label class="form-label text-muted fs-8 fw-semibold">KRA PIN Number</label>
+              <input type="text" class="form-control sbm-custom-input font-monospace" [(ngModel)]="appProfile.kraPin" />
+            </div>
+
+            <div class="col-12 col-md-4">
+              <label class="form-label text-muted fs-8 fw-semibold">Business Registration / CPR No</label>
+              <input type="text" class="form-control sbm-custom-input font-monospace"
+                [(ngModel)]="appProfile.registrationNo" />
+            </div>
+
+            <div class="col-12 col-md-4">
+              <label class="form-label text-muted fs-8 fw-semibold">Contact Email Address</label>
+              <input type="email" class="form-control sbm-custom-input" [(ngModel)]="appProfile.contactEmail" />
+            </div>
+          </div>
+
+          <h6 class="fw-bold text-dark mb-3">Select Target API Suites for Production Activation</h6>
+          <div class="row g-3 mb-4">
+            <div class="col-12 col-md-6" *ngFor="let s of apiSuites">
+              <div
+                [class]="s.selected ? 'p-3 border border-2 border-primary rounded-3 bg-light cursor-pointer' : 'p-3 border rounded-3 bg-white cursor-pointer'"
+                (click)="toggleSuite(s.id)">
+                <div class="d-flex align-items-center justify-content-between">
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" [checked]="s.selected" />
+                    <label class="form-check-label fw-bold text-dark fs-8">{{ s.name }}</label>
+                  </div>
+                  <span class="badge bg-primary-subtle text-primary rounded-pill px-2 py-1 fs-8">{{ s.badge }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="text-end">
+            <button class="btn btn-primary rounded-pill px-4 fw-bold shadow-sm" (click)="nextStep()">
+              Continue to Step 2: Technical Check <i class="bi bi-arrow-right ms-1"></i>
+            </button>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ===================================================================== -->
+      <!-- WIZARD STEP 2: TECHNICAL SECURITY & SERVER WHITELISTING -->
+      <!-- ===================================================================== -->
+      <div *ngIf="currentStep === 2">
+        <div class="sbm-card p-4">
+          <h5 class="fw-bold text-dark mb-3"><i class="bi bi-shield-lock-fill text-primary me-2"></i> Step 2: Server
+            Whitelisting & Technical Security</h5>
+          <p class="text-muted fs-8 mb-4">Configure static IP whitelisting rules and HTTPS SSL certificate details for
+            production security.</p>
+
+          <div class="row g-3 mb-4">
+            <div class="col-12">
+              <label class="form-label text-muted fs-8 fw-semibold">Production Server IP Addresses (Comma
+                Separated)</label>
+              <input type="text" class="form-control sbm-custom-input font-monospace"
+                [(ngModel)]="technicalSecurity.whitelistedIps" />
+              <small class="text-muted fs-8">Only requests from these IP CIDR blocks will be accepted by SBM Production
+                Gateway.</small>
+            </div>
+
+            <div class="col-12">
+              <label class="form-label text-muted fs-8 fw-semibold">HTTPS TLS 1.3 Webhook CallBack Listener URL</label>
+              <input type="url" class="form-control sbm-custom-input font-monospace"
+                [(ngModel)]="technicalSecurity.webhookCallbackUrl" />
+            </div>
+
+            <div class="col-12 col-md-6">
+              <div class="p-3 border rounded-3 bg-light">
+                <div class="form-check form-switch">
+                  <input class="form-check-input" type="checkbox" id="hmacCheck"
+                    [(ngModel)]="technicalSecurity.enforceHmac">
+                  <label class="form-check-label fw-bold text-dark fs-8" for="hmacCheck">Strict HMAC-SHA256 Signature
+                    Policy</label>
+                </div>
+                <small class="text-muted fs-8">Mandatory X-SBM-Signature header verification on all live POST
+                  requests.</small>
+              </div>
+            </div>
+
+            <div class="col-12 col-md-6">
+              <div class="p-3 border rounded-3 bg-light d-flex align-items-center justify-content-between">
+                <div>
+                  <div class="fw-bold text-dark fs-8"><i class="bi bi-file-earmark-lock text-success me-1"></i> RSA 2048
+                    Public Certificate</div>
+                  <small class="text-muted fs-8">{{ technicalSecurity.publicCertificateName }}</small>
+                </div>
+                <span class="badge bg-success-subtle text-success rounded-pill px-2 py-1 fs-8">UPLOADED</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="d-flex justify-content-between">
+            <button class="btn btn-outline-secondary rounded-pill px-4 fw-bold" (click)="prevStep()">
+              <i class="bi bi-arrow-left me-1"></i> Back to Step 1
+            </button>
+            <button class="btn btn-primary rounded-pill px-4 fw-bold shadow-sm" (click)="nextStep()">
+              Continue to Step 3: Sandbox Sign-off <i class="bi bi-arrow-right ms-1"></i>
+            </button>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ===================================================================== -->
+      <!-- WIZARD STEP 3: SANDBOX SIGN-OFF VERIFICATION -->
+      <!-- ===================================================================== -->
+      <div *ngIf="currentStep === 3">
+        <div class="sbm-card p-4">
+          <h5 class="fw-bold text-dark mb-3"><i class="bi bi-check2-square text-info me-2"></i> Step 3: Sandbox
+            Integration Sign-Off</h5>
+          <p class="text-muted fs-8 mb-4">Verification check confirming successful execution of Sandbox test
+            transactions.</p>
+
+          <div class="p-4 border border-info rounded-4 bg-light mb-4">
+            <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
+              <div class="d-flex align-items-center gap-3">
+                <i class="bi bi-patch-check-fill text-info fs-1"></i>
+                <div>
+                  <h6 class="fw-bold text-dark mb-1">Automated Sandbox Verification Passed</h6>
+                  <p class="text-muted fs-8 mb-0">
+                    Your application executed {{ sandboxSignoff.totalTestCount }} Sandbox transactions with {{
+                    sandboxSignoff.successRate }} success delivery rate.
+                  </p>
+                </div>
+              </div>
+              <span class="badge bg-info text-dark rounded-pill px-3 py-2 fw-bold">PASSED VERIFICATION</span>
+            </div>
+          </div>
+
+          <div class="d-flex justify-content-between">
+            <button class="btn btn-outline-secondary rounded-pill px-4 fw-bold" (click)="prevStep()">
+              <i class="bi bi-arrow-left me-1"></i> Back to Step 2
+            </button>
+            <button class="btn btn-primary rounded-pill px-4 fw-bold shadow-sm" (click)="nextStep()">
+              Continue to Step 4: KYB Audit <i class="bi bi-arrow-right ms-1"></i>
+            </button>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ===================================================================== -->
+      <!-- WIZARD STEP 4: KYB COMPLIANCE & LEGAL DOCUMENT UPLOADS -->
+      <!-- ===================================================================== -->
+      <div *ngIf="currentStep === 4">
+        <div class="sbm-card p-4">
+          <h5 class="fw-bold text-dark mb-3"><i class="bi bi-folder-check text-primary me-2"></i> Step 4: KYB Compliance
+            & Legal Document Uploads</h5>
+          <p class="text-muted fs-8 mb-4">Upload required legal verification documents for SBM Bank Compliance Officer
+            audit.</p>
+
+          <div class="row g-3 mb-4">
+
+            <div class="col-12 col-md-4">
+              <div class="p-3 border rounded-3 bg-light text-center">
+                <i class="bi bi-file-earmark-pdf fs-2 text-danger mb-2 d-block"></i>
+                <div class="fw-bold text-dark fs-8 mb-1">Certificate of Incorporation</div>
+                <small class="text-muted fs-8 d-block mb-2">{{ kybDocuments.certOfIncName }}</small>
+                <span class="badge bg-success-subtle text-success rounded-pill px-3 py-1 fs-8">VERIFIED</span>
+              </div>
+            </div>
+
+            <div class="col-12 col-md-4">
+              <div class="p-3 border rounded-3 bg-light text-center">
+                <i class="bi bi-person-badge fs-2 text-primary mb-2 d-block"></i>
+                <div class="fw-bold text-dark fs-8 mb-1">Director National IDs / Passports</div>
+                <small class="text-muted fs-8 d-block mb-2">{{ kybDocuments.directorIdName }}</small>
+                <span class="badge bg-success-subtle text-success rounded-pill px-3 py-1 fs-8">VERIFIED</span>
+              </div>
+            </div>
+
+            <div class="col-12 col-md-4">
+              <div class="p-3 border rounded-3 bg-light text-center">
+                <i class="bi bi-shield-check fs-2 text-success mb-2 d-block"></i>
+                <div class="fw-bold text-dark fs-8 mb-1">KRA Tax Compliance Certificate</div>
+                <small class="text-muted fs-8 d-block mb-2">{{ kybDocuments.taxComplianceName }}</small>
+                <span class="badge bg-success-subtle text-success rounded-pill px-3 py-1 fs-8">VERIFIED</span>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="d-flex justify-content-between">
+            <button class="btn btn-outline-secondary rounded-pill px-4 fw-bold" (click)="prevStep()">
+              <i class="bi bi-arrow-left me-1"></i> Back to Step 3
+            </button>
+
+            <button *ngIf="complianceStatus === 'DRAFT'" class="btn btn-success rounded-pill px-4 fw-bold shadow-sm"
+              (click)="submitForComplianceReview()">
+              Submit for SBM Compliance Audit <i class="bi bi-send-fill ms-1"></i>
+            </button>
+
+            <button *ngIf="complianceStatus !== 'DRAFT'" class="btn btn-primary rounded-pill px-4 fw-bold shadow-sm"
+              (click)="nextStep()">
+              Go to Step 5: Live Gateway <i class="bi bi-arrow-right ms-1"></i>
+            </button>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ===================================================================== -->
+      <!-- WIZARD STEP 5: COMPLIANCE AUDIT STATUS & LIVE PRODUCTION CONSOLE -->
+      <!-- ===================================================================== -->
+      <div *ngIf="currentStep === 5">
+
+        <!-- PENDING REVIEW AUDIT BANNER -->
+        <div *ngIf="complianceStatus === 'PENDING_REVIEW'" class="sbm-card p-4 text-center border-top-warning mb-4">
+          <i class="bi bi-hourglass-split fs-1 text-warning mb-3 d-block"></i>
+          <h4 class="fw-bold text-dark mb-2">Go-Live Application Under Compliance Review</h4>
+          <p class="text-muted fs-8 max-w-600 mx-auto mb-4">
+            SBM Bank Kenya Limited Legal & Compliance Officers are reviewing your KYB documents, static server IP
+            whitelisting, and SSL certificate credentials.
+          </p>
+
+          <div class="p-3 bg-light rounded-3 border max-w-600 mx-auto mb-4 text-start">
+            <small class="text-dark fs-8 d-block mb-1"><strong>Application Ref:</strong> SBM-GO-LIVE-2026-09182</small>
+            <small class="text-dark fs-8 d-block mb-1"><strong>Submitted By:</strong> Allan Cheruiyot (SBM Bank
+              Enterprise Developer)</small>
+            <small class="text-dark fs-8 d-block"><strong>Target Environment:</strong> Live Production (Central Bank of
+              Kenya Gateway)</small>
+          </div>
+
+          <button class="btn btn-success rounded-pill px-4 fw-bold shadow-sm" (click)="simulateComplianceApproval()">
+            <i class="bi bi-check-circle-fill me-1"></i> Simulate Compliance Sign-Off & Approve Live Access
+          </button>
+        </div>
+
+        <!-- APPROVED LIVE PRODUCTION GATEWAY CONSOLE -->
+        <div *ngIf="complianceStatus === 'APPROVED'">
+
+          <!-- Production Live Certificate Banner -->
+          <div class="sbm-card p-4 border-top-success mb-4">
+            <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
+              <div class="d-flex align-items-center gap-3">
+                <i class="bi bi-shield-check text-success fs-1"></i>
+                <div>
+                  <h5 class="fw-bold text-dark mb-1">SBM Bank Live Production Gateway Active</h5>
+                  <p class="text-muted fs-8 mb-0">
+                    Official Central Bank of Kenya (CBK) Approval Certificate:
+                    <code>{{ productionCredentials.approvalCertificateNo }}</code>
+                  </p>
+                </div>
+              </div>
+              <span class="badge bg-success-subtle text-success rounded-pill px-3 py-2 fw-bold fs-8">
+                <i class="bi bi-check-circle-fill me-1"></i> PROD APPROVED & ACTIVE
+              </span>
+            </div>
+          </div>
+
+          <!-- Production Credentials & IP Whitelisting Cards -->
+          <div class="row g-4 mb-4">
+
+            <div class="col-12 col-lg-6">
+              <div class="sbm-card p-4 h-100 border-top-success">
+                <h5 class="fw-bold text-dark mb-3"><i class="bi bi-key-fill text-success me-2"></i> Live Production
+                  Credentials</h5>
+
+                <div class="mb-3">
+                  <label class="form-label text-muted fs-8 fw-semibold">Production Client ID</label>
+                  <div class="input-group">
+                    <input type="text" class="form-control sbm-custom-input font-monospace"
+                      [value]="productionCredentials.liveClientId" readonly />
+                    <button class="btn btn-outline-success"
+                      (click)="copyToClipboard(productionCredentials.liveClientId, 'Production Client ID')">
+                      <i class="bi bi-copy"></i>
+                    </button>
+                  </div>
+                </div>
+
+                <div class="mb-3">
+                  <label class="form-label text-muted fs-8 fw-semibold">Production Passkey / HMAC Secret</label>
+                  <div class="input-group">
+                    <input [type]="showLivePasskey ? 'text' : 'password'"
+                      class="form-control sbm-custom-input font-monospace" [value]="productionCredentials.livePasskey"
+                      readonly />
+                    <button class="btn btn-outline-secondary" (click)="togglePasskeyVisibility()">
+                      <i [class]="showLivePasskey ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
+                    </button>
+                    <button class="btn btn-outline-success"
+                      (click)="copyToClipboard(productionCredentials.livePasskey, 'Production Passkey')">
+                      <i class="bi bi-copy"></i>
+                    </button>
+                  </div>
+                </div>
+
+                <div class="mb-3">
+                  <label class="form-label text-muted fs-8 fw-semibold">Production Base Endpoint</label>
+                  <div class="input-group">
+                    <input type="text" class="form-control sbm-custom-input font-monospace"
+                      [value]="productionCredentials.liveBaseUrl" readonly />
+                    <button class="btn btn-outline-success"
+                      (click)="copyToClipboard(productionCredentials.liveBaseUrl, 'Production Base URL')">
+                      <i class="bi bi-copy"></i>
+                    </button>
+                  </div>
+                </div>
+
+                <div class="text-end pt-2 border-top">
+                  <button class="btn btn-success btn-sm text-white rounded-pill px-3 fw-bold shadow-sm"
+                    (click)="regenerateProductionKey()">
+                    <i class="bi bi-arrow-repeat me-1"></i> Regenerate Production Key
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-12 col-lg-6">
+              <div class="sbm-card p-4 h-100 border-top-primary">
+                <h5 class="fw-bold text-dark mb-3"><i class="bi bi-hdd-network-fill text-primary me-2"></i> Server
+                  Security Rules</h5>
+
+                <div class="mb-3">
+                  <label class="form-label text-muted fs-8 fw-semibold">Whitelisted Production Server IPs</label>
+                  <input type="text" class="form-control sbm-custom-input font-monospace"
+                    [value]="technicalSecurity.whitelistedIps" readonly />
+                </div>
+
+                <div class="mb-3">
+                  <label class="form-label text-muted fs-8 fw-semibold">HTTPS Webhook Listener URL</label>
+                  <input type="text" class="form-control sbm-custom-input font-monospace"
+                    [value]="technicalSecurity.webhookCallbackUrl" readonly />
+                </div>
+
+                <div class="p-3 bg-light rounded-3 border">
+                  <small class="text-muted fs-8">
+                    <i class="bi bi-shield-lock-fill text-success me-1"></i> Production calls enforce TLS 1.3, static IP
+                    whitelisting, and HMAC-SHA256 authorization.
+                  </small>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+</div>

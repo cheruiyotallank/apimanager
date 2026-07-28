@@ -65,7 +65,7 @@ export class DashboardComponent implements OnInit {
     private router: Router,
     private sbmApiService: SbmBankApiService,
     private authService: AuthService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     console.log('DashboardComponent ngOnInit called');
@@ -226,13 +226,31 @@ export class DashboardComponent implements OnInit {
     this.isProfileDropdownOpen = false;
   }
 
+  // Launch Sandbox Playground
+  openSandboxPlayground(): void {
+    this.isProfileDropdownOpen = false;
+    this.router.navigate(['/post_login/sandbox']);
+  }
+
+  // Launch Go-Live Wizard & Production Console
+  openGoLiveConsole(): void {
+    this.isProfileDropdownOpen = false;
+    this.router.navigate(['/post_login/go-live']);
+  }
+
   // Profile Dropdown Item Handlers - Navigates to /post_login/profile with appropriate tab
   onDropdownItemClick(itemName: string): void {
     this.isProfileDropdownOpen = false;
+    if (itemName.includes('Sandbox')) {
+      this.router.navigate(['/post_login/sandbox']);
+      return;
+    }
+    if (itemName.includes('Go-Live') || itemName.includes('Production')) {
+      this.router.navigate(['/post_login/go-live']);
+      return;
+    }
     let targetTab = 'credentials';
-    if (itemName.includes('Keys')) {
-      targetTab = 'apikeys';
-    } else if (itemName.includes('Analytics')) {
+    if (itemName.includes('Analytics')) {
       targetTab = 'analytics';
     } else if (itemName.includes('Settings')) {
       targetTab = 'settings';
@@ -257,9 +275,8 @@ export class DashboardComponent implements OnInit {
   // Action for "More ->" button on each card:
   handleCardMore(cat: ApiCategory): void {
     if (cat.id === 'safaricom') {
-      this.selectedCategoryModal = cat;
-      this.activeModalTab = 'endpoints';
-      this.testedEndpointResult = null;
+      // Navigate to sandbox page with Safaricom API keys
+      this.router.navigate(['/post_login/sandbox'], { queryParams: { api: 'safaricom' } });
     } else {
       this.triggerToast(`${cat.name} Coming Soon!`);
     }

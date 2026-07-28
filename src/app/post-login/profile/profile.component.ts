@@ -23,16 +23,26 @@ export class ProfileComponent implements OnInit {
   // Active Tab State: 'credentials' | 'apikeys' | 'analytics' | 'settings' | 'help'
   activeTab: 'credentials' | 'apikeys' | 'analytics' | 'settings' | 'help' = 'credentials';
 
-  // User Profile Credentials
+  // User Profile Details & Dual Environment Credentials (Sandbox & Live Production)
   userProfile = {
     name: 'Allan Cheruiyot',
     email: 'allan.cheruiyot@sbmbank.co.ke',
+    phone: '+254 712 345 678',
     role: 'API Administrator',
     organization: 'SBM Bank Kenya',
     avatar: 'AC',
     tier: 'Enterprise Admin',
-    clientId: 'sbm_client_948172648192',
-    hmacSecret: 'sbm_sec_hmac_84719284719284719283719284719283',
+    status: 'ACTIVE',
+    // Sandbox Environment Credentials
+    sandboxClientId: 'sbm_sbx_client_948172648192',
+    sandboxHmacSecret: 'sbm_sbx_sec_84719284719284719283719284719283',
+    sandboxBaseUrl: 'https://sandbox.api.sbmbank.co.ke/v1',
+    sandboxStatus: 'ACTIVE',
+    // Live Production Environment Credentials
+    liveClientId: 'sbm_live_prod_309284019284',
+    liveHmacSecret: 'sbm_live_sec_99381726491827364918273649182736',
+    liveBaseUrl: 'https://api.sbmbank.co.ke/v1',
+    liveStatus: 'PROD APPROVED',
     quotaUsed: 74250,
     quotaLimit: 100000
   };
@@ -51,8 +61,9 @@ export class ProfileComponent implements OnInit {
     { id: 'key_3', name: 'Utility Settlements Key', keyPrefix: 'sbm_live_2841...c49d', createdDate: '2026-05-10', environment: 'SANDBOX', status: 'ACTIVE' }
   ];
 
-  // Show Key Secret Toggle
-  showHmacSecret: boolean = false;
+  // Show Key Secret Toggles
+  showSandboxHmacSecret: boolean = false;
+  showLiveHmacSecret: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -80,6 +91,12 @@ export class ProfileComponent implements OnInit {
       if (user.email) {
         this.userProfile.email = user.email;
       }
+      if (user.phone) {
+        this.userProfile.phone = user.phone;
+      }
+      if (user.organizationName) {
+        this.userProfile.organization = user.organizationName;
+      }
     }
   }
 
@@ -87,8 +104,12 @@ export class ProfileComponent implements OnInit {
     this.activeTab = tab;
   }
 
-  toggleSecretVisibility(): void {
-    this.showHmacSecret = !this.showHmacSecret;
+  toggleSandboxSecretVisibility(): void {
+    this.showSandboxHmacSecret = !this.showSandboxHmacSecret;
+  }
+
+  toggleLiveSecretVisibility(): void {
+    this.showLiveHmacSecret = !this.showLiveHmacSecret;
   }
 
   copyToClipboard(text: string, label: string): void {

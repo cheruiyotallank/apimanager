@@ -16,10 +16,10 @@
         <div class="brand-divider"></div>
         <div class="brand-text">
           <span class="brand-title">API MANAGER</span>
-          <span class="brand-subtitle">DEVELOPER PROFILE</span>
+          <span class="brand-subtitle">DEVELOPER PORTAL</span>
         </div>
       </div>
-      <span class="env-pill"><i class="bi bi-person-badge-fill me-1"></i> PROFILE CENTER</span>
+      <span class="env-pill"><i class="bi bi-person-badge-fill me-1"></i> DEVELOPER PROFILE</span>
     </div>
 
     <!-- Back to Dashboard Action Button -->
@@ -51,32 +51,50 @@
         <button class="btn-close btn-close-white ms-auto" (click)="showToast = false"></button>
       </div>
 
-      <!-- PROFILE HEADER CARD BANNER -->
+      <!-- RICH PROFILE HERO CARD BANNER (ACCOUNT DETAILS EMBEDDED IN HERO CARD) -->
       <div class="profile-hero-card p-4 rounded-4 text-white mb-4 shadow-sm">
-        <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
+        <div class="d-flex flex-wrap align-items-center justify-content-between gap-4">
+          
+          <!-- Avatar & Full Account Profile Info -->
           <div class="d-flex align-items-center gap-3">
             <div class="profile-hero-avatar">{{ userProfile.avatar }}</div>
             <div>
-              <h3 class="mb-1 fw-bold text-white">{{ userProfile.name }}</h3>
-              <p class="mb-0 text-light opacity-85 fs-8">
-                <i class="bi bi-building me-1"></i> {{ userProfile.organization }} • {{ userProfile.role }}
+              <div class="d-flex align-items-center gap-2 mb-1">
+                <h3 class="mb-0 fw-bold text-white">{{ userProfile.name }}</h3>
+                <span class="badge bg-success-subtle text-success rounded-pill px-2 py-1 fs-8 fw-semibold">
+                  <i class="bi bi-check-circle-fill me-1"></i> Account {{ userProfile.status }}
+                </span>
+              </div>
+              <p class="mb-1 text-light opacity-90 fs-8">
+                <i class="bi bi-envelope-fill me-1 text-info"></i> {{ userProfile.email }}
+                <span class="mx-2">•</span>
+                <i class="bi bi-telephone-fill me-1 text-info"></i> {{ userProfile.phone }}
+              </p>
+              <p class="mb-0 text-light opacity-75 fs-8">
+                <i class="bi bi-building me-1"></i> {{ userProfile.organization }}
+                <span class="mx-2">•</span>
+                <i class="bi bi-person-workspace me-1"></i> {{ userProfile.role }}
               </p>
             </div>
           </div>
-          <div class="d-flex align-items-center gap-2">
-            <span class="badge bg-white text-primary rounded-pill px-3 py-2 fw-bold">
-              <i class="bi bi-shield-check me-1"></i> {{ userProfile.tier }}
+
+          <!-- Tier Badge & Actions -->
+          <div class="d-flex flex-column align-items-end gap-2 ms-auto">
+            <span class="badge bg-white text-primary rounded-pill px-3 py-2 fw-bold shadow-sm">
+              <i class="bi bi-shield-check me-1 text-primary"></i> {{ userProfile.tier }}
             </span>
+            <small class="text-light opacity-75 fs-8">SBM Bank Kenya Developer Portal</small>
           </div>
+
         </div>
       </div>
 
-      <!-- PROFILE SUB-NAVIGATION TABS -->
+      <!-- PROFILE SUB-NAVIGATION TABS (RENAMED TO "Credentials") -->
       <div class="profile-tabs-wrapper d-flex flex-wrap align-items-center gap-2 mb-4 border-bottom pb-2">
         <button 
           [class]="activeTab === 'credentials' ? 'profile-tab-btn active' : 'profile-tab-btn'" 
           (click)="setTab('credentials')">
-          <i class="bi bi-person-vcard me-1"></i> Profile & Credentials
+          <i class="bi bi-shield-lock-fill me-1"></i> Credentials
         </button>
         <button 
           [class]="activeTab === 'apikeys' ? 'profile-tab-btn active' : 'profile-tab-btn'" 
@@ -101,59 +119,61 @@
       </div>
 
       <!-- ===================================================================== -->
-      <!-- TAB 1: PROFILE & CREDENTIALS -->
+      <!-- TAB 1: CREDENTIALS (DUAL CARDS: SANDBOX CREDENTIALS vs LIVE PRODUCTION CREDENTIALS) -->
       <!-- ===================================================================== -->
       <div *ngIf="activeTab === 'credentials'">
         <div class="row g-4">
           
+          <!-- LEFT CARD: SANDBOX CREDENTIALS -->
           <div class="col-12 col-lg-6">
-            <div class="sbm-card p-4 h-100">
-              <h5 class="fw-bold text-dark mb-3"><i class="bi bi-person-badge text-primary me-2"></i> Account Details</h5>
+            <div class="sbm-card p-4 h-100 border-top-info">
               
-              <div class="mb-3">
-                <label class="form-label text-muted fs-8">Full Name</label>
-                <input type="text" class="form-control sbm-custom-input" [value]="userProfile.name" readonly />
+              <div class="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom">
+                <div class="d-flex align-items-center gap-2">
+                  <i class="bi bi-box-seam-fill text-info fs-5"></i>
+                  <h5 class="fw-bold text-dark mb-0">Sandbox Credentials</h5>
+                </div>
+                <span class="badge bg-info-subtle text-info rounded-pill px-3 py-1 fs-8 fw-semibold">
+                  <i class="bi bi-lightning-charge-fill me-1"></i> SANDBOX READY
+                </span>
               </div>
 
+              <!-- Sandbox Client ID -->
               <div class="mb-3">
-                <label class="form-label text-muted fs-8">Corporate Email</label>
-                <input type="email" class="form-control sbm-custom-input" [value]="userProfile.email" readonly />
-              </div>
-
-              <div class="mb-3">
-                <label class="form-label text-muted fs-8">Organization / Bank Branch</label>
-                <input type="text" class="form-control sbm-custom-input" [value]="userProfile.organization" readonly />
-              </div>
-            </div>
-          </div>
-
-          <div class="col-12 col-lg-6">
-            <div class="sbm-card p-4 h-100">
-              <h5 class="fw-bold text-dark mb-3"><i class="bi bi-shield-lock text-primary me-2"></i> Sandbox Credentials</h5>
-
-              <div class="mb-3">
-                <label class="form-label text-muted fs-8">Client ID</label>
+                <label class="form-label text-muted fs-8 fw-semibold">Sandbox Client ID</label>
                 <div class="input-group">
-                  <input type="text" class="form-control sbm-custom-input font-monospace" [value]="userProfile.clientId" readonly />
-                  <button class="btn btn-outline-primary" (click)="copyToClipboard(userProfile.clientId, 'Client ID')">
+                  <input type="text" class="form-control sbm-custom-input font-monospace" [value]="userProfile.sandboxClientId" readonly />
+                  <button class="btn btn-outline-info" (click)="copyToClipboard(userProfile.sandboxClientId, 'Sandbox Client ID')">
                     <i class="bi bi-copy"></i>
                   </button>
                 </div>
               </div>
 
+              <!-- Sandbox HMAC Secret Key -->
               <div class="mb-3">
-                <label class="form-label text-muted fs-8">HMAC Secret Key</label>
+                <label class="form-label text-muted fs-8 fw-semibold">Sandbox HMAC Secret Key</label>
                 <div class="input-group">
                   <input 
-                    [type]="showHmacSecret ? 'text' : 'password'" 
+                    [type]="showSandboxHmacSecret ? 'text' : 'password'" 
                     class="form-control sbm-custom-input font-monospace" 
-                    [value]="userProfile.hmacSecret" 
+                    [value]="userProfile.sandboxHmacSecret" 
                     readonly 
                   />
-                  <button class="btn btn-outline-secondary" (click)="toggleSecretVisibility()">
-                    <i [class]="showHmacSecret ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
+                  <button class="btn btn-outline-secondary" (click)="toggleSandboxSecretVisibility()">
+                    <i [class]="showSandboxHmacSecret ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
                   </button>
-                  <button class="btn btn-outline-primary" (click)="copyToClipboard(userProfile.hmacSecret, 'HMAC Secret Key')">
+                  <button class="btn btn-outline-info" (click)="copyToClipboard(userProfile.sandboxHmacSecret, 'Sandbox HMAC Secret Key')">
+                    <i class="bi bi-copy"></i>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Sandbox Base Endpoint -->
+              <div class="mb-3">
+                <label class="form-label text-muted fs-8 fw-semibold">Sandbox Base Endpoint</label>
+                <div class="input-group">
+                  <input type="text" class="form-control sbm-custom-input font-monospace" [value]="userProfile.sandboxBaseUrl" readonly />
+                  <button class="btn btn-outline-info" (click)="copyToClipboard(userProfile.sandboxBaseUrl, 'Sandbox Base URL')">
                     <i class="bi bi-copy"></i>
                   </button>
                 </div>
@@ -161,7 +181,71 @@
 
               <div class="p-3 bg-light rounded-3 border mt-3">
                 <small class="text-muted fs-8">
-                  <i class="bi bi-shield-check me-1 text-success"></i> Keep your HMAC Secret Key secure. Do not share credentials in client-side code.
+                  <i class="bi bi-info-circle-fill text-info me-1"></i> Sandbox environment is active for integration testing with instant mock responses.
+                </small>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- RIGHT CARD: LIVE PRODUCTION CREDENTIALS -->
+          <div class="col-12 col-lg-6">
+            <div class="sbm-card p-4 h-100 border-top-success">
+              
+              <div class="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom">
+                <div class="d-flex align-items-center gap-2">
+                  <i class="bi bi-shield-check text-success fs-5"></i>
+                  <h5 class="fw-bold text-dark mb-0">Live Production Credentials</h5>
+                </div>
+                <span class="badge bg-success-subtle text-success rounded-pill px-3 py-1 fs-8 fw-semibold">
+                  <i class="bi bi-check-circle-fill me-1"></i> {{ userProfile.liveStatus }}
+                </span>
+              </div>
+
+              <!-- Live Production Client ID -->
+              <div class="mb-3">
+                <label class="form-label text-muted fs-8 fw-semibold">Production Client ID</label>
+                <div class="input-group">
+                  <input type="text" class="form-control sbm-custom-input font-monospace" [value]="userProfile.liveClientId" readonly />
+                  <button class="btn btn-outline-success" (click)="copyToClipboard(userProfile.liveClientId, 'Production Client ID')">
+                    <i class="bi bi-copy"></i>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Live Production HMAC Secret Key -->
+              <div class="mb-3">
+                <label class="form-label text-muted fs-8 fw-semibold">Production HMAC Secret Key</label>
+                <div class="input-group">
+                  <input 
+                    [type]="showLiveHmacSecret ? 'text' : 'password'" 
+                    class="form-control sbm-custom-input font-monospace" 
+                    [value]="userProfile.liveHmacSecret" 
+                    readonly 
+                  />
+                  <button class="btn btn-outline-secondary" (click)="toggleLiveSecretVisibility()">
+                    <i [class]="showLiveHmacSecret ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
+                  </button>
+                  <button class="btn btn-outline-success" (click)="copyToClipboard(userProfile.liveHmacSecret, 'Production HMAC Secret Key')">
+                    <i class="bi bi-copy"></i>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Live Production Base Endpoint -->
+              <div class="mb-3">
+                <label class="form-label text-muted fs-8 fw-semibold">Production Base Endpoint</label>
+                <div class="input-group">
+                  <input type="text" class="form-control sbm-custom-input font-monospace" [value]="userProfile.liveBaseUrl" readonly />
+                  <button class="btn btn-outline-success" (click)="copyToClipboard(userProfile.liveBaseUrl, 'Production Base URL')">
+                    <i class="bi bi-copy"></i>
+                  </button>
+                </div>
+              </div>
+
+              <div class="p-3 bg-light rounded-3 border mt-3">
+                <small class="text-muted fs-8">
+                  <i class="bi bi-shield-lock-fill text-success me-1"></i> Production calls require TLS 1.3 encryption, IP Whitelisting, and HMAC-SHA256 headers.
                 </small>
               </div>
 
@@ -179,7 +263,7 @@
           <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-3">
             <div>
               <h5 class="fw-bold text-dark mb-1"><i class="bi bi-key-fill text-primary me-2"></i> Active API Keys</h5>
-              <p class="text-muted fs-8 mb-0">Manage authentication keys for SBM Bank Kenya API sandbox environment.</p>
+              <p class="text-muted fs-8 mb-0">Manage authentication keys for SBM Bank Kenya Sandbox & Live Production environments.</p>
             </div>
             <button class="btn btn-primary rounded-pill px-4 btn-sm fw-bold" (click)="triggerToast('Generated New Sandbox API Key')">
               <i class="bi bi-plus-lg me-1"></i> Generate New Key
@@ -268,7 +352,12 @@
           
           <div class="mb-3">
             <label class="form-label text-muted fs-8">Sandbox Base Endpoint</label>
-            <input type="text" class="form-control sbm-custom-input font-monospace" value="https://sandbox.api.sbmbank.co.ke/v1" readonly />
+            <input type="text" class="form-control sbm-custom-input font-monospace" [value]="userProfile.sandboxBaseUrl" readonly />
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label text-muted fs-8">Production Base Endpoint</label>
+            <input type="text" class="form-control sbm-custom-input font-monospace" [value]="userProfile.liveBaseUrl" readonly />
           </div>
 
           <div class="mb-3">

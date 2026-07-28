@@ -1,0 +1,289 @@
+<div class="sbm-sandbox-layout">
+
+  <!-- ========================================================================= -->
+  <!-- TOP HEADER (SBM Bank Logo | Back to Dashboard | Sandbox Badge) -->
+  <!-- ========================================================================= -->
+  <header class="sbm-header-bar">
+    <div class="header-left d-flex align-items-center gap-3">
+      <!-- SBM Bank Logo -->
+      <div class="sbm-brand-logo" (click)="navigateBackToDashboard()" style="cursor: pointer;">
+        <img 
+          [src]="sbmLogoPath" 
+          (error)="onLogoError($event)" 
+          alt="SBM Bank Logo" 
+          class="sbm-header-logo-img"
+        />
+        <div class="brand-divider"></div>
+        <div class="brand-text">
+          <span class="brand-title">API MANAGER</span>
+          <span class="brand-subtitle">DEVELOPER PORTAL</span>
+        </div>
+      </div>
+      <span class="env-pill bg-info-subtle text-info"><i class="bi bi-box-seam-fill me-1"></i> SANDBOX PLAYGROUND</span>
+    </div>
+
+    <!-- Back to Dashboard Action Button -->
+    <div class="header-right d-flex align-items-center gap-3">
+      <button class="btn btn-outline-primary btn-sm rounded-pill px-3 fw-bold" (click)="navigateBackToDashboard()">
+        <i class="bi bi-arrow-left me-1"></i> Back to Dashboard
+      </button>
+
+      <div class="sandbox-mode-indicator badge bg-info text-dark rounded-pill px-3 py-2 fw-bold shadow-sm">
+        <i class="bi bi-shield-check me-1"></i> SANDBOX MODE ACTIVE
+      </div>
+    </div>
+  </header>
+
+  <!-- ========================================================================= -->
+  <!-- MAIN SANDBOX PLAYGROUND BODY -->
+  <!-- ========================================================================= -->
+  <main class="sbm-sandbox-body sbm-scroll-container">
+    <div class="container-fluid px-4 px-lg-5 py-4">
+
+      <!-- Toast Notification -->
+      <div *ngIf="showToast" class="sbm-toast-notification">
+        <i class="bi bi-info-circle-fill me-2"></i>
+        <span>{{ toastMessage }}</span>
+        <button class="btn-close btn-close-white ms-auto" (click)="showToast = false"></button>
+      </div>
+
+      <!-- TOP CONTROL BANNER: BASE URL & OAUTH TOKEN BAR -->
+      <div class="sandbox-control-banner p-4 rounded-4 text-white mb-4 shadow-sm">
+        <div class="row align-items-center g-3">
+          <div class="col-12 col-lg-5">
+            <label class="text-light opacity-75 fs-8 fw-semibold mb-1">Sandbox Endpoint Base URL</label>
+            <div class="input-group">
+              <span class="input-group-text bg-dark border-secondary text-info font-monospace fs-8">POST</span>
+              <input type="text" class="form-control bg-dark border-secondary text-white font-monospace fs-8" [value]="sandboxBaseUrl" readonly />
+              <button class="btn btn-outline-info btn-sm" (click)="copyToClipboard(sandboxBaseUrl, 'Sandbox Base URL')">
+                <i class="bi bi-copy"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="col-12 col-lg-5">
+            <label class="text-light opacity-75 fs-8 fw-semibold mb-1">Active OAuth 2.0 Bearer Token (Expires in {{ tokenExpiresInSeconds }}s)</label>
+            <div class="input-group">
+              <input type="text" class="form-control bg-dark border-secondary text-white font-monospace fs-8" [value]="oauthToken" readonly />
+              <button class="btn btn-outline-info btn-sm" (click)="copyToClipboard(oauthToken, 'OAuth Token')">
+                <i class="bi bi-copy"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="col-12 col-lg-2 text-end">
+            <button class="btn btn-info text-white rounded-pill w-100 fw-bold shadow-sm" (click)="generateOAuthToken()">
+              <i class="bi bi-key-fill me-1"></i> New Token
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- SERVICE SUITE NAVIGATION TABS -->
+      <div class="sandbox-tabs-wrapper d-flex flex-wrap align-items-center gap-2 mb-4 border-bottom pb-2">
+        <button [class]="activeSuite === 'oauth' ? 'sandbox-tab-btn active' : 'sandbox-tab-btn'" (click)="selectSuite('oauth')">
+          <i class="bi bi-key-fill me-1"></i> OAuth 2.0 Token
+        </button>
+        <button [class]="activeSuite === 'stk' ? 'sandbox-tab-btn active' : 'sandbox-tab-btn'" (click)="selectSuite('stk')">
+          <i class="bi bi-phone-fill me-1"></i> Lipa Na M-Pesa STK Push
+        </button>
+        <button [class]="activeSuite === 'b2c' ? 'sandbox-tab-btn active' : 'sandbox-tab-btn'" (click)="selectSuite('b2c')">
+          <i class="bi bi-cash-stack me-1"></i> B2C Fund Disbursal
+        </button>
+        <button [class]="activeSuite === 'c2b' ? 'sandbox-tab-btn active' : 'sandbox-tab-btn'" (click)="selectSuite('c2b')">
+          <i class="bi bi-building me-1"></i> C2B Paybill Register
+        </button>
+        <button [class]="activeSuite === 'pesalink' ? 'sandbox-tab-btn active' : 'sandbox-tab-btn'" (click)="selectSuite('pesalink')">
+          <i class="bi bi-bank me-1"></i> PesaLink Transfer
+        </button>
+        <button [class]="activeSuite === 'utility' ? 'sandbox-tab-btn active' : 'sandbox-tab-btn'" (click)="selectSuite('utility')">
+          <i class="bi bi-lightbulb-fill me-1"></i> Utility Payments
+        </button>
+      </div>
+
+      <!-- MAIN PLAYGROUND GRID (REQUEST FORM vs LIVE TERMINAL & CODE GENERATOR) -->
+      <div class="row g-4 mb-4">
+        
+        <!-- LEFT COLUMN: INTERACTIVE REQUEST FORM & PARAMETER EDITOR -->
+        <div class="col-12 col-lg-6">
+          <div class="sbm-card p-4 h-100 border-top-info d-flex flex-column">
+            
+            <div class="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom">
+              <h5 class="fw-bold text-dark mb-0">
+                <i class="bi bi-sliders text-info me-2"></i> Request Parameters Editor
+              </h5>
+              <span class="badge bg-info-subtle text-info rounded-pill px-3 py-1 fs-8 fw-semibold">
+                {{ activeSuite.toUpperCase() }} API
+              </span>
+            </div>
+
+            <!-- Parameters Editor Fields -->
+            <div class="row g-3">
+              
+              <!-- Business ShortCode -->
+              <div class="col-12 col-md-6">
+                <label class="form-label text-muted fs-8 fw-semibold">Business ShortCode / Paybill</label>
+                <input type="text" class="form-control sbm-custom-input font-monospace" [(ngModel)]="requestParams.businessShortCode" />
+              </div>
+
+              <!-- Phone Number -->
+              <div class="col-12 col-md-6">
+                <label class="form-label text-muted fs-8 fw-semibold">Customer Phone (2547XXXXXXXX)</label>
+                <input type="text" class="form-control sbm-custom-input font-monospace" [(ngModel)]="requestParams.phoneNumber" />
+              </div>
+
+              <!-- Amount -->
+              <div class="col-12 col-md-6">
+                <label class="form-label text-muted fs-8 fw-semibold">Transaction Amount (KES)</label>
+                <input type="number" class="form-control sbm-custom-input font-monospace" [(ngModel)]="requestParams.amount" />
+              </div>
+
+              <!-- Account Reference -->
+              <div class="col-12 col-md-6">
+                <label class="form-label text-muted fs-8 fw-semibold">Account Reference / Invoice</label>
+                <input type="text" class="form-control sbm-custom-input" [(ngModel)]="requestParams.accountReference" />
+              </div>
+
+              <!-- Webhook Callback URL -->
+              <div class="col-12">
+                <label class="form-label text-muted fs-8 fw-semibold">Webhook CallBack URL</label>
+                <input type="url" class="form-control sbm-custom-input font-monospace" [(ngModel)]="requestParams.callbackUrl" />
+              </div>
+
+              <!-- Transaction Description -->
+              <div class="col-12">
+                <label class="form-label text-muted fs-8 fw-semibold">Transaction Description</label>
+                <input type="text" class="form-control sbm-custom-input" [(ngModel)]="requestParams.transactionDesc" />
+              </div>
+
+            </div>
+
+            <!-- Action Execution Buttons -->
+            <div class="mt-auto pt-4 border-top d-flex align-items-center justify-content-between">
+              <button class="btn btn-outline-secondary btn-sm rounded-pill px-3 fw-bold" (click)="ngOnInit()">
+                <i class="bi bi-arrow-counterclockwise me-1"></i> Reset Form
+              </button>
+
+              <button class="btn btn-primary rounded-pill px-4 fw-bold shadow-sm" [disabled]="isExecuting" (click)="executeSandboxRequest()">
+                <span *ngIf="isExecuting" class="spinner-border spinner-border-sm me-2" role="status"></span>
+                <i *ngIf="!isExecuting" class="bi bi-rocket-takeoff-fill me-1"></i> 
+                {{ isExecuting ? 'Executing Request...' : 'Execute Sandbox Request' }}
+              </button>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- RIGHT COLUMN: LIVE TERMINAL & READY-TO-USE CODE GENERATOR -->
+        <div class="col-12 col-lg-6">
+          <div class="sbm-card p-0 h-100 overflow-hidden border-top-primary d-flex flex-column">
+            
+            <!-- Terminal Header Controls -->
+            <div class="terminal-header p-3 bg-dark text-white d-flex align-items-center justify-content-between border-bottom border-secondary">
+              
+              <!-- Code Generator Language Switcher -->
+              <div class="btn-group btn-group-sm" role="group">
+                <button [class]="activeCodeLang === 'curl' ? 'btn btn-info text-white fw-bold' : 'btn btn-outline-secondary text-light'" (click)="selectCodeLang('curl')">
+                  cURL
+                </button>
+                <button [class]="activeCodeLang === 'typescript' ? 'btn btn-info text-white fw-bold' : 'btn btn-outline-secondary text-light'" (click)="selectCodeLang('typescript')">
+                  TypeScript
+                </button>
+                <button [class]="activeCodeLang === 'python' ? 'btn btn-info text-white fw-bold' : 'btn btn-outline-secondary text-light'" (click)="selectCodeLang('python')">
+                  Python
+                </button>
+                <button [class]="activeCodeLang === 'java' ? 'btn btn-info text-white fw-bold' : 'btn btn-outline-secondary text-light'" (click)="selectCodeLang('java')">
+                  Java
+                </button>
+              </div>
+
+              <!-- Terminal Status Badge -->
+              <div class="d-flex align-items-center gap-2">
+                <span class="badge bg-success-subtle text-success rounded-pill px-3 py-1 fs-8 fw-semibold">
+                  {{ statusText }}
+                </span>
+                <span class="badge bg-secondary rounded-pill px-2 py-1 fs-8 text-light">
+                  <i class="bi bi-clock me-1"></i> {{ responseTimeMs }}ms
+                </span>
+              </div>
+            </div>
+
+            <!-- Code Snippet Display Block -->
+            <div class="code-snippet-box p-3 bg-black text-light font-monospace border-bottom border-secondary position-relative" style="max-height: 180px; overflow-y: auto;">
+              <button class="btn btn-sm btn-outline-info position-absolute top-0 end-0 m-2" (click)="copyToClipboard(generatedCodeSnippet, 'Code Snippet')">
+                <i class="bi bi-copy me-1"></i> Copy Code
+              </button>
+              <pre class="mb-0 fs-8 text-info"><code>{{ generatedCodeSnippet }}</code></pre>
+            </div>
+
+            <!-- JSON Response Terminal Screen -->
+            <div class="terminal-body p-3 bg-dark text-white font-monospace flex-grow-1" style="min-height: 220px; max-height: 320px; overflow-y: auto;">
+              <div class="text-muted fs-8 mb-2">// Live JSON HTTP Response Output</div>
+              <pre class="mb-0 text-success fs-8"><code>{{ responseBodyJson }}</code></pre>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+      <!-- BOTTOM FULL-WIDTH CARD: LIVE INCOMING WEBHOOK CALLBACK EVENT LOGS -->
+      <div class="sbm-card p-4">
+        <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-3">
+          <div>
+            <h5 class="fw-bold text-dark mb-1">
+              <i class="bi bi-broadcast text-info me-2"></i> Live Incoming Webhook Listener Logs
+            </h5>
+            <p class="text-muted fs-8 mb-0">Simulated real-time M-Pesa transaction confirmation payloads sent to your CallBackURL.</p>
+          </div>
+
+          <span class="badge bg-success-subtle text-success rounded-pill px-3 py-2 fw-bold">
+            <span class="spinner-grow spinner-grow-sm me-1" role="status"></span> LISTENER ONLINE
+          </span>
+        </div>
+
+        <!-- Webhook Logs Table -->
+        <div class="table-responsive border rounded-3">
+          <table class="table table-hover align-middle mb-0 custom-table">
+            <thead class="table-light">
+              <tr>
+                <th>Timestamp</th>
+                <th>Event Type</th>
+                <th>Checkout Request ID</th>
+                <th>Receipt No</th>
+                <th>Amount</th>
+                <th>Phone</th>
+                <th>Delivery Status</th>
+                <th class="text-end">Payload</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let log of webhookLogs">
+                <td class="text-muted fs-8 font-monospace">{{ log.timestamp }}</td>
+                <td>
+                  <span class="badge bg-info-subtle text-info rounded-pill px-2 py-1 fs-8">{{ log.eventType }}</span>
+                </td>
+                <td class="font-monospace fs-8 text-dark">{{ log.checkoutRequestId }}</td>
+                <td><code class="fw-bold text-success">{{ log.mpesaReceipt }}</code></td>
+                <td class="fw-bold text-dark fs-8">KES {{ log.amount | number:'1.2-2' }}</td>
+                <td class="text-muted fs-8 font-monospace">{{ log.phone }}</td>
+                <td>
+                  <span class="badge bg-success-subtle text-success rounded-pill px-2 py-1 fs-8">
+                    <i class="bi bi-check-all me-1"></i> {{ log.status }}
+                  </span>
+                </td>
+                <td class="text-end">
+                  <button class="btn btn-sm btn-outline-info rounded-pill px-3" (click)="copyToClipboard(log.payloadJson, 'Webhook Payload')">
+                    Copy JSON
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+</div>

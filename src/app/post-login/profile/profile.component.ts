@@ -3,15 +3,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { SbmBankApiService } from '../../core/services/sbm-bank-api.service';
 import { AuthService } from '../../core/services/auth.service';
 
-export interface ApiKeyItem {
-  id: string;
-  name: string;
-  keyPrefix: string;
-  createdDate: string;
-  environment: 'SANDBOX' | 'PRODUCTION';
-  status: 'ACTIVE' | 'REVOKED';
-}
-
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
@@ -20,8 +11,11 @@ export interface ApiKeyItem {
 })
 export class ProfileComponent implements OnInit {
 
-  // Active Tab State: 'credentials' | 'apikeys' | 'analytics' | 'settings' | 'help'
-  activeTab: 'credentials' | 'apikeys' | 'analytics' | 'settings' | 'help' = 'credentials';
+  // Active Tab State: 'credentials' | 'analytics' | 'settings' | 'help'
+  activeTab: 'credentials' | 'analytics' | 'settings' | 'help' = 'credentials';
+
+  // Live Production Approval Security State (Defaults to false until Go-Live Compliance Audit is completed)
+  isLiveApproved: boolean = false;
 
   // User Profile Details & Dual Environment Credentials (Sandbox & Live Production)
   userProfile = {
@@ -33,18 +27,40 @@ export class ProfileComponent implements OnInit {
     avatar: 'AC',
     tier: 'Enterprise Admin',
     status: 'ACTIVE',
-    // Sandbox Environment Credentials
+    // Sandbox Environment Credentials (Single Active Key - Always Unlocked)
     sandboxClientId: 'sbm_sbx_client_948172648192',
     sandboxHmacSecret: 'sbm_sbx_sec_84719284719284719283719284719283',
     sandboxBaseUrl: 'https://sandbox.api.sbmbank.co.ke/v1',
     sandboxStatus: 'ACTIVE',
-    // Live Production Environment Credentials
+    // Live Production Environment Credentials (Locked until Go-Live Approved)
     liveClientId: 'sbm_live_prod_309284019284',
     liveHmacSecret: 'sbm_live_sec_99381726491827364918273649182736',
     liveBaseUrl: 'https://api.sbmbank.co.ke/v1',
-    liveStatus: 'PROD APPROVED',
+    liveStatus: 'PENDING ONBOARDING',
     quotaUsed: 74250,
     quotaLimit: 100000
+  };
+
+  // Comprehensive Developer Preferences & General System Settings State
+  developerPreferences = {
+    portalName: 'SBM Bank Kenya Developer Gateway',
+    defaultEnvironment: 'SANDBOX',
+    dataRefreshInterval: 'REALTIME',
+    logLevel: 'INFO',
+    rateLimitThreshold: 100,
+    autoRetryFailed: true,
+    timezone: '(GMT+03:00) Nairobi, Kenya (EAT)',
+    webhookCallbackUrl: 'https://api.yourcompany.co.ke/sbm-callback',
+    webhookSecret: 'whsec_9481726481928371',
+    enforceHmacSignature: true,
+    mfaTwoFactorAuth: true,
+    sessionTimeoutMinutes: 30,
+    webhookAlerts: true,
+    quotaAlertThresholdPercent: 80,
+    securityAlertEmails: true,
+    portalTheme: 'LIGHT',
+    defaultSdkLanguage: 'CURL',
+    whitelistedIps: '102.210.14.88/32, 197.232.4.12'
   };
 
   sbmLogoPath: string = 'assets/sbm-logo.png';
@@ -53,13 +69,6 @@ export class ProfileComponent implements OnInit {
   // Toast Notification
   showToast: boolean = false;
   toastMessage: string = '';
-
-  // API Keys List
-  apiKeys: ApiKeyItem[] = [
-    { id: 'key_1', name: 'Safaricom M-Pesa Primary Key', keyPrefix: 'sbm_live_9481...a82f', createdDate: '2026-01-15', environment: 'SANDBOX', status: 'ACTIVE' },
-    { id: 'key_2', name: 'PesaLink IPSL Secondary Key', keyPrefix: 'sbm_live_7361...b91c', createdDate: '2026-03-02', environment: 'SANDBOX', status: 'ACTIVE' },
-    { id: 'key_3', name: 'Utility Settlements Key', keyPrefix: 'sbm_live_2841...c49d', createdDate: '2026-05-10', environment: 'SANDBOX', status: 'ACTIVE' }
-  ];
 
   // Show Key Secret Toggles
   showSandboxHmacSecret: boolean = false;
@@ -73,9 +82,9 @@ export class ProfileComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // Read query params for tab switching (e.g. /post_login/profile?tab=apikeys)
+    // Read query params for tab switching (e.g. /post_login/profile?tab=settings)
     this.route.queryParams.subscribe(params => {
-      if (params['tab'] && ['credentials', 'apikeys', 'analytics', 'settings', 'help'].includes(params['tab'])) {
+      if (params['tab'] && ['credentials', 'analytics', 'settings', 'help'].includes(params['tab'])) {
         this.activeTab = params['tab'];
       }
     });
@@ -100,7 +109,7 @@ export class ProfileComponent implements OnInit {
     }
   }
 
-  setTab(tab: 'credentials' | 'apikeys' | 'analytics' | 'settings' | 'help'): void {
+  setTab(tab: 'credentials' | 'analytics' | 'settings' | 'help'): void {
     this.activeTab = tab;
   }
 
@@ -109,46 +118,65 @@ export class ProfileComponent implements OnInit {
   }
 
   toggleLiveSecretVisibility(): void {
+    if (!this.isLiveApproved) {
+      this.triggerToast('Complete Go-Live Wizard onboarding and KYB compliance audit to unlock Live Production credentials.');
+      return;
+    }
     this.showLiveHmacSecret = !this.showLiveHmacSecret;
   }
 
   copyToClipboard(text: string, label: string): void {
+    if (label.includes('Production') && !this.isLiveApproved) {
+      this.triggerToast('Complete Go-Live Wizard onboarding and KYB compliance audit to unlock Live Production credentials.');
+      return;
+    }
     navigator.clipboard.writeText(text);
     this.triggerToast(`${label} copied to clipboard!`);
   }
 
-  generateNewKey(keyName: string): void {
-    this.sbmApiService.generateApiKey(keyName).subscribe({
-      next: (res) => {
-        this.triggerToast('New API key created successfully!');
-      },
-      error: () => {
-        const newId = 'key_' + (this.apiKeys.length + 1);
-        const randPrefix = 'sbm_live_' + Math.floor(1000 + Math.random() * 9000) + '...a' + Math.floor(10 + Math.random() * 89);
-        this.apiKeys.push({
-          id: newId,
-          name: keyName || 'New API Key',
-          keyPrefix: randPrefix,
-          createdDate: new Date().toISOString().split('T')[0],
-          environment: 'SANDBOX',
-          status: 'ACTIVE'
-        });
-        this.triggerToast(`Generated New API Key: ${keyName}`);
-      }
-    });
+  // Regenerate Sandbox Key (Overrides existing Sandbox key for security)
+  regenerateSandboxKey(): void {
+    const newRand = Math.floor(100000000000 + Math.random() * 900000000000);
+    const newSecret = 'sbm_sbx_sec_' + Math.random().toString(36).substring(2, 12) + Math.random().toString(36).substring(2, 12);
+    this.userProfile.sandboxClientId = `sbm_sbx_client_${newRand}`;
+    this.userProfile.sandboxHmacSecret = newSecret;
+    this.triggerToast('Sandbox API Key regenerated & overridden successfully!');
   }
 
-  revokeKey(keyId: string): void {
-    this.sbmApiService.revokeApiKey(keyId).subscribe({
-      next: () => {
-        this.apiKeys = this.apiKeys.filter(k => k.id !== keyId);
-        this.triggerToast('API Key revoked');
-      },
-      error: () => {
-        this.apiKeys = this.apiKeys.filter(k => k.id !== keyId);
-        this.triggerToast('API Key revoked');
-      }
-    });
+  // Regenerate Live Production Key (Overrides existing Live key for security)
+  regenerateLiveKey(): void {
+    if (!this.isLiveApproved) {
+      this.triggerToast('Complete Go-Live Wizard onboarding and KYB compliance audit to unlock Live Production credentials.');
+      return;
+    }
+    const newRand = Math.floor(100000000000 + Math.random() * 900000000000);
+    const newSecret = 'sbm_live_sec_' + Math.random().toString(36).substring(2, 12) + Math.random().toString(36).substring(2, 12);
+    this.userProfile.liveClientId = `sbm_live_prod_${newRand}`;
+    this.userProfile.liveHmacSecret = newSecret;
+    this.triggerToast('Production API Key regenerated & overridden successfully!');
+  }
+
+  launchSandboxPlayground(): void {
+    this.router.navigate(['/post_login/sandbox']);
+  }
+
+  launchGoLiveConsole(): void {
+    this.router.navigate(['/post_login/go-live']);
+  }
+
+  toggleApprovalDemo(): void {
+    this.isLiveApproved = !this.isLiveApproved;
+    if (this.isLiveApproved) {
+      this.userProfile.liveStatus = 'PROD APPROVED';
+      this.triggerToast('Live Production Status updated: PROD APPROVED & UNLOCKED!');
+    } else {
+      this.userProfile.liveStatus = 'PENDING ONBOARDING';
+      this.triggerToast('Live Production Status updated: LOCKED (Approval Required)');
+    }
+  }
+
+  saveDeveloperSettings(): void {
+    this.triggerToast('General System & Developer preferences saved successfully!');
   }
 
   navigateBackToDashboard(): void {

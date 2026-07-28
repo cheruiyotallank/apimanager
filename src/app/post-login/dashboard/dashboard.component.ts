@@ -222,13 +222,31 @@ export class DashboardComponent implements OnInit {
     this.isProfileDropdownOpen = false;
   }
 
+  // Launch Sandbox Playground
+  openSandboxPlayground(): void {
+    this.isProfileDropdownOpen = false;
+    this.router.navigate(['/post_login/sandbox']);
+  }
+
+  // Launch Go-Live Wizard & Production Console
+  openGoLiveConsole(): void {
+    this.isProfileDropdownOpen = false;
+    this.router.navigate(['/post_login/go-live']);
+  }
+
   // Profile Dropdown Item Handlers - Navigates to /post_login/profile with appropriate tab
   onDropdownItemClick(itemName: string): void {
     this.isProfileDropdownOpen = false;
+    if (itemName.includes('Sandbox')) {
+      this.router.navigate(['/post_login/sandbox']);
+      return;
+    }
+    if (itemName.includes('Go-Live') || itemName.includes('Production')) {
+      this.router.navigate(['/post_login/go-live']);
+      return;
+    }
     let targetTab = 'credentials';
-    if (itemName.includes('Keys')) {
-      targetTab = 'apikeys';
-    } else if (itemName.includes('Analytics')) {
+    if (itemName.includes('Analytics')) {
       targetTab = 'analytics';
     } else if (itemName.includes('Settings')) {
       targetTab = 'settings';

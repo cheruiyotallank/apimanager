@@ -19,7 +19,6 @@
           <span class="brand-subtitle">DEVELOPER PORTAL</span>
         </div>
       </div>
-      <span class="env-pill"><i class="bi bi-shield-lock-fill me-1"></i> SANDBOX</span>
     </div>
 
     <!-- Center Search Bar -->
@@ -39,7 +38,16 @@
     </div>
 
     <!-- Right Controls & User Profile Dropdown -->
-    <div class="header-right d-flex align-items-center gap-3">
+    <div class="header-right d-flex align-items-center gap-2">
+      
+      <button class="btn btn-outline-info btn-sm rounded-pill px-3 fw-bold" (click)="openSandboxPlayground()">
+        <i class="bi bi-box-seam-fill me-1"></i> Sandbox
+      </button>
+
+      <button class="btn btn-outline-success btn-sm rounded-pill px-3 fw-bold" (click)="openGoLiveConsole()">
+        <i class="bi bi-rocket-takeoff-fill me-1"></i> Go-Live
+      </button>
+
       <button class="icon-nav-btn" title="System Status" (click)="triggerToast('System Status: Safaricom APIs Operational')">
         <i class="bi bi-bell-fill"></i>
         <span class="notification-dot"></span>
@@ -88,17 +96,19 @@
           <!-- RECOMMENDED API MANAGER MENU ITEMS -->
           <div class="dropdown-body-items py-2">
             
+            <div class="dropdown-item-row" (click)="openSandboxPlayground()">
+              <i class="bi bi-box-seam dropdown-item-icon text-info"></i>
+              <span class="dropdown-item-text text-info fw-bold">API Sandbox Playground</span>
+            </div>
+
+            <div class="dropdown-item-row" (click)="openGoLiveConsole()">
+              <i class="bi bi-rocket-takeoff dropdown-item-icon text-success"></i>
+              <span class="dropdown-item-text text-success fw-bold">Go-Live Production Wizard</span>
+            </div>
+
             <div class="dropdown-item-row" (click)="onDropdownItemClick('Credentials')">
               <i class="bi bi-shield-lock dropdown-item-icon"></i>
               <span class="dropdown-item-text">Credentials</span>
-            </div>
-
-            <div class="dropdown-item-row d-flex align-items-center justify-content-between" (click)="onDropdownItemClick('API Keys Management')">
-              <div class="d-flex align-items-center">
-                <i class="bi bi-key dropdown-item-icon"></i>
-                <span class="dropdown-item-text">API Keys & Quota</span>
-              </div>
-              <span class="badge bg-gradient-pill text-white fs-8">12 Keys</span>
             </div>
 
             <div class="dropdown-item-row" (click)="onDropdownItemClick('API Analytics & Telemetry')">
@@ -108,7 +118,7 @@
 
             <div class="dropdown-item-row" (click)="onDropdownItemClick('API Gateway Settings')">
               <i class="bi bi-gear dropdown-item-icon"></i>
-              <span class="dropdown-item-text">API Gateway Settings</span>
+              <span class="dropdown-item-text">Developer Settings</span>
             </div>
 
             <hr class="dropdown-divider my-2" />

@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, NgZone } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
+import { HttpAdapterService } from '../../core/services/http-adapter.service';
 
 /**
  * ============================================================================
@@ -56,13 +57,23 @@ export class ForceChangePasswordComponent implements OnInit {
   public errorMessage: string | null = null;
   public successMessage: string | null = null;
 
+  /**
+   * REQUEST OBJECT FOR BACKEND API CALLS
+   */
+  public request: any = {};
+
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private authService: AuthService
+    private authService: AuthService,
+    private httpAdapter: HttpAdapterService,
+    private ngZone: NgZone
   ) { }
 
   ngOnInit(): void {
+    // Initialize request object
+    this.request = { ...this.httpAdapter.preLoginRequest };
+
     // Read email passed from login state or query params if available
     const nav = this.router.getCurrentNavigation();
     if (nav?.extras?.state && nav.extras.state['email']) {
@@ -105,7 +116,7 @@ export class ForceChangePasswordComponent implements OnInit {
   }
 
   /**
-   * Submits Force Change Password (Old, New, Confirm Passwords) via AuthService
+   * Submits Force Change Password (Old, New, Confirm Passwords) via HttpAdapterService
    */
   public onForceChangePasswordSubmit(): void {
     this.errorMessage = null;
@@ -148,32 +159,38 @@ export class ForceChangePasswordComponent implements OnInit {
 
     this.isSubmitting = true;
 
-    const payload = {
-      email: this.passwordData.email,
-      oldPassword: this.passwordData.oldPassword,
-      newPassword: this.passwordData.newPassword,
-      confirmPassword: this.passwordData.confirmPassword
-    };
+    // Set request data for backend API call
+    this.request.email = this.passwordData.email;
+    this.request.oldPassword = this.passwordData.oldPassword;
+    this.request.newPassword = this.passwordData.newPassword;
+    this.request.confirmPassword = this.passwordData.confirmPassword;
+    this.request.ReqService = 'APIM_FORCE_CHANGE_PASSWORD';
 
-    this.authService.forceChangePassword(payload).subscribe({
-      next: (response) => {
-        this.isSubmitting = false;
-        this.successMessage = 'Password changed successfully! Account activated. Directing to Login...';
-        setTimeout(() => {
-          this.router.navigate(['/login']);
-        }, 1500);
+    this.httpAdapter.sendRequest(this.request).subscribe({
+      next: (data: any) => {
+        this.ngZone.run(() => {
+          this.isSubmitting = false;
+          try {
+            let jsonResponse = JSON.parse(data);
+            if ('ErrorMessage' in jsonResponse) {
+              this.errorMessage = jsonResponse['ErrorMessage'];
+            } else {
+              this.successMessage = 'Password changed successfully! Account activated. Directing to Login...';
+              this.authService.setSuccessMessage('Password changed successfully! You can now login with your new password.');
+              setTimeout(() => {
+                this.router.navigate(['/pre-login/login']);
+              }, 1500);
+            }
+          } catch (e) {
+            this.errorMessage = 'Service error. Please try again later.';
+          }
+        });
       },
-      error: (error) => {
-        this.isSubmitting = false;
-        // Fallback for dev mode testing if server is un-reachable
-        if (error?.message?.includes('Unable to connect')) {
-          this.successMessage = '[Dev Mode] Password changed successfully! Account activated. Directing to Login...';
-          setTimeout(() => {
-            this.router.navigate(['/login']);
-          }, 1500);
-        } else {
+      error: (error: any) => {
+        this.ngZone.run(() => {
+          this.isSubmitting = false;
           this.errorMessage = error?.message || 'Password update failed. Please check your credentials and try again.';
-        }
+        });
       }
     });
   }
@@ -182,6 +199,6 @@ export class ForceChangePasswordComponent implements OnInit {
    * Navigates back to Login screen
    */
   public navigateToLogin(): void {
-    this.router.navigate(['/login']);
+    this.router.navigate(['/pre-login/login']);
   }
 }

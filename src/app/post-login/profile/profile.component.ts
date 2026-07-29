@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { SbmBankApiService } from '../../core/services/sbm-bank-api.service';
 import { AuthService } from '../../core/services/auth.service';
 
@@ -7,7 +9,8 @@ import { AuthService } from '../../core/services/auth.service';
   selector: 'app-profile',
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css'],
-  standalone: false
+  standalone: true,
+  imports: [CommonModule, FormsModule]
 })
 export class ProfileComponent implements OnInit {
 

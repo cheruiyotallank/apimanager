@@ -112,4 +112,5 @@ export interface UserProfile {
   organizationType: string;
   country: string;
   roles: string[];
+  apiKey?: string;
 }

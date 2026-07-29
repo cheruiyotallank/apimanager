@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { DecimalPipe } from '@angular/common';
 import { SbmBankApiService } from '../../core/services/sbm-bank-api.service';
 
 export interface WebhookEventLog {
@@ -18,7 +21,8 @@ export interface WebhookEventLog {
   selector: 'app-sandbox',
   templateUrl: './sandbox.component.html',
   styleUrls: ['./sandbox.component.css'],
-  standalone: false
+  standalone: true,
+  imports: [CommonModule, FormsModule, DecimalPipe]
 })
 export class SandboxComponent implements OnInit {
 

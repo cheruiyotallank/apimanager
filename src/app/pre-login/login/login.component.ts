@@ -166,22 +166,27 @@ export class LoginComponent implements OnInit, OnDestroy {
             let jsonResponse = JSON.parse(data);
             if ('ErrorMessage' in jsonResponse) {
               this.errorMessage = jsonResponse['ErrorMessage'];
+              if (jsonResponse['ForceChangePassword'] === "Y") {
+                this.router.navigate(['/pre-login/force-change-password'], { state: { email: email } });
+              }
             } else {
-              // Save session and navigate to dashboard
+              // Save session with backend response fields
               this.authService.saveSession({
-                accessToken: jsonResponse['accessToken'] || 'temp_token',
-                user: jsonResponse['user'] || {
-                  id: jsonResponse['id'] || '0',
+                accessToken: jsonResponse['SessionID'] || 'temp_token',
+                user: {
+                  id: jsonResponse['userId'] || '0',
                   firstName: jsonResponse['firstName'] || '',
                   lastName: jsonResponse['lastName'] || '',
-                  email: email,
+                  email: jsonResponse['email'] || email,
                   phone: jsonResponse['phone'] || '',
                   organizationName: jsonResponse['organizationName'] || '',
                   organizationType: jsonResponse['organizationType'] || '',
                   country: jsonResponse['country'] || '',
-                  roles: jsonResponse['roles'] || ['USER']
+                  roles: jsonResponse['roles'] || ['USER'],
+                  apiKey: jsonResponse['apiKey'] || ''
                 }
               });
+
               this.router.navigate(['/post_login/dashboard']);
             }
           } catch (e) {
@@ -216,6 +221,20 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Navigates to forgot password page.
+   */
+  public navigateToForgotPassword(): void {
+    this.router.navigate(['/pre-login/forgot-password']);
+  }
+
+  /**
+   * Navigates to signup page.
+   */
+  public navigateToSignup(): void {
+    this.router.navigate(['/pre-login/signup']);
+  }
+
+  /**
    * Navigates back to credentials login step.
    */
   public backToCredentials(): void {
@@ -236,5 +255,9 @@ export class LoginComponent implements OnInit, OnDestroy {
    */
   public loginWithSSO(): void {
     this.onLoginSubmit();
+  }
+
+  onCkickSignup() {
+    this.router.navigate(['/signup']);
   }
 }

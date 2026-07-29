@@ -1,5 +1,5 @@
 import { Component, signal, OnInit, OnDestroy } from '@angular/core';
-import { RouterOutlet, Router, NavigationStart } from '@angular/router';
+import { RouterOutlet, Router, NavigationStart, NavigationEnd } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -14,14 +14,14 @@ export class App implements OnInit, OnDestroy {
   constructor(private router: Router) {}
 
   ngOnInit(): void {
-    // Always redirect to login on page refresh
-    this.router.navigate(['/pre-login']);
-
-    // Disable browser back and forward buttons completely
-    this.disableBrowserBackButton();
-
-    // Block router back navigation
-    this.blockRouterBackNavigation();
+    // SBM-style router initialization pattern
+    const currentUrl = this.router.url;
+    this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+      if (currentUrl === '/') {
+        this.router.navigate(['']);
+      }
+      this.router.navigate([currentUrl]);
+    });
   }
 
   blockRouterBackNavigation(): void {

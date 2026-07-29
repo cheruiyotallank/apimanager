@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { SbmBankApiService } from '../../core/services/sbm-bank-api.service';
 
 export interface SelectedApiService {
@@ -13,7 +15,8 @@ export interface SelectedApiService {
   selector: 'app-go-live',
   templateUrl: './go-live.component.html',
   styleUrls: ['./go-live.component.css'],
-  standalone: false
+  standalone: true,
+  imports: [CommonModule, FormsModule]
 })
 export class GoLiveComponent implements OnInit {
 

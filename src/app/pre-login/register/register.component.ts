@@ -238,7 +238,7 @@ export class RegisterComponent {
               // Store success message in service and redirect to login
               const successMsg = jsonResponse['ResultMessage'] || 'Registration complete! Your temporary password has been sent to your email address. You can now log in.';
               this.authService.setSuccessMessage(successMsg);
-              this.router.navigate(['/login']);
+              this.router.navigate(['/']);
             }
           } catch (e) {
             this.errorMessage = 'Service error. Please try again later.';
@@ -260,7 +260,7 @@ export class RegisterComponent {
    * Navigates directly to the Login page
    */
   public navigateToLogin(): void {
-    this.router.navigate(['/login'], { state: { email: this.registerData.email } });
+    this.router.navigate(['/pre-login/login'], { state: { email: this.registerData.email } });
   }
 
   /**
@@ -345,6 +345,10 @@ export class RegisterComponent {
   private isValidEmail(email: string): boolean {
     const emailRegexPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     return emailRegexPattern.test(email);
+  }
+
+  onCkickLogin() {
+    this.router.navigate(['/']);
   }
 }
 

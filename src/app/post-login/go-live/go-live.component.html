@@ -11,7 +11,6 @@
         <div class="brand-divider"></div>
         <div class="brand-text">
           <span class="brand-title">API MANAGER</span>
-          <span class="brand-subtitle">DEVELOPER PORTAL</span>
         </div>
       </div>
       <span class="env-pill bg-success-subtle text-success"><i class="bi bi-rocket-takeoff-fill me-1"></i> GO-LIVE
@@ -21,11 +20,59 @@
     <!-- Back to Dashboard Action Button -->
     <div class="header-right d-flex align-items-center gap-3">
       <button class="btn btn-outline-primary btn-sm rounded-pill px-3 fw-bold" (click)="navigateBackToDashboard()">
-        <i class="bi bi-arrow-left me-1"></i> Back to Dashboard
+        <i class="bi bi-house-fill me-1"></i> Home
       </button>
 
-      <div class="golive-mode-indicator badge bg-success text-white rounded-pill px-3 py-2 fw-bold shadow-sm">
-        <i class="bi bi-shield-check me-1"></i> GO-LIVE WIZARD
+      <div class="profile-dropdown-wrapper position-relative" (mouseenter)="openProfileDropdown()"
+        (mouseleave)="closeProfileDropdown()">
+        <div class="user-profile-chip" (click)="toggleProfileDropdown()">
+          <div class="user-avatar-circle">AC</div>
+          <div class="user-info-text d-none d-md-block">
+            <div class="user-name">Allan Cheruiyot</div>
+            <div class="user-role">API Administrator</div>
+          </div>
+          <i class="bi bi-chevron-down ms-1 text-muted fs-7"></i>
+        </div>
+
+        <!-- PROFILE DROPDOWN MENU -->
+        <div class="profile-dropdown-menu" [class.show]="isProfileDropdownOpen">
+          <div class="dropdown-header-box p-3 border-bottom">
+            <div class="d-flex align-items-center gap-3">
+              <div class="dropdown-avatar-circle">AC</div>
+              <div class="overflow-hidden">
+                <div class="fw-bold text-dark fs-8 text-truncate">Allan Cheruiyot</div>
+                <div class="text-muted fs-8 text-truncate">allan.cheruiyot@sbmbank.co.ke</div>
+              </div>
+            </div>
+            <div class="mt-2">
+              <small class="text-success fs-8 fw-bold"><i class="bi bi-shield-check me-1"></i> Active</small>
+            </div>
+          </div>
+
+          <div class="dropdown-body-items py-2">
+            <div class="dropdown-item-row" (click)="onDropdownItemClick('Credentials')">
+              <i class="bi bi-shield-lock dropdown-item-icon"></i>
+              <span class="dropdown-item-text">Credentials</span>
+            </div>
+
+            <div class="dropdown-item-row" (click)="onDropdownItemClick('API Analytics & Telemetry')">
+              <i class="bi bi-bar-chart dropdown-item-icon"></i>
+              <span class="dropdown-item-text">Analytics & Telemetry</span>
+            </div>
+
+            <div class="dropdown-item-row" (click)="onDropdownItemClick('Help Center')">
+              <i class="bi bi-question-circle dropdown-item-icon"></i>
+              <span class="dropdown-item-text">Help Center</span>
+            </div>
+
+            <hr class="dropdown-divider my-2" />
+
+            <div class="dropdown-item-row logout-row text-danger" (click)="signOut()">
+              <i class="bi bi-box-arrow-right dropdown-item-icon text-danger"></i>
+              <span class="dropdown-item-text fw-bold">Sign Out</span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </header>

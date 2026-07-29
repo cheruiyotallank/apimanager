@@ -6,25 +6,75 @@
   <header class="sbm-header-bar">
     <div class="header-left d-flex align-items-center gap-3">
       <!-- SBM Bank Logo -->
-      <div class="sbm-brand-logo" (click)="navigateBackToDashboard()" style="cursor: pointer;">
+      <div class="sbm-brand-logo enhanced-logo" (click)="navigateBackToDashboard()" style="cursor: pointer;">
         <img [src]="sbmLogoPath" (error)="onLogoError($event)" alt="SBM Bank Logo" class="sbm-header-logo-img" />
         <div class="brand-divider"></div>
         <div class="brand-text">
           <span class="brand-title">API MANAGER</span>
-          <span class="brand-subtitle">DEVELOPER PORTAL</span>
         </div>
       </div>
-      <span class="env-pill bg-info-subtle text-info"><i class="bi bi-box-seam-fill me-1"></i> SANDBOX PLAYGROUND</span>
     </div>
 
     <!-- Back to Dashboard Action Button -->
     <div class="header-right d-flex align-items-center gap-3">
       <button class="btn btn-outline-primary btn-sm rounded-pill px-3 fw-bold" (click)="navigateBackToDashboard()">
-        <i class="bi bi-arrow-left me-1"></i> Back to Dashboard
+        <i class="bi bi-house-fill me-1"></i> Home
       </button>
 
       <div class="sandbox-mode-indicator badge bg-info text-dark rounded-pill px-3 py-2 fw-bold shadow-sm">
         <i class="bi bi-shield-check me-1"></i> SANDBOX MODE ACTIVE
+      </div>
+
+      <div class="profile-dropdown-wrapper position-relative" (mouseenter)="openProfileDropdown()"
+        (mouseleave)="closeProfileDropdown()">
+        <div class="user-profile-chip" (click)="toggleProfileDropdown()">
+          <div class="user-avatar-circle">AC</div>
+          <div class="user-info-text d-none d-md-block">
+            <div class="user-name">Allan Cheruiyot</div>
+            <div class="user-role">API Administrator</div>
+          </div>
+          <i class="bi bi-chevron-down ms-1 text-muted fs-7"></i>
+        </div>
+
+        <!-- PROFILE DROPDOWN MENU -->
+        <div class="profile-dropdown-menu" [class.show]="isProfileDropdownOpen">
+          <div class="dropdown-header-box p-3 border-bottom">
+            <div class="d-flex align-items-center gap-3">
+              <div class="dropdown-avatar-circle">AC</div>
+              <div class="overflow-hidden">
+                <div class="fw-bold text-dark fs-8 text-truncate">Allan Cheruiyot</div>
+                <div class="text-muted fs-8 text-truncate">allan.cheruiyot@sbmbank.co.ke</div>
+              </div>
+            </div>
+            <div class="mt-2">
+              <small class="text-success fs-8 fw-bold"><i class="bi bi-shield-check me-1"></i> Active</small>
+            </div>
+          </div>
+
+          <div class="dropdown-body-items py-2">
+            <div class="dropdown-item-row" (click)="onDropdownItemClick('Credentials')">
+              <i class="bi bi-shield-lock dropdown-item-icon"></i>
+              <span class="dropdown-item-text">Credentials</span>
+            </div>
+
+            <div class="dropdown-item-row" (click)="onDropdownItemClick('API Analytics & Telemetry')">
+              <i class="bi bi-bar-chart dropdown-item-icon"></i>
+              <span class="dropdown-item-text">Analytics & Telemetry</span>
+            </div>
+
+            <div class="dropdown-item-row" (click)="onDropdownItemClick('Help Center')">
+              <i class="bi bi-question-circle dropdown-item-icon"></i>
+              <span class="dropdown-item-text">Help Center</span>
+            </div>
+
+            <hr class="dropdown-divider my-2" />
+
+            <div class="dropdown-item-row logout-row text-danger" (click)="signOut()">
+              <i class="bi bi-box-arrow-right dropdown-item-icon text-danger"></i>
+              <span class="dropdown-item-text fw-bold">Sign Out</span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </header>
@@ -66,29 +116,8 @@
             </div>
           </div>
 
-          <div class="col-12 col-lg-2 text-end">
-            <button class="btn btn-primary rounded-pill w-100 fw-bold shadow-sm" (click)="generateOAuthToken()">
-              <i class="bi bi-key-fill me-1"></i> New Token
-            </button>
-          </div>
         </div>
 
-        <!-- OPENAPI DOCS & GO-LIVE WIZARD QUICK ACTION BAR -->
-        <div class="pt-3 border-top d-flex flex-wrap align-items-center justify-content-between gap-3">
-          <div class="d-flex align-items-center gap-2">
-            <button class="btn btn-sm btn-outline-primary rounded-pill px-3 fw-bold" (click)="viewOpenApiSpec()">
-              <i class="bi bi-journal-code me-1"></i> View OpenAPI 3.0 Spec
-            </button>
-
-            <button class="btn btn-sm btn-outline-secondary rounded-pill px-3 fw-bold" (click)="downloadOpenApiSpec()">
-              <i class="bi bi-download me-1"></i> Download OpenAPI JSON
-            </button>
-          </div>
-
-          <button class="btn btn-success btn-sm text-white rounded-pill px-4 fw-bold shadow-sm" (click)="launchGoLiveWizard()">
-            <i class="bi bi-rocket-takeoff-fill me-1"></i> Start Go-Live Production Wizard
-          </button>
-        </div>
       </div>
 
       <!-- SERVICE SUITE NAVIGATION TABS -->
@@ -261,64 +290,6 @@
           </div>
         </div>
 
-      </div>
-
-      <!-- BOTTOM FULL-WIDTH CARD: LIVE INCOMING WEBHOOK CALLBACK EVENT LOGS -->
-      <div class="sbm-card p-4">
-        <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-3">
-          <div>
-            <h5 class="fw-bold text-dark mb-1">
-              <i class="bi bi-broadcast text-info me-2"></i> Live Incoming Webhook Listener Logs
-            </h5>
-            <p class="text-muted fs-8 mb-0">Simulated real-time M-Pesa transaction confirmation payloads sent to your
-              CallBackURL.</p>
-          </div>
-
-          <span class="badge bg-success-subtle text-success rounded-pill px-3 py-2 fw-bold">
-            <span class="spinner-grow spinner-grow-sm me-1" role="status"></span> LISTENER ONLINE
-          </span>
-        </div>
-
-        <!-- Webhook Logs Table -->
-        <div class="table-responsive border rounded-3">
-          <table class="table table-hover align-middle mb-0 custom-table">
-            <thead class="table-light">
-              <tr>
-                <th>Timestamp</th>
-                <th>Event Type</th>
-                <th>Checkout Request ID</th>
-                <th>Receipt No</th>
-                <th>Amount</th>
-                <th>Phone</th>
-                <th>Delivery Status</th>
-                <th class="text-end">Payload</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let log of webhookLogs">
-                <td class="text-muted fs-8 font-monospace">{{ log.timestamp }}</td>
-                <td>
-                  <span class="badge bg-info-subtle text-info rounded-pill px-2 py-1 fs-8">{{ log.eventType }}</span>
-                </td>
-                <td class="font-monospace fs-8 text-dark">{{ log.checkoutRequestId }}</td>
-                <td><code class="fw-bold text-success">{{ log.mpesaReceipt }}</code></td>
-                <td class="fw-bold text-dark fs-8">KES {{ log.amount | number:'1.2-2' }}</td>
-                <td class="text-muted fs-8 font-monospace">{{ log.phone }}</td>
-                <td>
-                  <span class="badge bg-success-subtle text-success rounded-pill px-2 py-1 fs-8">
-                    <i class="bi bi-check-all me-1"></i> {{ log.status }}
-                  </span>
-                </td>
-                <td class="text-end">
-                  <button class="btn btn-sm btn-outline-info rounded-pill px-3"
-                    (click)="copyToClipboard(log.payloadJson, 'Webhook Payload')">
-                    Copy JSON
-                  </button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
       </div>
 
     </div>

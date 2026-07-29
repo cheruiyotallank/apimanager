@@ -93,6 +93,9 @@ export class GoLiveComponent implements OnInit {
   public showToast: boolean = false;
   public toastMessage: string = '';
 
+  // Profile Dropdown State
+  public isProfileDropdownOpen: boolean = false;
+
   constructor(
     private router: Router,
     private sbmApiService: SbmBankApiService
@@ -224,5 +227,46 @@ export class GoLiveComponent implements OnInit {
 
   public onLogoError(event: any): void {
     event.target.src = this.sbmLogoSvgPath;
+  }
+
+  // Profile Dropdown Methods
+  public toggleProfileDropdown(): void {
+    this.isProfileDropdownOpen = !this.isProfileDropdownOpen;
+  }
+
+  public openProfileDropdown(): void {
+    this.isProfileDropdownOpen = true;
+  }
+
+  public closeProfileDropdown(): void {
+    this.isProfileDropdownOpen = false;
+  }
+
+  public onDropdownItemClick(itemName: string): void {
+    this.isProfileDropdownOpen = false;
+    if (itemName.includes('Credentials')) {
+      this.router.navigate(['/post_login/profile'], { queryParams: { tab: 'credentials' } });
+      return;
+    }
+    if (itemName.includes('Analytics')) {
+      this.router.navigate(['/post_login/profile'], { queryParams: { tab: 'analytics' } });
+      return;
+    }
+    if (itemName.includes('Help')) {
+      this.router.navigate(['/post_login/profile'], { queryParams: { tab: 'help' } });
+      return;
+    }
+    if (itemName.includes('Sandbox')) {
+      this.router.navigate(['/post_login/sandbox']);
+      return;
+    }
+    if (itemName.includes('Go-Live') || itemName.includes('Production')) {
+      // Already on go-live
+      return;
+    }
+  }
+
+  public signOut(): void {
+    this.router.navigate(['/pre-login/login']);
   }
 }

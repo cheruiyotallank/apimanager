@@ -11,7 +11,6 @@
         <div class="brand-divider"></div>
         <div class="brand-text">
           <span class="brand-title">API MANAGER</span>
-          <span class="brand-subtitle">DEVELOPER PORTAL</span>
         </div>
       </div>
     </div>
@@ -31,8 +30,8 @@
     <!-- Right Controls & User Profile Dropdown -->
     <div class="header-right d-flex align-items-center gap-2">
 
-      <button class="icon-nav-btn" title="System Status"
-        (click)="triggerToast('System Status: Safaricom APIs Operational')">
+      <button class="icon-nav-btn" title="Notifications"
+        (click)="openNotifications()">
         <i class="bi bi-bell-fill"></i>
         <span class="notification-dot"></span>
       </button>
@@ -63,10 +62,7 @@
                 <div class="text-muted fs-8 text-truncate">{{ userProfile.email }}</div>
               </div>
             </div>
-            <div class="mt-2 d-flex align-items-center justify-content-between">
-              <span class="badge bg-primary-subtle text-primary rounded-pill px-2 py-1 fs-8 fw-semibold">
-                {{ userProfile.tier }}
-              </span>
+            <div class="mt-2">
               <small class="text-success fs-8 fw-bold"><i class="bi bi-shield-check me-1"></i> Active</small>
             </div>
           </div>
@@ -82,11 +78,6 @@
             <div class="dropdown-item-row" (click)="onDropdownItemClick('API Analytics & Telemetry')">
               <i class="bi bi-bar-chart dropdown-item-icon"></i>
               <span class="dropdown-item-text">Analytics & Telemetry</span>
-            </div>
-
-            <div class="dropdown-item-row" (click)="onDropdownItemClick('API Gateway Settings')">
-              <i class="bi bi-gear dropdown-item-icon"></i>
-              <span class="dropdown-item-text">Developer Settings</span>
             </div>
 
             <hr class="dropdown-divider my-2" />
@@ -118,9 +109,17 @@
 
       <!-- Quick Pop-up Toast Alert -->
       <div *ngIf="showNotificationToast" class="sbm-toast-notification">
-        <i class="bi bi-info-circle-fill me-2"></i>
-        <span class="fw-bold">{{ notificationMessage }}</span>
-        <button class="btn-close btn-close-white ms-auto" (click)="showNotificationToast = false"></button>
+        <div class="sbm-toast-icon">
+          <i class="bi bi-info-circle-fill"></i>
+        </div>
+        <div class="sbm-toast-content">
+          <div class="sbm-toast-title">Notification</div>
+          <div class="sbm-toast-message">{{ notificationMessage }}</div>
+        </div>
+        <button class="sbm-toast-close" (click)="showNotificationToast = false">
+          <i class="bi bi-x-lg"></i>
+        </button>
+        <div class="sbm-toast-progress"></div>
       </div>
 
       <!-- DASHBOARD TITLE BANNER -->
@@ -457,5 +456,8 @@ print(response.json())</pre>
 
     </div>
   </div>
+
+  <!-- NOTIFICATIONS MODAL -->
+  <app-notifications [isOpen]="isNotificationsOpen" (close)="closeNotifications()"></app-notifications>
 
 </div>

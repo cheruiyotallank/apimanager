@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SbmBankApiService } from '../../core/services/sbm-bank-api.service';
 import { AuthService } from '../../core/services/auth.service';
+import { NotificationsComponent } from '../notifications/notifications.component';
 
 export interface ApiCategory {
   id: string;
@@ -24,7 +25,7 @@ export interface ApiCategory {
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css'],
   standalone: true,
-  imports: [CommonModule, FormsModule]
+  imports: [CommonModule, FormsModule, NotificationsComponent]
 })
 export class DashboardComponent implements OnInit {
   // Search & Filter State
@@ -61,6 +62,9 @@ export class DashboardComponent implements OnInit {
   showNotificationToast: boolean = false;
   notificationMessage: string = '';
 
+  // Notification Modal State
+  isNotificationsOpen: boolean = false;
+
   constructor(
     private router: Router,
     private sbmApiService: SbmBankApiService,
@@ -88,11 +92,11 @@ export class DashboardComponent implements OnInit {
     {
       id: 'safaricom',
       name: 'Safaricom APIs',
-      badge: 'M-PESA Integration',
+      badge: 'Mobile Money',
       icon: 'bi-phone-vibrate-fill',
       accentColor: '#1aa3d8',
       bgGradient: 'linear-gradient(135deg, rgba(26, 163, 216, 0.12) 0%, rgba(6, 33, 77, 0.05) 100%)',
-      description: 'Direct M-Pesa mobile money suite supporting STK Push checkout, real-time B2C disbursals, C2B collections & account status requeries.',
+      description: 'Comprehensive M-Pesa integration suite for seamless mobile payments, collections, and disbursements.',
       redirectUrl: '/post_login/safaricom',
       status: 'Operational',
       endpointsCount: 5,
@@ -107,11 +111,11 @@ export class DashboardComponent implements OnInit {
     {
       id: 'pesalink',
       name: 'PesaLink APIs',
-      badge: 'IPSL Instant Transfer',
+      badge: 'Instant Transfer',
       icon: 'bi-lightning-charge-fill',
-      accentColor: '#06214d',
-      bgGradient: 'linear-gradient(135deg, rgba(6, 33, 77, 0.12) 0%, rgba(26, 163, 216, 0.05) 100%)',
-      description: 'Integrated Integrated Payments Service Ltd (IPSL) PesaLink API for 24/7 instant bank-to-bank money transfers via phone or account.',
+      accentColor: '#1aa3d8',
+      bgGradient: 'linear-gradient(135deg, rgba(26, 163, 216, 0.12) 0%, rgba(6, 33, 77, 0.05) 100%)',
+      description: '24/7 instant bank-to-bank money transfers via IPSL network.',
       redirectUrl: '/post_login/pesalink',
       status: 'Coming Soon',
       endpointsCount: 5,
@@ -126,11 +130,11 @@ export class DashboardComponent implements OnInit {
     {
       id: 'utility',
       name: 'Billing & Utility APIs',
-      badge: 'Utility Settlements',
+      badge: 'Bill Payments',
       icon: 'bi-receipt-cutoff',
       accentColor: '#1aa3d8',
       bgGradient: 'linear-gradient(135deg, rgba(26, 163, 216, 0.12) 0%, rgba(6, 33, 77, 0.05) 100%)',
-      description: 'Automated utility payments for KPLC prepaid electricity tokens, Nairobi Water bill settlements, and multi-carrier airtime top-ups.',
+      description: 'Automated utility payments for electricity, water, and airtime services.',
       redirectUrl: '/post_login/utility',
       status: 'Coming Soon',
       endpointsCount: 5,
@@ -145,11 +149,11 @@ export class DashboardComponent implements OnInit {
     {
       id: 'fund-transfer',
       name: 'Fund Transfer APIs',
-      badge: 'Core Banking Clearing',
+      badge: 'Bank Transfers',
       icon: 'bi-arrow-left-right',
-      accentColor: '#06214d',
-      bgGradient: 'linear-gradient(135deg, rgba(6, 33, 77, 0.12) 0%, rgba(26, 163, 216, 0.05) 100%)',
-      description: 'Core banking interbank clearing suite including RTGS settlements, EFT batch processing, internal SBM transfers, and SWIFT wire.',
+      accentColor: '#1aa3d8',
+      bgGradient: 'linear-gradient(135deg, rgba(26, 163, 216, 0.12) 0%, rgba(6, 33, 77, 0.05) 100%)',
+      description: 'Core banking interbank clearing for RTGS, EFT, and SWIFT transfers.',
       redirectUrl: '/post_login/transfers',
       status: 'Coming Soon',
       endpointsCount: 5,
@@ -164,11 +168,11 @@ export class DashboardComponent implements OnInit {
     {
       id: 'kyc-identity',
       name: 'Identity & KYC APIs',
-      badge: 'IPRS & Tax Validation',
+      badge: 'Verification',
       icon: 'bi-person-check-fill',
       accentColor: '#1aa3d8',
       bgGradient: 'linear-gradient(135deg, rgba(26, 163, 216, 0.12) 0%, rgba(6, 33, 77, 0.05) 100%)',
-      description: 'Official Government IPRS National ID verification, KRA PIN tax compliance validation, and CRB credit score lookups.',
+      description: 'Government ID verification and tax compliance validation services.',
       redirectUrl: '/post_login/kyc',
       status: 'Coming Soon',
       endpointsCount: 4,
@@ -278,8 +282,17 @@ export class DashboardComponent implements OnInit {
       // Navigate to sandbox page with Safaricom API keys
       this.router.navigate(['/post_login/sandbox'], { queryParams: { api: 'safaricom' } });
     } else {
-      this.triggerToast(`${cat.name} Coming Soon!`);
+      // Show toast card for coming soon APIs
+      this.showComingSoonToast(cat.name);
     }
+  }
+
+  showComingSoonToast(apiName: string): void {
+    this.notificationMessage = `${apiName} Coming Soon! This API suite will be available shortly.`;
+    this.showNotificationToast = true;
+    setTimeout(() => {
+      this.showNotificationToast = false;
+    }, 4000);
   }
 
   closeModal(): void {
@@ -346,5 +359,13 @@ export class DashboardComponent implements OnInit {
     setTimeout(() => {
       this.showNotificationToast = false;
     }, 3500);
+  }
+
+  openNotifications(): void {
+    this.isNotificationsOpen = true;
+  }
+
+  closeNotifications(): void {
+    this.isNotificationsOpen = false;
   }
 }

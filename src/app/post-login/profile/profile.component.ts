@@ -14,8 +14,8 @@ import { AuthService } from '../../core/services/auth.service';
 })
 export class ProfileComponent implements OnInit {
 
-  // Active Tab State: 'credentials' | 'analytics' | 'settings' | 'help'
-  activeTab: 'credentials' | 'analytics' | 'settings' | 'help' = 'credentials';
+  // Active Tab State: 'credentials' | 'analytics' | 'help'
+  activeTab: 'credentials' | 'analytics' | 'help' = 'credentials';
 
   // Live Production Approval Security State (Defaults to false until Go-Live Compliance Audit is completed)
   isLiveApproved: boolean = false;
@@ -28,7 +28,7 @@ export class ProfileComponent implements OnInit {
     role: 'API Administrator',
     organization: 'SBM Bank Kenya',
     avatar: 'AC',
-    tier: 'Enterprise Admin',
+    tier: 'API Administrator',
     status: 'ACTIVE',
     // Sandbox Environment Credentials (Single Active Key - Always Unlocked)
     sandboxClientId: 'sbm_sbx_client_948172648192',
@@ -44,27 +44,6 @@ export class ProfileComponent implements OnInit {
     quotaLimit: 100000
   };
 
-  // Comprehensive Developer Preferences & General System Settings State
-  developerPreferences = {
-    portalName: 'SBM Bank Kenya Developer Gateway',
-    defaultEnvironment: 'SANDBOX',
-    dataRefreshInterval: 'REALTIME',
-    logLevel: 'INFO',
-    rateLimitThreshold: 100,
-    autoRetryFailed: true,
-    timezone: '(GMT+03:00) Nairobi, Kenya (EAT)',
-    webhookCallbackUrl: 'https://api.yourcompany.co.ke/sbm-callback',
-    webhookSecret: 'whsec_9481726481928371',
-    enforceHmacSignature: true,
-    mfaTwoFactorAuth: true,
-    sessionTimeoutMinutes: 30,
-    webhookAlerts: true,
-    quotaAlertThresholdPercent: 80,
-    securityAlertEmails: true,
-    portalTheme: 'LIGHT',
-    defaultSdkLanguage: 'CURL',
-    whitelistedIps: '102.210.14.88/32, 197.232.4.12'
-  };
 
   sbmLogoPath: string = 'assets/sbm-logo.png';
   sbmLogoSvgPath: string = 'sbm-logo.svg';
@@ -77,6 +56,9 @@ export class ProfileComponent implements OnInit {
   showSandboxHmacSecret: boolean = false;
   showLiveHmacSecret: boolean = false;
 
+  // Profile Dropdown State
+  isProfileDropdownOpen: boolean = false;
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -87,7 +69,7 @@ export class ProfileComponent implements OnInit {
   ngOnInit(): void {
     // Read query params for tab switching (e.g. /post_login/profile?tab=settings)
     this.route.queryParams.subscribe(params => {
-      if (params['tab'] && ['credentials', 'analytics', 'settings', 'help'].includes(params['tab'])) {
+      if (params['tab'] && ['credentials', 'analytics', 'help'].includes(params['tab'])) {
         this.activeTab = params['tab'];
       }
     });
@@ -112,7 +94,7 @@ export class ProfileComponent implements OnInit {
     }
   }
 
-  setTab(tab: 'credentials' | 'analytics' | 'settings' | 'help'): void {
+  setTab(tab: 'credentials' | 'analytics' | 'help'): void {
     this.activeTab = tab;
   }
 
@@ -137,14 +119,6 @@ export class ProfileComponent implements OnInit {
     this.triggerToast(`${label} copied to clipboard!`);
   }
 
-  // Regenerate Sandbox Key (Overrides existing Sandbox key for security)
-  regenerateSandboxKey(): void {
-    const newRand = Math.floor(100000000000 + Math.random() * 900000000000);
-    const newSecret = 'sbm_sbx_sec_' + Math.random().toString(36).substring(2, 12) + Math.random().toString(36).substring(2, 12);
-    this.userProfile.sandboxClientId = `sbm_sbx_client_${newRand}`;
-    this.userProfile.sandboxHmacSecret = newSecret;
-    this.triggerToast('Sandbox API Key regenerated & overridden successfully!');
-  }
 
   // Regenerate Live Production Key (Overrides existing Live key for security)
   regenerateLiveKey(): void {
@@ -167,20 +141,7 @@ export class ProfileComponent implements OnInit {
     this.router.navigate(['/post_login/go-live']);
   }
 
-  toggleApprovalDemo(): void {
-    this.isLiveApproved = !this.isLiveApproved;
-    if (this.isLiveApproved) {
-      this.userProfile.liveStatus = 'PROD APPROVED';
-      this.triggerToast('Live Production Status updated: PROD APPROVED & UNLOCKED!');
-    } else {
-      this.userProfile.liveStatus = 'PENDING ONBOARDING';
-      this.triggerToast('Live Production Status updated: LOCKED (Approval Required)');
-    }
-  }
 
-  saveDeveloperSettings(): void {
-    this.triggerToast('General System & Developer preferences saved successfully!');
-  }
 
   navigateBackToDashboard(): void {
     this.router.navigate(['/post_login/dashboard']);
@@ -201,5 +162,42 @@ export class ProfileComponent implements OnInit {
   signOut(): void {
     this.authService.logout();
     this.router.navigate(['/pre-login/login']);
+  }
+
+  // Profile Dropdown Methods
+  toggleProfileDropdown(): void {
+    this.isProfileDropdownOpen = !this.isProfileDropdownOpen;
+  }
+
+  openProfileDropdown(): void {
+    this.isProfileDropdownOpen = true;
+  }
+
+  closeProfileDropdown(): void {
+    this.isProfileDropdownOpen = false;
+  }
+
+  onDropdownItemClick(itemName: string): void {
+    this.isProfileDropdownOpen = false;
+    if (itemName.includes('Credentials')) {
+      this.setTab('credentials');
+      return;
+    }
+    if (itemName.includes('Analytics')) {
+      this.setTab('analytics');
+      return;
+    }
+    if (itemName.includes('Help')) {
+      this.setTab('help');
+      return;
+    }
+    if (itemName.includes('Sandbox')) {
+      this.router.navigate(['/post_login/sandbox']);
+      return;
+    }
+    if (itemName.includes('Go-Live') || itemName.includes('Production')) {
+      this.router.navigate(['/post_login/go-live']);
+      return;
+    }
   }
 }

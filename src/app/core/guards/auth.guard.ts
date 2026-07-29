@@ -6,8 +6,8 @@ import { AuthService } from '../services/auth.service';
  * ============================================================================
  * SBM BANK AUTHENTICATION GUARD (core/guards/auth.guard.ts)
  * ============================================================================
- * Configured for direct dashboard preview without requiring manual login.
- * Automatically saves active session fallback for Allan Cheruiyot.
+ * Protects post-login routes by checking if user is authenticated.
+ * Redirects to login page if session is invalid or expired.
  * ============================================================================
  */
 export const authGuard: CanActivateFn = (route, state) => {

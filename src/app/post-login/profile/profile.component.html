@@ -11,7 +11,6 @@
         <div class="brand-divider"></div>
         <div class="brand-text">
           <span class="brand-title">API MANAGER</span>
-          <span class="brand-subtitle">DEVELOPER PORTAL</span>
         </div>
       </div>
       <span class="env-pill"><i class="bi bi-person-badge-fill me-1"></i> DEVELOPER PROFILE</span>
@@ -20,14 +19,58 @@
     <!-- Back to Dashboard Action Button -->
     <div class="header-right d-flex align-items-center gap-3">
       <button class="btn btn-outline-primary btn-sm rounded-pill px-3 fw-bold" (click)="navigateBackToDashboard()">
-        <i class="bi bi-arrow-left me-1"></i> Back to Dashboard
+        <i class="bi bi-house-fill me-1"></i> Home
       </button>
 
-      <div class="user-profile-chip">
-        <div class="user-avatar-circle">{{ userProfile.avatar }}</div>
-        <div class="user-info-text d-none d-md-block">
-          <div class="user-name">{{ userProfile.name }}</div>
-          <div class="user-role">{{ userProfile.role }}</div>
+      <div class="profile-dropdown-wrapper position-relative" (mouseenter)="openProfileDropdown()"
+        (mouseleave)="closeProfileDropdown()">
+        <div class="user-profile-chip" (click)="toggleProfileDropdown()">
+          <div class="user-avatar-circle">{{ userProfile.avatar }}</div>
+          <div class="user-info-text d-none d-md-block">
+            <div class="user-name">{{ userProfile.name }}</div>
+            <div class="user-role">{{ userProfile.role }}</div>
+          </div>
+          <i class="bi bi-chevron-down ms-1 text-muted fs-7"></i>
+        </div>
+
+        <!-- PROFILE DROPDOWN MENU -->
+        <div class="profile-dropdown-menu" [class.show]="isProfileDropdownOpen">
+          <div class="dropdown-header-box p-3 border-bottom">
+            <div class="d-flex align-items-center gap-3">
+              <div class="dropdown-avatar-circle">{{ userProfile.avatar }}</div>
+              <div class="overflow-hidden">
+                <div class="fw-bold text-dark fs-8 text-truncate">{{ userProfile.name }}</div>
+                <div class="text-muted fs-8 text-truncate">{{ userProfile.email }}</div>
+              </div>
+            </div>
+            <div class="mt-2">
+              <small class="text-success fs-8 fw-bold"><i class="bi bi-shield-check me-1"></i> Active</small>
+            </div>
+          </div>
+
+          <div class="dropdown-body-items py-2">
+            <div class="dropdown-item-row" (click)="onDropdownItemClick('Credentials')">
+              <i class="bi bi-shield-lock dropdown-item-icon"></i>
+              <span class="dropdown-item-text">Credentials</span>
+            </div>
+
+            <div class="dropdown-item-row" (click)="onDropdownItemClick('API Analytics & Telemetry')">
+              <i class="bi bi-bar-chart dropdown-item-icon"></i>
+              <span class="dropdown-item-text">Analytics & Telemetry</span>
+            </div>
+
+            <div class="dropdown-item-row" (click)="onDropdownItemClick('Help Center')">
+              <i class="bi bi-question-circle dropdown-item-icon"></i>
+              <span class="dropdown-item-text">Help Center</span>
+            </div>
+
+            <hr class="dropdown-divider my-2" />
+
+            <div class="dropdown-item-row logout-row text-danger" (click)="signOut()">
+              <i class="bi bi-box-arrow-right dropdown-item-icon text-danger"></i>
+              <span class="dropdown-item-text fw-bold">Sign Out</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -83,20 +126,17 @@
             </div>
           </div>
 
-          <!-- Tier Badge & Quick Approval Switcher Demo -->
+          <!-- Tier Badge -->
           <div class="d-flex flex-column align-items-end gap-2 ms-auto">
             <span class="badge bg-primary text-white rounded-pill px-3 py-2 fw-bold fs-8 shadow-sm">
               <i class="bi bi-shield-check me-1"></i> {{ userProfile.tier }}
             </span>
-            <button class="btn btn-sm btn-outline-primary rounded-pill px-3 fs-8 fw-semibold" (click)="toggleApprovalDemo()">
-              <i class="bi bi-toggle-on me-1"></i> Toggle Approval Demo ({{ isLiveApproved ? 'Approved' : 'Unapproved' }})
-            </button>
           </div>
 
         </div>
       </div>
 
-      <!-- PROFILE SUB-NAVIGATION TABS (CREDENTIALS | ANALYTICS | SETTINGS | HELP) -->
+      <!-- PROFILE SUB-NAVIGATION TABS (CREDENTIALS | ANALYTICS | HELP) -->
       <div class="profile-tabs-wrapper d-flex flex-wrap align-items-center gap-2 mb-4 border-bottom pb-2">
         <button [class]="activeTab === 'credentials' ? 'profile-tab-btn active' : 'profile-tab-btn'"
           (click)="setTab('credentials')">
@@ -106,12 +146,8 @@
           (click)="setTab('analytics')">
           <i class="bi bi-bar-chart-fill me-1"></i> Analytics & Telemetry
         </button>
-        <button [class]="activeTab === 'settings' ? 'profile-tab-btn active' : 'profile-tab-btn'"
-          (click)="setTab('settings')">
-          <i class="bi bi-gear-fill me-1"></i> Developer Settings
-        </button>
         <button [class]="activeTab === 'help' ? 'profile-tab-btn active' : 'profile-tab-btn'" (click)="setTab('help')">
-          <i class="bi bi-question-circle-fill me-1"></i> Help & Specs
+          <i class="bi bi-question-circle-fill me-1"></i> Help
         </button>
       </div>
 
@@ -179,13 +215,6 @@
                 </div>
               </div>
 
-              <!-- Action: Regenerate Sandbox Key -->
-              <div class="mt-auto pt-3 border-top d-flex align-items-center justify-content-between flex-wrap gap-2">
-                <button class="btn btn-info btn-sm text-white rounded-pill px-3 fw-bold shadow-sm"
-                  (click)="regenerateSandboxKey()">
-                  <i class="bi bi-arrow-repeat me-1"></i> Regenerate Sandbox Key
-                </button>
-              </div>
 
             </div>
           </div>
@@ -270,6 +299,9 @@
                   Complete the Go-Live Wizard onboarding and KYB compliance audit to be approved and receive Live
                   Production API Keys.
                 </p>
+                <button class="btn btn-success btn-sm text-white rounded-pill px-4 fw-bold shadow-sm" (click)="launchGoLiveConsole()">
+                  <i class="bi bi-rocket-takeoff-fill me-1"></i> Go Live Wizard
+                </button>
               </div>
 
               <!-- APPROVED ACTION BUTTONS -->
@@ -316,236 +348,117 @@
         </div>
       </div>
 
-      <!-- ===================================================================== -->
-      <!-- TAB 3: DEVELOPER SETTINGS & GENERAL SYSTEM PREFERENCES -->
-      <!-- ===================================================================== -->
-      <div *ngIf="activeTab === 'settings'">
-        <div class="row g-4">
-
-          <!-- GENERAL SYSTEM & PORTAL CONFIGURATION CARD -->
-          <div class="col-12">
-            <div class="sbm-card p-4 border-top-primary">
-              <div class="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom">
-                <div class="d-flex align-items-center gap-2">
-                  <i class="bi bi-sliders2 text-primary fs-4"></i>
-                  <h5 class="fw-bold text-dark mb-0">General System & Portal Settings</h5>
-                </div>
-                <span class="badge bg-primary-subtle text-primary rounded-pill px-3 py-1 fs-8 fw-semibold">SYSTEM
-                  PREFERENCES</span>
-              </div>
-
-              <div class="row g-3">
-                <div class="col-12 col-md-6">
-                  <label class="form-label text-muted fs-8 fw-semibold">System Portal Gateway Name</label>
-                  <input type="text" class="form-control sbm-custom-input"
-                    [(ngModel)]="developerPreferences.portalName" />
-                </div>
-
-                <div class="col-12 col-md-6">
-                  <label class="form-label text-muted fs-8 fw-semibold">Default Target Environment</label>
-                  <select class="form-select sbm-custom-input" [(ngModel)]="developerPreferences.defaultEnvironment">
-                    <option value="SANDBOX">Sandbox Environment (Recommended for Testing)</option>
-                    <option value="PRODUCTION">Live Production Environment</option>
-                  </select>
-                </div>
-
-                <div class="col-12 col-md-4">
-                  <label class="form-label text-muted fs-8 fw-semibold">Live Telemetry Data Refresh Interval</label>
-                  <select class="form-select sbm-custom-input" [(ngModel)]="developerPreferences.dataRefreshInterval">
-                    <option value="REALTIME">Real-time WebSocket Streaming</option>
-                    <option value="15S">Every 15 Seconds</option>
-                    <option value="MANUAL">Manual Refresh Only</option>
-                  </select>
-                </div>
-
-                <div class="col-12 col-md-4">
-                  <label class="form-label text-muted fs-8 fw-semibold">System Audit Log Verbosity</label>
-                  <select class="form-select sbm-custom-input" [(ngModel)]="developerPreferences.logLevel">
-                    <option value="DEBUG">DEBUG (Detailed Request Payload Logs)</option>
-                    <option value="INFO">INFO (Standard Audit Trail)</option>
-                    <option value="ERROR">ERROR (Only Errors & Failures)</option>
-                  </select>
-                </div>
-
-                <div class="col-12 col-md-4">
-                  <label class="form-label text-muted fs-8 fw-semibold">Default Timezone & Locale</label>
-                  <input type="text" class="form-control sbm-custom-input" [(ngModel)]="developerPreferences.timezone"
-                    readonly />
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- CARD 1: ENVIRONMENT & WEBHOOK CONFIGURATION -->
-          <div class="col-12 col-lg-6">
-            <div class="sbm-card p-4 h-100">
-              <h5 class="fw-bold text-dark mb-3"><i class="bi bi-globe text-primary me-2"></i> Environment & Webhooks
-              </h5>
-
-              <div class="mb-3">
-                <label class="form-label text-muted fs-8 fw-semibold">Sandbox Base Endpoint</label>
-                <input type="text" class="form-control sbm-custom-input font-monospace"
-                  [value]="userProfile.sandboxBaseUrl" readonly />
-              </div>
-
-              <div class="mb-3">
-                <label class="form-label text-muted fs-8 fw-semibold">Live Production Base Endpoint</label>
-                <input type="text" class="form-control sbm-custom-input font-monospace"
-                  [value]="userProfile.liveBaseUrl" readonly />
-              </div>
-
-              <div class="mb-3">
-                <label class="form-label text-muted fs-8 fw-semibold">Webhook Callback Listener URL</label>
-                <input type="url" class="form-control sbm-custom-input"
-                  [(ngModel)]="developerPreferences.webhookCallbackUrl"
-                  placeholder="https://api.yourcompany.co.ke/sbm-callback" />
-              </div>
-
-              <div class="mb-3">
-                <label class="form-label text-muted fs-8 fw-semibold">Webhook Signing Secret</label>
-                <input type="text" class="form-control sbm-custom-input font-monospace"
-                  [(ngModel)]="developerPreferences.webhookSecret" readonly />
-              </div>
-            </div>
-          </div>
-
-          <!-- CARD 2: SECURITY & AUTHENTICATION ENFORCEMENT -->
-          <div class="col-12 col-lg-6">
-            <div class="sbm-card p-4 h-100">
-              <h5 class="fw-bold text-dark mb-3"><i class="bi bi-shield-lock-fill text-primary me-2"></i> Security &
-                Authentication</h5>
-
-              <div class="form-check form-switch mb-3">
-                <input class="form-check-input" type="checkbox" id="enforceHmacCheck"
-                  [(ngModel)]="developerPreferences.enforceHmacSignature">
-                <label class="form-check-label text-dark fs-8 fw-semibold" for="enforceHmacCheck">
-                  Strict HMAC-SHA256 Signature Enforcement
-                </label>
-                <small class="d-block text-muted fs-8">Require X-SBM-Signature header on all POST API requests.</small>
-              </div>
-
-              <div class="form-check form-switch mb-3">
-                <input class="form-check-input" type="checkbox" id="mfaCheck"
-                  [(ngModel)]="developerPreferences.mfaTwoFactorAuth">
-                <label class="form-check-label text-dark fs-8 fw-semibold" for="mfaCheck">
-                  Require 2FA Multi-Factor Authentication
-                </label>
-                <small class="d-block text-muted fs-8">Ask for 6-digit SMS/Email OTP when regenerating keys or changing
-                  settings.</small>
-              </div>
-
-              <div class="mb-3">
-                <label class="form-label text-muted fs-8 fw-semibold">Session Idle Timeout</label>
-                <select class="form-select sbm-custom-input" [(ngModel)]="developerPreferences.sessionTimeoutMinutes">
-                  <option [value]="15">15 Minutes</option>
-                  <option [value]="30">30 Minutes (Recommended)</option>
-                  <option [value]="60">1 Hour</option>
-                </select>
-              </div>
-            </div>
-          </div>
-
-          <!-- CARD 3: NOTIFICATION & ALERTS PREFERENCES -->
-          <div class="col-12 col-lg-6">
-            <div class="sbm-card p-4 h-100">
-              <h5 class="fw-bold text-dark mb-3"><i class="bi bi-bell-fill text-primary me-2"></i> Notifications & Alert
-                Thresholds</h5>
-
-              <div class="form-check form-switch mb-3">
-                <input class="form-check-input" type="checkbox" id="webhookAlertsCheck"
-                  [(ngModel)]="developerPreferences.webhookAlerts">
-                <label class="form-check-label text-dark fs-8 fw-semibold" for="webhookAlertsCheck">
-                  Webhook Failure Email Alerts
-                </label>
-                <small class="d-block text-muted fs-8">Receive instant email if callback listener returns non-200 HTTP
-                  code.</small>
-              </div>
-
-              <div class="form-check form-switch mb-3">
-                <input class="form-check-input" type="checkbox" id="secAlertsCheck"
-                  [(ngModel)]="developerPreferences.securityAlertEmails">
-                <label class="form-check-label text-dark fs-8 fw-semibold" for="secAlertsCheck">
-                  Security & Key Revocation Alerts
-                </label>
-              </div>
-
-              <div class="mb-3">
-                <label class="form-label text-muted fs-8 fw-semibold">Quota Alert Threshold</label>
-                <select class="form-select sbm-custom-input"
-                  [(ngModel)]="developerPreferences.quotaAlertThresholdPercent">
-                  <option [value]="70">Alert at 70% Quota</option>
-                  <option [value]="80">Alert at 80% Quota (Default)</option>
-                  <option [value]="90">Alert at 90% Quota</option>
-                </select>
-              </div>
-            </div>
-          </div>
-
-          <!-- CARD 4: DEVELOPER DISPLAY PREFERENCES -->
-          <div class="col-12 col-lg-6">
-            <div class="sbm-card p-4 h-100">
-              <h5 class="fw-bold text-dark mb-3"><i class="bi bi-palette-fill text-primary me-2"></i> Portal Display &
-                SDK Preferences</h5>
-
-              <div class="mb-3">
-                <label class="form-label text-muted fs-8 fw-semibold">Default SDK Code Generator Language</label>
-                <select class="form-select sbm-custom-input" [(ngModel)]="developerPreferences.defaultSdkLanguage">
-                  <option value="CURL">cURL</option>
-                  <option value="TS">TypeScript / Axios</option>
-                  <option value="PYTHON">Python Requests</option>
-                  <option value="JAVA">Java HttpClient</option>
-                </select>
-              </div>
-
-              <div class="mb-3">
-                <label class="form-label text-muted fs-8 fw-semibold">Developer Portal Theme</label>
-                <select class="form-select sbm-custom-input" [(ngModel)]="developerPreferences.portalTheme">
-                  <option value="LIGHT">SBM Modern Light Mode</option>
-                  <option value="DARK">Sleek Dark Mode</option>
-                </select>
-              </div>
-            </div>
-          </div>
-
-          <!-- CARD 5: NETWORK ACCESS & IP WHITELISTING -->
-          <div class="col-12">
-            <div class="sbm-card p-4">
-              <h5 class="fw-bold text-dark mb-3"><i class="bi bi-hdd-network-fill text-primary me-2"></i> IP
-                Whitelisting & Network Rules</h5>
-
-              <div class="mb-3">
-                <label class="form-label text-muted fs-8 fw-semibold">Allowed Developer Server IP Addresses (Comma
-                  Separated)</label>
-                <input type="text" class="form-control sbm-custom-input font-monospace"
-                  [(ngModel)]="developerPreferences.whitelistedIps" />
-                <small class="text-muted fs-8">Only requests originating from these IP CIDR blocks will be accepted by
-                  SBM Production Gateway.</small>
-              </div>
-
-              <div class="text-end mt-3">
-                <button class="btn btn-primary rounded-pill px-4 fw-bold shadow-sm" (click)="saveDeveloperSettings()">
-                  <i class="bi bi-check-lg me-1"></i> Save All Developer & System Preferences
-                </button>
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </div>
 
       <!-- ===================================================================== -->
-      <!-- TAB 4: HELP & SPECS -->
+      <!-- TAB 3: HELP -->
       <!-- ===================================================================== -->
       <div *ngIf="activeTab === 'help'">
-        <div class="sbm-card p-4">
-          <h5 class="fw-bold text-dark mb-3"><i class="bi bi-question-circle text-primary me-2"></i> Help & Support</h5>
-          <p class="text-muted fs-8 mb-4">Access developer support ticket desk and integration guides.</p>
+        <div class="row g-4">
+          <!-- Support Contact Card -->
+          <div class="col-12 col-md-6">
+            <div class="sbm-card p-4 h-100 border-top-primary">
+              <div class="d-flex align-items-center gap-3 mb-3">
+                <div class="support-icon-box">
+                  <i class="bi bi-headset"></i>
+                </div>
+                <div>
+                  <h5 class="fw-bold text-dark mb-1">Developer Support</h5>
+                  <p class="text-muted fs-8 mb-0">24/7 Technical Assistance</p>
+                </div>
+              </div>
+              <div class="support-details">
+                <div class="support-item">
+                  <i class="bi bi-envelope-fill text-primary"></i>
+                  <span>support@sbmbank.co.ke</span>
+                </div>
+                <div class="support-item">
+                  <i class="bi bi-telephone-fill text-primary"></i>
+                  <span>+254 719 000 000</span>
+                </div>
+                <div class="support-item">
+                  <i class="bi bi-geo-alt-fill text-primary"></i>
+                  <span>Nairobi, Kenya</span>
+                </div>
+              </div>
+              <button class="btn btn-primary rounded-pill px-4 fw-bold shadow-sm w-100 mt-3"
+                (click)="triggerToast('Opening Support Ticket Desk')">
+                <i class="bi bi-chat-dots me-1"></i> Contact Support
+              </button>
+            </div>
+          </div>
 
-          <div class="d-flex flex-wrap gap-3">
-            <button class="btn btn-outline-secondary rounded-pill px-4 btn-sm fw-bold"
-              (click)="triggerToast('Opening Support Ticket Desk')">
-              <i class="bi bi-headset me-1"></i> Contact Developer Support
-            </button>
+          <!-- Documentation Card -->
+          <div class="col-12 col-md-6">
+            <div class="sbm-card p-4 h-100 border-top-info">
+              <div class="d-flex align-items-center gap-3 mb-3">
+                <div class="support-icon-box bg-info">
+                  <i class="bi bi-book-fill"></i>
+                </div>
+                <div>
+                  <h5 class="fw-bold text-dark mb-1">API Documentation</h5>
+                  <p class="text-muted fs-8 mb-0">Integration Guides & Specs</p>
+                </div>
+              </div>
+              <div class="support-details">
+                <div class="support-item">
+                  <i class="bi bi-file-code text-info"></i>
+                  <span>OpenAPI 3.0 Specifications</span>
+                </div>
+                <div class="support-item">
+                  <i class="bi bi-journal-code text-info"></i>
+                  <span>SDK Libraries & Examples</span>
+                </div>
+                <div class="support-item">
+                  <i class="bi bi-play-circle text-info"></i>
+                  <span>Video Tutorials</span>
+                </div>
+              </div>
+              <button class="btn btn-info text-white rounded-pill px-4 fw-bold shadow-sm w-100 mt-3"
+                (click)="triggerToast('Opening Documentation Portal')">
+                <i class="bi bi-book me-1"></i> View Docs
+              </button>
+            </div>
+          </div>
+
+          <!-- FAQ Card -->
+          <div class="col-12">
+            <div class="sbm-card p-4 border-top-success">
+              <div class="d-flex align-items-center gap-3 mb-3">
+                <div class="support-icon-box bg-success">
+                  <i class="bi bi-question-circle-fill"></i>
+                </div>
+                <div>
+                  <h5 class="fw-bold text-dark mb-1">Frequently Asked Questions</h5>
+                  <p class="text-muted fs-8 mb-0">Quick answers to common questions</p>
+                </div>
+              </div>
+              <div class="row g-3">
+                <div class="col-12 col-md-6">
+                  <div class="faq-item">
+                    <h6 class="fw-bold text-dark fs-8 mb-1">How do I get API keys?</h6>
+                    <p class="text-muted fs-8 mb-0">Complete the Go-Live Wizard to receive production credentials.</p>
+                  </div>
+                </div>
+                <div class="col-12 col-md-6">
+                  <div class="faq-item">
+                    <h6 class="fw-bold text-dark fs-8 mb-1">What are the rate limits?</h6>
+                    <p class="text-muted fs-8 mb-0">Sandbox: 1000 req/day, Production: Custom based on plan.</p>
+                  </div>
+                </div>
+                <div class="col-12 col-md-6">
+                  <div class="faq-item">
+                    <h6 class="fw-bold text-dark fs-8 mb-1">How do I test endpoints?</h6>
+                    <p class="text-muted fs-8 mb-0">Use the Sandbox Playground with test credentials.</p>
+                  </div>
+                </div>
+                <div class="col-12 col-md-6">
+                  <div class="faq-item">
+                    <h6 class="fw-bold text-dark fs-8 mb-1">Is there a test environment?</h6>
+                    <p class="text-muted fs-8 mb-0">Yes, sandbox is available for all API suites.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

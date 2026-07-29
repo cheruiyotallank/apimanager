@@ -32,34 +32,50 @@
   z-index: 100;
 }
 
+/* Brand Logo Styling */
+.sbm-brand-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.5rem 1rem;
+  background: linear-gradient(135deg, rgba(26, 163, 216, 0.08) 0%, rgba(6, 33, 77, 0.05) 100%);
+  border-radius: 12px;
+  border: 1px solid rgba(26, 163, 216, 0.2);
+  transition: all 0.3s ease;
+}
+
+.sbm-brand-logo:hover {
+  background: linear-gradient(135deg, rgba(26, 163, 216, 0.15) 0%, rgba(6, 33, 77, 0.1) 100%);
+  border-color: rgba(26, 163, 216, 0.4);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(26, 163, 216, 0.2);
+}
+
 .sbm-header-logo-img {
   height: 38px;
+  max-width: 125px;
   object-fit: contain;
 }
 
 .brand-divider {
-  width: 1px;
-  height: 24px;
-  background-color: #cbd5e1;
+  width: 1.5px;
+  height: 28px;
+  background: linear-gradient(180deg, transparent 0%, rgba(26, 163, 216, 0.3) 50%, transparent 100%);
+  margin: 0 0.4rem;
 }
 
 .brand-text {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  align-items: center;
+  line-height: 1.2;
 }
 
 .brand-title {
-  font-size: 0.95rem;
   font-weight: 800;
-  color: #06214d;
-  letter-spacing: 0.5px;
-}
-
-.brand-subtitle {
-  font-size: 0.65rem;
-  font-weight: 700;
-  color: #1aa3d8;
-  letter-spacing: 1px;
+  font-size: 0.95rem;
+  letter-spacing: 0.06em;
+  color: var(--sbm-navy, #06214d);
 }
 
 .env-pill {
@@ -214,4 +230,140 @@
     transform: translateX(0);
     opacity: 1;
   }
+}
+
+/* Profile Dropdown Styles */
+.profile-dropdown-wrapper {
+  position: relative;
+  cursor: pointer;
+}
+
+.profile-dropdown-menu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 8px);
+  width: 270px;
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 15px 35px -5px rgba(6, 33, 77, 0.18), 0 5px 15px rgba(0, 0, 0, 0.08);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-8px);
+  transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 2000;
+  overflow: hidden;
+}
+
+.profile-dropdown-wrapper:hover .profile-dropdown-menu,
+.profile-dropdown-menu.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.dropdown-header-box {
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+}
+
+.dropdown-avatar-circle {
+  width: 38px;
+  height: 38px;
+  background: linear-gradient(135deg, #06214d 0%, #1aa3d8 100%);
+  color: #ffffff;
+  border-radius: 50%;
+  font-weight: 800;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dropdown-body-items {
+  background: #ffffff;
+}
+
+.dropdown-item-row {
+  display: flex;
+  align-items: center;
+  padding: 0.58rem 0.9rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #334155;
+  border-radius: 8px;
+  margin: 2px 6px;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.dropdown-item-icon {
+  font-size: 1.05rem;
+  color: #06214d;
+  width: 24px;
+}
+
+.dropdown-item-text {
+  font-weight: 600;
+}
+
+.dropdown-item-row:hover {
+  background: #eaf7fc;
+  color: #06214d;
+}
+
+.dropdown-item-row:hover .dropdown-item-icon {
+  color: #1aa3d8;
+}
+
+.dropdown-item-row.logout-row:hover {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.dropdown-divider {
+  border-color: #e2e8f0;
+}
+
+.user-profile-chip {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 3px 12px 3px 3px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.profile-dropdown-wrapper:hover .user-profile-chip,
+.user-profile-chip:hover {
+  border-color: #1aa3d8;
+  background: #f8fafc;
+  box-shadow: 0 4px 12px rgba(26, 163, 216, 0.15);
+}
+
+.user-avatar-circle {
+  width: 32px;
+  height: 32px;
+  background: linear-gradient(135deg, #06214d 0%, #1aa3d8 100%);
+  color: #ffffff;
+  border-radius: 50%;
+  font-weight: 800;
+  font-size: 0.82rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.user-name {
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: #06214d;
+  line-height: 1.1;
+}
+
+.user-role {
+  font-size: 0.68rem;
+  color: #64748b;
 }

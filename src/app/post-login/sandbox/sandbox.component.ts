@@ -5,18 +5,6 @@ import { FormsModule } from '@angular/forms';
 import { DecimalPipe } from '@angular/common';
 import { SbmBankApiService } from '../../core/services/sbm-bank-api.service';
 
-export interface WebhookEventLog {
-  id: string;
-  timestamp: string;
-  eventType: 'STK_PUSH_SUCCESS' | 'STK_PUSH_CANCELLED' | 'B2C_DISBURSAL' | 'C2B_CONFIRMATION';
-  checkoutRequestId: string;
-  mpesaReceipt: string;
-  amount: number;
-  phone: string;
-  status: 'DELIVERED' | 'PENDING';
-  payloadJson: string;
-}
-
 @Component({
   selector: 'app-sandbox',
   templateUrl: './sandbox.component.html',
@@ -71,31 +59,8 @@ export class SandboxComponent implements OnInit {
   public showToast: boolean = false;
   public toastMessage: string = '';
 
-  // Live Simulated Webhook Incoming Callback Logs
-  public webhookLogs: WebhookEventLog[] = [
-    {
-      id: 'wh_evt_01',
-      timestamp: '2026-07-28 13:00:15',
-      eventType: 'STK_PUSH_SUCCESS',
-      checkoutRequestId: 'ws_CO_28072026_94817264',
-      mpesaReceipt: 'NLJ8291827',
-      amount: 1500,
-      phone: '254708374149',
-      status: 'DELIVERED',
-      payloadJson: '{\n  "Body": {\n    "stkCallback": {\n      "MerchantRequestID": "29182-94817-1",\n      "CheckoutRequestID": "ws_CO_28072026_94817264",\n      "ResultCode": 0,\n      "ResultDesc": "The service request is processed successfully.",\n      "CallbackMetadata": {\n        "Item": [\n          { "Name": "Amount", "Value": 1500.00 },\n          { "Name": "MpesaReceiptNumber", "Value": "NLJ8291827" },\n          { "Name": "PhoneNumber", "Value": 254708374149 }\n        ]\n      }\n    }\n  }\n}'
-    },
-    {
-      id: 'wh_evt_02',
-      timestamp: '2026-07-28 12:45:10',
-      eventType: 'B2C_DISBURSAL',
-      checkoutRequestId: 'b2c_req_774102948',
-      mpesaReceipt: 'NLJ8291800',
-      amount: 4500,
-      phone: '254712345678',
-      status: 'DELIVERED',
-      payloadJson: '{\n  "Result": {\n    "ResultType": 0,\n    "ResultCode": 0,\n    "ResultDesc": "The service request has been processed successfully.",\n    "OriginatorConversationID": "29182-94817-2",\n    "ConversationID": "AG_20260728_000048172648",\n    "TransactionID": "NLJ8291800"\n  }\n}'
-    }
-  ];
+  // Profile Dropdown State
+  public isProfileDropdownOpen: boolean = false;
 
   constructor(
     private router: Router,
@@ -213,39 +178,6 @@ export class SandboxComponent implements OnInit {
           this.httpStatus = 200;
           this.statusText = '200 OK';
 
-          // Generate a simulated incoming Webhook callback log event
-          const checkoutId = 'ws_CO_28072026_' + Math.floor(10000000 + Math.random() * 90000000);
-          const receipt = 'NLJ' + Math.floor(1000000 + Math.random() * 9000000);
-
-          const newWebhookEvent: WebhookEventLog = {
-            id: 'wh_evt_' + (this.webhookLogs.length + 1),
-            timestamp: new Date().toISOString().replace('T', ' ').substring(0, 19),
-            eventType: this.activeSuite === 'b2c' ? 'B2C_DISBURSAL' : 'STK_PUSH_SUCCESS',
-            checkoutRequestId: checkoutId,
-            mpesaReceipt: receipt,
-            amount: Number(this.requestParams.amount) || 1500,
-            phone: this.requestParams.phoneNumber,
-            status: 'DELIVERED',
-            payloadJson: JSON.stringify({
-              Body: {
-                stkCallback: {
-                  MerchantRequestID: '29182-94817-1',
-                  CheckoutRequestID: checkoutId,
-                  ResultCode: 0,
-                  ResultDesc: 'The service request is processed successfully.',
-                  CallbackMetadata: {
-                    Item: [
-                      { Name: 'Amount', Value: Number(this.requestParams.amount) || 1500 },
-                      { Name: 'MpesaReceiptNumber', Value: receipt },
-                      { Name: 'PhoneNumber', Value: Number(this.requestParams.phoneNumber) }
-                    ]
-                  }
-                }
-              }
-            }, null, 2)
-          };
-
-          this.webhookLogs.unshift(newWebhookEvent);
           this.triggerToast(`Sandbox ${this.activeSuite.toUpperCase()} API request executed successfully!`);
           this.updateResponseTerminal();
           this.updateCodeSnippet();
@@ -410,5 +342,46 @@ System.out.println(response.body());`;
 
   public onLogoError(event: any): void {
     event.target.src = this.sbmLogoSvgPath;
+  }
+
+  // Profile Dropdown Methods
+  public toggleProfileDropdown(): void {
+    this.isProfileDropdownOpen = !this.isProfileDropdownOpen;
+  }
+
+  public openProfileDropdown(): void {
+    this.isProfileDropdownOpen = true;
+  }
+
+  public closeProfileDropdown(): void {
+    this.isProfileDropdownOpen = false;
+  }
+
+  public onDropdownItemClick(itemName: string): void {
+    this.isProfileDropdownOpen = false;
+    if (itemName.includes('Credentials')) {
+      this.router.navigate(['/post_login/profile'], { queryParams: { tab: 'credentials' } });
+      return;
+    }
+    if (itemName.includes('Analytics')) {
+      this.router.navigate(['/post_login/profile'], { queryParams: { tab: 'analytics' } });
+      return;
+    }
+    if (itemName.includes('Help')) {
+      this.router.navigate(['/post_login/profile'], { queryParams: { tab: 'help' } });
+      return;
+    }
+    if (itemName.includes('Sandbox')) {
+      // Already on sandbox
+      return;
+    }
+    if (itemName.includes('Go-Live') || itemName.includes('Production')) {
+      this.router.navigate(['/post_login/go-live']);
+      return;
+    }
+  }
+
+  public signOut(): void {
+    this.router.navigate(['/pre-login/login']);
   }
 }
